@@ -51,7 +51,7 @@ export async function GET() {
     const fxRes = await fetch("https://open.er-api.com/v6/latest/USD");
     const fxData = await fxRes.json();
     usdkrw = fxData.rates.KRW;
-  } catch (e) {}
+  } catch {}
 
   // 3대 지수 (Twelve Data)
   const indexes = await Promise.all(
