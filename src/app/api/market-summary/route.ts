@@ -47,7 +47,7 @@ export async function GET() {
   } catch {}
 
   if (!usdkrw && indexes.length === 0) {
-    return NextResponse.json({ error: "Failed to fetch market data (network or API error)" }, { status: 500 });
+    return NextResponse.json({ usdkrw: null, indexes: [] });
   }
   return NextResponse.json({ usdkrw, indexes });
 } 

@@ -52,13 +52,17 @@ export default function MarketSummary() {
         <span className="text-3xl font-extrabold tracking-tight">$1 = ₩{usdkrw ? usdkrw.toLocaleString(undefined, { maximumFractionDigits: 2 }) : "-"}</span>
       </div>
       <div className="flex gap-4 w-full">
-        {indexes.map((idx) => (
-          <div key={idx.symbol} className="bg-[#23272f] rounded-xl p-4 flex-1 flex flex-col items-start min-w-[120px]">
-            <span className="text-xs text-gray-400">{idx.name}</span>
-            <span className="text-lg font-bold mt-1">{idx.price !== null ? idx.price.toLocaleString() : "-"}</span>
-            <span className={`text-sm mt-1 ${idx.color}`}>{idx.change !== null ? (idx.change > 0 ? `▲${idx.change.toFixed(2)}%` : `▼${Math.abs(idx.change).toFixed(2)}%`) : "-"}</span>
-          </div>
-        ))}
+        {indexes && indexes.length > 0 ? (
+          indexes.map((idx) => (
+            <div key={idx.symbol} className="bg-[#23272f] rounded-xl p-4 flex-1 flex flex-col items-start min-w-[120px]">
+              <span className="text-xs text-gray-400">{idx.name}</span>
+              <span className="text-lg font-bold mt-1">{idx.price !== null ? idx.price.toLocaleString() : "-"}</span>
+              <span className={`text-sm mt-1 ${idx.color}`}>{idx.change !== null ? (idx.change > 0 ? `▲${idx.change.toFixed(2)}%` : `▼${Math.abs(idx.change).toFixed(2)}%`) : "-"}</span>
+            </div>
+          ))
+        ) : (
+          <div className="text-gray-400 w-full text-center py-4">지수 데이터를 불러올 수 없습니다.</div>
+        )}
       </div>
     </div>
   );
