@@ -5,25 +5,33 @@ const INDEXES = [
   {
     name: "S&P 500",
     symbol: "^GSPC",
+    label: "S&P 500",
     color: "text-blue-400",
   },
   {
     name: "나스닥",
     symbol: "^IXIC",
+    label: "나스닥",
     color: "text-red-400",
   },
   {
     name: "다우존스",
     symbol: "^DJI",
+    label: "다우존스",
     color: "text-blue-400",
   },
 ];
 
 export default function MarketSummary() {
   const [usdkrw, setUsdkrw] = useState<number|null>(null);
-  const [indexes, setIndexes] = useState(
-    INDEXES.map(idx => ({ ...idx, price: null as number|null, change: null as number|null, history: [] as number[] }))
-  );
+  const [indexes, setIndexes] = useState<{
+    name: string;
+    symbol: string;
+    label: string;
+    price: number | null;
+    change: number | null;
+    history: number[];
+  }[]>(INDEXES.map(idx => ({ ...idx, price: null, change: null, history: [] })));
 
   // 서버 API에서 환율/지수 fetch
   useEffect(() => {
@@ -32,13 +40,10 @@ export default function MarketSummary() {
         const res = await fetch("/api/market-summary");
         const data = await res.json();
         setUsdkrw(data.usdkrw);
-        setIndexes(prev => prev.map((idx, i) => ({
-          ...idx,
-          price: data.indexes[i]?.price ?? null,
-          change: data.indexes[i]?.change ?? null,
-          history: idx.history.length > 30 ? idx.history.slice(-29).concat([data.indexes[i]?.price ?? null]) : idx.history.concat([data.indexes[i]?.price ?? null])
-        })));
-      } catch {}
+        setIndexes(data.indexes);
+      } catch {
+        setIndexes([]);
+      }
     }
     fetchMarket();
     const timer = setInterval(fetchMarket, 60000);
@@ -53,29 +58,39 @@ export default function MarketSummary() {
       </div>
       <div className="flex gap-4 w-full">
         {indexes && indexes.length > 0 ? (
-          indexes.map((idx) => (
-            <div key={idx.symbol} className="bg-[#23272f] rounded-xl p-4 flex-1 flex flex-col items-start min-w-[120px]">
-              <span className="text-xs text-gray-400">{idx.name}</span>
-              <span className="text-lg font-bold mt-1">{idx.price !== null ? idx.price.toLocaleString() : "-"}</span>
-              <span className={`text-sm mt-1 ${idx.color}`}>{idx.change !== null ? (idx.change > 0 ? `▲${idx.change.toFixed(2)}%` : `▼${Math.abs(idx.change).toFixed(2)}%`) : "-"}</span>
-              {idx.history && idx.history.length > 1 && (
-                <svg width="100%" height="32" viewBox="0 0 100 32" preserveAspectRatio="none" className="mt-2">
-                  <polyline
-                    fill="none"
-                    stroke={idx.change !== null && idx.change < 0 ? '#ef4444' : '#60a5fa'}
-                    strokeWidth="2"
-                    points={idx.history.map((v, i, arr) => {
-                      const x = (i / (arr.length - 1)) * 100;
-                      const min = Math.min(...arr);
-                      const max = Math.max(...arr);
-                      const y = max === min ? 16 : 32 - ((v - min) / (max - min)) * 32;
-                      return `${x},${y}`;
-                    }).join(' ')}
-                  />
-                </svg>
-              )}
-            </div>
-          ))
+          indexes.map((idx) => {
+            // 한국식 색상: 상승=빨강, 하락=파랑
+            const isUp = idx.change !== null && idx.change > 0;
+            const color = isUp ? 'text-red-500' : 'text-blue-500';
+            const graphColor = isUp ? '#ef4444' : '#3b82f6';
+            return (
+              <div key={idx.symbol} className="bg-[#23272f] rounded-xl p-4 flex-1 flex flex-col items-start min-w-[120px]">
+                <span className="text-xs text-gray-400">{idx.label}</span>
+                <span className="text-lg font-bold mt-1">{idx.price !== null ? idx.price.toLocaleString() : "-"}</span>
+                <span className={`text-sm mt-1 ${color}`}>{idx.change !== null ? (isUp ? `▲${idx.change.toFixed(2)}%` : `▼${Math.abs(idx.change).toFixed(2)}%`) : "-"}</span>
+                {idx.history && idx.history.length > 1 && (
+                  <svg width="100%" height="32" viewBox="0 0 100 32" preserveAspectRatio="none" className="mt-2">
+                    <polyline
+                      fill="none"
+                      stroke={graphColor}
+                      strokeWidth="2"
+                      points={(() => {
+                        const arr = idx.history;
+                        const min = Math.min(...arr);
+                        const max = Math.max(...arr);
+                        return arr.map((v, i) => {
+                          const x = (i / (arr.length - 1)) * 100;
+                          // min==max일 때 평평하게
+                          const y = max === min ? 16 : 32 - ((v - min) / (max - min)) * 32;
+                          return `${x},${y}`;
+                        }).join(' ');
+                      })()}
+                    />
+                  </svg>
+                )}
+              </div>
+            );
+          })
         ) : (
           <div className="text-gray-400 w-full text-center py-4">지수 데이터를 불러올 수 없습니다.</div>
         )}

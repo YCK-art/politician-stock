@@ -1,54 +1,67 @@
 import { NextResponse } from "next/server";
 
-const ALPHA_KEY = process.env.ALPHA_VANTAGE_KEY;
+console.log("FINNHUB_API_KEY:", process.env.FINNHUB_API_KEY);
+
+const FINNHUB_KEY = process.env.FINNHUB_API_KEY;
 const INDEXES = [
-  { name: "S&P 500", symbol: "SPY" },
-  { name: "나스닥", symbol: "QQQ" },
-  { name: "다우존스", symbol: "DIA" },
+  { name: "S&P 500", symbol: "SPY", label: "SPY" },
+  { name: "나스닥", symbol: "QQQ", label: "QQQ" },
+  { name: "다우존스", symbol: "DIA", label: "DIA" },
 ];
 
-async function fetchAlphaVantage(url: string) {
-  const res = await fetch(url);
-  return res.json();
+async function fetchFinnhub(path: string, params: Record<string, string>) {
+  const url = new URL(`https://finnhub.io/api/v1/${path}`);
+  Object.entries(params).forEach(([k, v]) => url.searchParams.append(k, v));
+  url.searchParams.append("token", FINNHUB_KEY!);
+  console.log("[Finnhub fetch]", url.toString());
+  const res = await fetch(url.toString());
+  const json = await res.json();
+  console.log("[Finnhub response]", path, json);
+  return json;
 }
 
 export async function GET() {
-  // 환율
+  // 환율 (open.er-api.com)
   let usdkrw: number | null = null;
   try {
-    const fxData = await fetchAlphaVantage(
-      `https://www.alphavantage.co/query?function=CURRENCY_EXCHANGE_RATE&from_currency=USD&to_currency=KRW&apikey=${ALPHA_KEY}`
-    );
-    usdkrw = parseFloat(fxData["Realtime Currency Exchange Rate"]["5. Exchange Rate"]);
-  } catch {}
+    const fxRes = await fetch("https://open.er-api.com/v6/latest/USD");
+    const fxData = await fxRes.json();
+    console.log("[FX response]", fxData);
+    usdkrw = fxData.rates.KRW;
+  } catch (e) {
+    console.log("[FX error]", e);
+  }
 
-  // 3대 지수 (현재가 + 그래프용 데이터)
+  // 3대 지수 (실시간 가격 + 그래프용 캔들)
+  const now = Math.floor(Date.now() / 1000);
+  const from = now - 60 * 60 * 24 * 2; // 최근 2일치 (5분봉)
   const indexes = await Promise.all(
     INDEXES.map(async (idx) => {
       let price: number | null = null;
       let change: number | null = null;
       let history: number[] = [];
       try {
-        // 현재가 및 변동률
-        const quoteData = await fetchAlphaVantage(
-          `https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${encodeURIComponent(idx.symbol)}&apikey=${ALPHA_KEY}`
-        );
-        price = parseFloat(quoteData["Global Quote"]["05. price"]);
-        change = parseFloat(quoteData["Global Quote"]["10. change percent"]?.replace("%", "") ?? "0");
-        // 최근 30개 데이터 (5분봉)
-        const histData = await fetchAlphaVantage(
-          `https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=${encodeURIComponent(idx.symbol)}&interval=5min&outputsize=compact&apikey=${ALPHA_KEY}`
-        );
-        const series = histData["Time Series (5min)"] as Record<string, { "4. close": string }> || {};
-        history = Object.values(series)
-          .map((v) => parseFloat(v["4. close"]))
-          .filter((v) => !isNaN(v))
-          .slice(0, 30)
-          .reverse();
-      } catch {}
+        // 실시간 가격
+        const quote = await fetchFinnhub("quote", { symbol: idx.symbol });
+        price = quote.c ?? null;
+        change = quote.dp ?? null;
+        // 캔들(그래프)
+        const candle = await fetchFinnhub("stock/candle", {
+          symbol: idx.symbol,
+          resolution: "5",
+          from: from.toString(),
+          to: now.toString(),
+        });
+        if (candle && candle.c && Array.isArray(candle.c)) {
+          history = candle.c.slice(-30);
+        }
+      } catch (e) {
+        console.log(`[Index error] ${idx.name}`, e);
+      }
       return {
         name: idx.name,
         symbol: idx.symbol,
+        label: idx.label,
         price,
         change,
         history,
