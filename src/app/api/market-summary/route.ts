@@ -2,9 +2,9 @@ import { NextResponse } from "next/server";
 
 const ALPHA_KEY = process.env.ALPHA_VANTAGE_KEY;
 const INDEXES = [
-  { name: "S&P 500", symbol: "^GSPC" },
-  { name: "나스닥", symbol: "^IXIC" },
-  { name: "다우존스", symbol: "^DJI" },
+  { name: "S&P 500", symbol: "SPY" },
+  { name: "나스닥", symbol: "QQQ" },
+  { name: "다우존스", symbol: "DIA" },
 ];
 
 async function fetchAlphaVantage(url: string) {
