@@ -60,14 +60,29 @@ export default function MarketSummary() {
         {indexes && indexes.length > 0 ? (
           indexes.map((idx) => {
             // 한국식 색상: 상승=빨강, 하락=파랑
-            const isUp = idx.change !== null && idx.change > 0;
-            const color = isUp ? 'text-red-500' : 'text-blue-500';
-            const graphColor = isUp ? '#ef4444' : '#3b82f6';
+            let color = 'text-gray-400';
+            let graphColor = '#6b7280';
+            let arrow = '';
+            if (idx.change !== null) {
+              if (idx.change > 0) {
+                color = 'text-red-500';
+                graphColor = '#ef4444';
+                arrow = `▲${idx.change.toFixed(2)}%`;
+              } else if (idx.change < 0) {
+                color = 'text-blue-500';
+                graphColor = '#3b82f6';
+                arrow = `▼${Math.abs(idx.change).toFixed(2)}%`;
+              } else {
+                arrow = '0.00%';
+              }
+            } else {
+              arrow = '-';
+            }
             return (
               <div key={idx.symbol} className="bg-[#23272f] rounded-xl p-4 flex-1 flex flex-col items-start min-w-[120px]">
                 <span className="text-xs text-gray-400">{idx.label}</span>
                 <span className="text-lg font-bold mt-1">{idx.price !== null ? idx.price.toLocaleString() : "-"}</span>
-                <span className={`text-sm mt-1 ${color}`}>{idx.change !== null ? (isUp ? `▲${idx.change.toFixed(2)}%` : `▼${Math.abs(idx.change).toFixed(2)}%`) : "-"}</span>
+                <span className={`text-sm mt-1 ${color}`}>{arrow}</span>
                 {idx.history && idx.history.length > 1 && (
                   <svg width="100%" height="32" viewBox="0 0 100 32" preserveAspectRatio="none" className="mt-2">
                     <polyline
@@ -92,9 +107,9 @@ export default function MarketSummary() {
             );
           })
         ) : (
-          <div className="text-gray-400 w-full text-center py-4">지수 데이터를 불러올 수 없습니다.</div>
+          <div className="flex-1 text-center text-gray-400">데이터를 불러오는 중입니다...</div>
         )}
       </div>
     </div>
   );
-} 
+}

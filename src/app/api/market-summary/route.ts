@@ -9,6 +9,10 @@ const INDEXES = [
   { name: "다우존스", symbol: "DIA", label: "DIA" },
 ];
 
+// 60초 캐싱용 전역 변수
+let cachedData: any = null;
+let cachedAt: number = 0;
+
 async function fetchFinnhub(path: string, params: Record<string, string>) {
   const url = new URL(`https://finnhub.io/api/v1/${path}`);
   Object.entries(params).forEach(([k, v]) => url.searchParams.append(k, v));
@@ -21,6 +25,12 @@ async function fetchFinnhub(path: string, params: Record<string, string>) {
 }
 
 export async function GET() {
+  const nowTime = Date.now();
+  if (cachedData && nowTime - cachedAt < 60000) {
+    console.log('[CACHE] Returning cached market summary');
+    return NextResponse.json(cachedData);
+  }
+
   // 환율 (open.er-api.com)
   let usdkrw: number | null = null;
   try {
@@ -69,5 +79,8 @@ export async function GET() {
     })
   );
 
-  return NextResponse.json({ usdkrw, indexes });
+  const result = { usdkrw, indexes };
+  cachedData = result;
+  cachedAt = nowTime;
+  return NextResponse.json(result);
 } 
