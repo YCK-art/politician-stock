@@ -35,8 +35,10 @@ export default function Home() {
         {/* 환율/지수 영역 */}
         <MarketSummary />
       </section>
-      {/* 오른쪽: 트렌딩 정치인 영역 */}
-      <TrendingPoliticians now={now} />
+      {/* 오른쪽: 트렌딩 정치인 영역 (PC에서만 보임) */}
+      <div className="hidden md:block">
+        <TrendingPoliticians now={now} />
+      </div>
     </main>
   );
 }

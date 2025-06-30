@@ -21,6 +21,8 @@ export default function Topbar() {
   const isPro = false; // true면 PRO, false면 FREE
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
+  const [showSettings, setShowSettings] = useState(false);
+  const [theme, setTheme] = useState<'system' | 'light' | 'dark'>('system');
 
   useEffect(() => {
     const unsub = onAuthStateChanged(auth, (u) => setUser(u));
@@ -65,7 +67,7 @@ export default function Topbar() {
           WHITEPICK
         </Link>
         {/* 메뉴 */}
-        <nav className="flex gap-8">
+        <nav className="hidden md:flex gap-8">
           {menus.map((menu) => (
             <Link
               key={menu.path}
@@ -111,7 +113,7 @@ export default function Topbar() {
               {/* 프로필 드롭다운 */}
               {dropdownOpen && (
                 <div className="profile-dropdown absolute right-0 top-14 w-40 bg-[#23272f] rounded-xl shadow-lg py-2 flex flex-col z-50 border border-white/10">
-                  <button className="px-4 py-2 text-left hover:bg-white/10 transition text-sm" onClick={() => { setDropdownOpen(false); alert('설정은 추후 구현됩니다.'); }}>설정</button>
+                  <button className="px-4 py-2 text-left hover:bg-white/10 transition text-sm" onClick={() => { setDropdownOpen(false); setShowSettings(true); }}>설정</button>
                   <button className="px-4 py-2 text-left hover:bg-white/10 transition text-sm" onClick={() => { setDropdownOpen(false); alert('계정전환은 추후 구현됩니다.'); }}>계정전환</button>
                   <button className="px-4 py-2 text-left hover:bg-white/10 transition text-sm text-red-400" onClick={() => { setDropdownOpen(false); setShowLogoutConfirm(true); }}>로그아웃</button>
                 </div>
@@ -152,6 +154,49 @@ export default function Topbar() {
             >
               닫기
             </button>
+          </div>
+        </div>,
+        document.body
+      )}
+      {/* 설정 모달 */}
+      {showSettings && typeof window !== "undefined" && createPortal(
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
+          <div className="bg-[#23272f] rounded-2xl p-8 min-w-[400px] max-w-full flex flex-col gap-6 shadow-2xl" style={{width: 440}}>
+            <div className="flex gap-8">
+              {/* 왼쪽 탭 */}
+              <nav className="flex flex-col gap-2 min-w-[120px]">
+                <button className="text-left px-4 py-2 rounded-lg bg-white/10 text-white font-bold">일반</button>
+                <button className="text-left px-4 py-2 rounded-lg text-gray-400 hover:bg-white/10">알림</button>
+                <button className="text-left px-4 py-2 rounded-lg text-gray-400 hover:bg-white/10">개인 맞춤 설정</button>
+                <button className="text-left px-4 py-2 rounded-lg text-gray-400 hover:bg-white/10">커넥터</button>
+                <button className="text-left px-4 py-2 rounded-lg text-gray-400 hover:bg-white/10">데이터 제어</button>
+                <button className="text-left px-4 py-2 rounded-lg text-gray-400 hover:bg-white/10">보안</button>
+                <button className="text-left px-4 py-2 rounded-lg text-gray-400 hover:bg-white/10">계정</button>
+              </nav>
+              {/* 오른쪽 내용 */}
+              <section className="flex-1 flex flex-col gap-6">
+                <div className="text-xl font-bold mb-2">설정</div>
+                <div className="flex flex-col gap-4">
+                  <div className="flex items-center gap-4">
+                    <span className="text-gray-400 min-w-[80px]">내 계정</span>
+                    <span className="text-white font-semibold">{user?.email}</span>
+                  </div>
+                  <div className="flex items-center gap-4">
+                    <span className="text-gray-400 min-w-[80px]">테마</span>
+                    <select
+                      className="bg-[#18171c] text-white px-4 py-2 rounded-lg border border-white/10 focus:outline-none"
+                      value={theme}
+                      onChange={e => setTheme(e.target.value as 'system' | 'light' | 'dark')}
+                    >
+                      <option value="system">시스템</option>
+                      <option value="light">라이트</option>
+                      <option value="dark">다크</option>
+                    </select>
+                  </div>
+                </div>
+              </section>
+            </div>
+            <button className="mt-2 text-xs text-gray-400 hover:text-white underline self-end" onClick={() => setShowSettings(false)}>닫기</button>
           </div>
         </div>,
         document.body
