@@ -65,7 +65,7 @@ export async function GET() {
         change = quote.percent_change ? Number(quote.percent_change) : null;
         if (candle && candle.values && Array.isArray(candle.values)) {
           // candle.values는 [{close, datetime, ...}, ...] (최신순)
-          history = candle.values.slice(-30).map((v: any) => Number(v.close));
+          history = candle.values.slice(-30).map((v: { close: string }) => Number(v.close));
         }
       } catch {}
       return {
