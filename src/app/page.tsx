@@ -1,6 +1,5 @@
 "use client";
 import { useEffect, useState } from "react";
-import Image from "next/image";
 import TrendingPoliticians from "../components/TrendingPoliticians";
 import MarketSummary from "../components/MarketSummary";
 
