@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 import { signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "firebase/auth";
 import { auth } from "../firebase";
 import { createPortal } from "react-dom";
+import type { User } from "firebase/auth";
 
 const menus = [
   { name: "홈", path: "/" },
@@ -15,7 +16,7 @@ const menus = [
 export default function Topbar() {
   const pathname = usePathname();
   const [showLogin, setShowLogin] = useState(false);
-  const [user, setUser] = useState<any>(null);
+  const [user, setUser] = useState<User | null>(null);
   // 임시: 유료 구독 여부 (실제 구현 시 DB/결제 연동)
   const isPro = false; // true면 PRO, false면 FREE
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -32,7 +33,7 @@ export default function Topbar() {
       await signInWithPopup(auth, new GoogleAuthProvider());
       setShowLogin(false);
       // 로그인 성공 후 추가 로직(예: 토스트, 리다이렉트 등) 필요시 여기에 작성
-    } catch (e) {
+    } catch {
       alert("구글 로그인에 실패했습니다.");
     }
   };

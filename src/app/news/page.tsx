@@ -16,7 +16,6 @@ const CATEGORIES = ["전체", "정치", "경제", "기술", "기업", "해외", 
 export default function NewsPage() {
   const [selected, setSelected] = useState("전체");
   const [visible, setVisible] = useState(8); // 처음 8개만 보임
-  const [dropdown, setDropdown] = useState(false);
 
   const filtered = selected === "전체" ? dummyNews : dummyNews.filter(n => n.title.includes(selected));
 

@@ -9,8 +9,17 @@ const INDEXES = [
   { name: "다우존스", symbol: "DIA", label: "DIA" },
 ];
 
+type IndexType = {
+  name: string;
+  symbol: string;
+  label: string;
+  price: number | null;
+  change: number | null;
+  history: number[];
+};
+
 // 60초 캐싱용 전역 변수
-let cachedData: any = null;
+let cachedData: { usdkrw: number | null; indexes: IndexType[] } | null = null;
 let cachedAt: number = 0;
 
 async function fetchFinnhub(path: string, params: Record<string, string>) {
