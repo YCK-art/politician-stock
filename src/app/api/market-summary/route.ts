@@ -1,8 +1,6 @@
 import { NextResponse } from "next/server";
 
-console.log("FINNHUB_API_KEY:", process.env.FINNHUB_API_KEY);
-
-const FINNHUB_KEY = process.env.FINNHUB_API_KEY;
+const TWELVE_KEY = "14564784e2874d0c9b4c5c8ef879bcef";
 const INDEXES = [
   { name: "S&P 500", symbol: "SPY", label: "SPY" },
   { name: "나스닥", symbol: "QQQ", label: "QQQ" },
@@ -18,25 +16,32 @@ type IndexType = {
   history: number[];
 };
 
-// 60초 캐싱용 전역 변수
+// 5분(300초) 캐싱용 전역 변수
 let cachedData: { usdkrw: number | null; indexes: IndexType[] } | null = null;
 let cachedAt: number = 0;
 
-async function fetchFinnhub(path: string, params: Record<string, string>) {
-  const url = new URL(`https://finnhub.io/api/v1/${path}`);
-  Object.entries(params).forEach(([k, v]) => url.searchParams.append(k, v));
-  url.searchParams.append("token", FINNHUB_KEY!);
-  console.log("[Finnhub fetch]", url.toString());
-  const res = await fetch(url.toString());
-  const json = await res.json();
-  console.log("[Finnhub response]", path, json);
-  return json;
+async function fetchTwelveData(symbol: string) {
+  // 실시간 가격/변동률
+  const quoteUrl = `https://api.twelvedata.com/quote?symbol=${symbol}&apikey=${TWELVE_KEY}`;
+  // 5분봉 캔들 (최근 2일)
+  const now = new Date();
+  const from = new Date(now.getTime() - 1000 * 60 * 60 * 24 * 2);
+  const fromStr = from.toISOString().slice(0, 19);
+  const toStr = now.toISOString().slice(0, 19);
+  const candleUrl = `https://api.twelvedata.com/time_series?symbol=${symbol}&interval=5min&start_date=${fromStr}&end_date=${toStr}&apikey=${TWELVE_KEY}`;
+
+  const [quoteRes, candleRes] = await Promise.all([
+    fetch(quoteUrl),
+    fetch(candleUrl),
+  ]);
+  const quote = await quoteRes.json();
+  const candle = await candleRes.json();
+  return { quote, candle };
 }
 
 export async function GET() {
   const nowTime = Date.now();
-  if (cachedData && nowTime - cachedAt < 60000) {
-    console.log('[CACHE] Returning cached market summary');
+  if (cachedData && nowTime - cachedAt < 300000) { // 5분 캐싱
     return NextResponse.json(cachedData);
   }
 
@@ -45,38 +50,24 @@ export async function GET() {
   try {
     const fxRes = await fetch("https://open.er-api.com/v6/latest/USD");
     const fxData = await fxRes.json();
-    console.log("[FX response]", fxData);
     usdkrw = fxData.rates.KRW;
-  } catch (e) {
-    console.log("[FX error]", e);
-  }
+  } catch (e) {}
 
-  // 3대 지수 (실시간 가격 + 그래프용 캔들)
-  const now = Math.floor(Date.now() / 1000);
-  const from = now - 60 * 60 * 24 * 2; // 최근 2일치 (5분봉)
+  // 3대 지수 (Twelve Data)
   const indexes = await Promise.all(
     INDEXES.map(async (idx) => {
       let price: number | null = null;
       let change: number | null = null;
       let history: number[] = [];
       try {
-        // 실시간 가격
-        const quote = await fetchFinnhub("quote", { symbol: idx.symbol });
-        price = quote.c ?? null;
-        change = quote.dp ?? null;
-        // 캔들(그래프)
-        const candle = await fetchFinnhub("stock/candle", {
-          symbol: idx.symbol,
-          resolution: "5",
-          from: from.toString(),
-          to: now.toString(),
-        });
-        if (candle && candle.c && Array.isArray(candle.c)) {
-          history = candle.c.slice(-30);
+        const { quote, candle } = await fetchTwelveData(idx.symbol);
+        price = quote.close ? Number(quote.close) : null;
+        change = quote.percent_change ? Number(quote.percent_change) : null;
+        if (candle && candle.values && Array.isArray(candle.values)) {
+          // candle.values는 [{close, datetime, ...}, ...] (최신순)
+          history = candle.values.slice(-30).map((v: any) => Number(v.close));
         }
-      } catch (e) {
-        console.log(`[Index error] ${idx.name}`, e);
-      }
+      } catch {}
       return {
         name: idx.name,
         symbol: idx.symbol,
