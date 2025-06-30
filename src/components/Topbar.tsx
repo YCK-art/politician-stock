@@ -2,7 +2,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
-import { signInWithPopup, GoogleAuthProvider, onAuthStateChanged } from "firebase/auth";
+import { signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "firebase/auth";
 import { auth } from "../firebase";
 import { createPortal } from "react-dom";
 
@@ -18,6 +18,8 @@ export default function Topbar() {
   const [user, setUser] = useState<any>(null);
   // 임시: 유료 구독 여부 (실제 구현 시 DB/결제 연동)
   const isPro = false; // true면 PRO, false면 FREE
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
 
   useEffect(() => {
     const unsub = onAuthStateChanged(auth, (u) => setUser(u));
@@ -34,6 +36,25 @@ export default function Topbar() {
       alert("구글 로그인에 실패했습니다.");
     }
   };
+
+  // 로그아웃 핸들러
+  const handleLogout = async () => {
+    await signOut(auth);
+    setDropdownOpen(false);
+    setShowLogoutConfirm(false);
+  };
+
+  // 드롭다운 외부 클릭 시 닫기
+  useEffect(() => {
+    if (!dropdownOpen) return;
+    const onClick = (e: MouseEvent) => {
+      if (!(e.target as HTMLElement).closest(".profile-dropdown")) {
+        setDropdownOpen(false);
+      }
+    };
+    window.addEventListener("mousedown", onClick);
+    return () => window.removeEventListener("mousedown", onClick);
+  }, [dropdownOpen]);
 
   return (
     <>
@@ -73,17 +94,27 @@ export default function Topbar() {
             </button>
           ) : (
             <div className="relative flex items-center">
-              {user.photoURL ? (
-                <img src={user.photoURL} alt="프로필" className="w-10 h-10 rounded-full border-2 border-white shadow object-cover" />
-              ) : (
-                <div className="w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center text-white font-bold text-lg border-2 border-white shadow">
-                  {user.displayName ? user.displayName[0] : user.email[0]}
+              <div className="cursor-pointer" onClick={() => setDropdownOpen((v) => !v)}>
+                {user.photoURL ? (
+                  <img src={user.photoURL} alt="프로필" className="w-10 h-10 rounded-full border-2 border-white shadow object-cover" />
+                ) : (
+                  <div className="w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center text-white font-bold text-lg border-2 border-white shadow">
+                    {user.displayName ? user.displayName[0] : user.email[0]}
+                  </div>
+                )}
+                <span className={`absolute left-1/2 -translate-x-1/2 top-9 px-3 py-1 rounded-full text-xs font-bold whitespace-nowrap ${isPro ? "bg-black text-white border border-white" : "bg-white text-black"} font-[Pretendard]`}
+                  style={{ minWidth: 44, textAlign: 'center', fontFamily: 'Pretendard, sans-serif' }}>
+                  {isPro ? "PRO" : "FREE"}
+                </span>
+              </div>
+              {/* 프로필 드롭다운 */}
+              {dropdownOpen && (
+                <div className="profile-dropdown absolute right-0 top-14 w-40 bg-[#23272f] rounded-xl shadow-lg py-2 flex flex-col z-50 border border-white/10">
+                  <button className="px-4 py-2 text-left hover:bg-white/10 transition text-sm" onClick={() => { setDropdownOpen(false); alert('설정은 추후 구현됩니다.'); }}>설정</button>
+                  <button className="px-4 py-2 text-left hover:bg-white/10 transition text-sm" onClick={() => { setDropdownOpen(false); alert('계정전환은 추후 구현됩니다.'); }}>계정전환</button>
+                  <button className="px-4 py-2 text-left hover:bg-white/10 transition text-sm text-red-400" onClick={() => { setDropdownOpen(false); setShowLogoutConfirm(true); }}>로그아웃</button>
                 </div>
               )}
-              <span className={`absolute left-1/2 -translate-x-1/2 top-9 px-3 py-1 rounded-full text-xs font-bold whitespace-nowrap ${isPro ? "bg-black text-white border border-white" : "bg-white text-black"} font-[Pretendard]`}
-                style={{ minWidth: 44, textAlign: 'center', fontFamily: 'Pretendard, sans-serif' }}>
-                {isPro ? "PRO" : "FREE"}
-              </span>
             </div>
           )}
         </div>
@@ -120,6 +151,19 @@ export default function Topbar() {
             >
               닫기
             </button>
+          </div>
+        </div>,
+        document.body
+      )}
+      {/* 로그아웃 확인 모달 */}
+      {showLogoutConfirm && typeof window !== "undefined" && createPortal(
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
+          <div className="bg-[#23272f] rounded-2xl p-8 min-w-[320px] flex flex-col items-center gap-6 shadow-2xl">
+            <div className="text-lg font-bold mb-2">정말 로그아웃 하시겠습니까?</div>
+            <div className="flex gap-4 w-full justify-center">
+              <button className="px-6 py-2 rounded-lg bg-white text-black font-bold hover:bg-gray-200 transition" onClick={handleLogout}>로그아웃</button>
+              <button className="px-6 py-2 rounded-lg bg-gray-100 text-gray-600 font-bold hover:bg-gray-200 transition" onClick={() => setShowLogoutConfirm(false)}>취소</button>
+            </div>
           </div>
         </div>,
         document.body
