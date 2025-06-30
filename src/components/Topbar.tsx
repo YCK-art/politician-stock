@@ -100,7 +100,7 @@ export default function Topbar() {
                   <img src={user.photoURL} alt="프로필" className="w-10 h-10 rounded-full border-2 border-white shadow object-cover" />
                 ) : (
                   <div className="w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center text-white font-bold text-lg border-2 border-white shadow">
-                    {user.displayName ? user.displayName[0] : user.email[0]}
+                    {user.displayName ? user.displayName[0] : user.email ? user.email[0] : "?"}
                   </div>
                 )}
                 <span className={`absolute left-1/2 -translate-x-1/2 top-9 px-3 py-1 rounded-full text-xs font-bold whitespace-nowrap ${isPro ? "bg-black text-white border border-white" : "bg-white text-black"} font-[Pretendard]`}
