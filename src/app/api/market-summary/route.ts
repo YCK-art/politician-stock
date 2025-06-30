@@ -39,9 +39,9 @@ export async function GET() {
         const histData = await fetchAlphaVantage(
           `https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=${encodeURIComponent(idx.symbol)}&interval=5min&outputsize=compact&apikey=${ALPHA_KEY}`
         );
-        const series = histData["Time Series (5min)"] || {};
+        const series = histData["Time Series (5min)"] as Record<string, { "4. close": string }> || {};
         history = Object.values(series)
-          .map((v: any) => parseFloat(v["4. close"]))
+          .map((v) => parseFloat(v["4. close"]))
           .filter((v) => !isNaN(v))
           .slice(0, 30)
           .reverse();
