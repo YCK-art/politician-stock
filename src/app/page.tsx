@@ -1,103 +1,43 @@
+"use client";
+import { useEffect, useState } from "react";
 import Image from "next/image";
+import TrendingPoliticians from "../components/TrendingPoliticians";
+import MarketSummary from "../components/MarketSummary";
 
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+  // 실시간 KST 시계
+  const [now, setNow] = useState("");
+  useEffect(() => {
+    const update = () => {
+      const date = new Date();
+      // KST 변환
+      const kst = new Date(date.getTime() + 9 * 60 * 60 * 1000);
+      const hh = String(kst.getUTCHours()).padStart(2, "0");
+      const mm = String(kst.getUTCMinutes()).padStart(2, "0");
+      const ss = String(kst.getUTCSeconds()).padStart(2, "0");
+      setNow(`${hh}:${mm}:${ss}`);
+    };
+    update();
+    const timer = setInterval(update, 1000);
+    return () => clearInterval(timer);
+  }, []);
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+  return (
+    <main className="relative min-h-screen w-full flex items-center justify-center bg-black/80 pt-24 pb-12">
+      {/* 왼쪽: 타이틀/설명/검색/환율/지수 */}
+      <section className="flex flex-col gap-6 w-[480px] max-w-full text-white">
+        <h1 className="text-3xl font-extrabold drop-shadow-lg">백악관 내부자의 주식을 꿰뚫어 본다</h1>
+        <p className="text-base text-gray-300">미국 정치인들의 내부정보, 가장 빠르게 전달합니다</p>
+        <input
+          type="text"
+          placeholder="🔍 정치인 이름 또는 종목명을 검색하세요"
+          className="bg-[#222c] text-white px-5 py-3 rounded-lg w-full outline-none placeholder:text-gray-400 border border-transparent focus:border-white/40 transition"
+        />
+        {/* 환율/지수 영역 */}
+        <MarketSummary />
+      </section>
+      {/* 오른쪽: 트렌딩 정치인 영역 */}
+      <TrendingPoliticians now={now} />
+    </main>
   );
 }
