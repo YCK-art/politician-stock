@@ -1,12 +1,12 @@
 import { NextResponse } from "next/server";
 
-async function fetchWithTimeout(resource: RequestInfo, options: any = {}) {
-  const { timeout = 5000 } = options;
+async function fetchWithTimeout(resource: RequestInfo, options: RequestInit & { timeout?: number } = {}) {
+  const { timeout = 5000, ...rest } = options;
   const controller = new AbortController();
   const id = setTimeout(() => controller.abort(), timeout);
   try {
     const response = await fetch(resource, {
-      ...options,
+      ...rest,
       signal: controller.signal,
     });
     clearTimeout(id);
