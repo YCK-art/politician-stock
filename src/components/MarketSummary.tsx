@@ -58,6 +58,22 @@ export default function MarketSummary() {
               <span className="text-xs text-gray-400">{idx.name}</span>
               <span className="text-lg font-bold mt-1">{idx.price !== null ? idx.price.toLocaleString() : "-"}</span>
               <span className={`text-sm mt-1 ${idx.color}`}>{idx.change !== null ? (idx.change > 0 ? `▲${idx.change.toFixed(2)}%` : `▼${Math.abs(idx.change).toFixed(2)}%`) : "-"}</span>
+              {idx.history && idx.history.length > 1 && (
+                <svg width="100%" height="32" viewBox="0 0 100 32" preserveAspectRatio="none" className="mt-2">
+                  <polyline
+                    fill="none"
+                    stroke={idx.change !== null && idx.change < 0 ? '#ef4444' : '#60a5fa'}
+                    strokeWidth="2"
+                    points={idx.history.map((v, i, arr) => {
+                      const x = (i / (arr.length - 1)) * 100;
+                      const min = Math.min(...arr);
+                      const max = Math.max(...arr);
+                      const y = max === min ? 16 : 32 - ((v - min) / (max - min)) * 32;
+                      return `${x},${y}`;
+                    }).join(' ')}
+                  />
+                </svg>
+              )}
             </div>
           ))
         ) : (

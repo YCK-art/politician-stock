@@ -1,53 +1,60 @@
 import { NextResponse } from "next/server";
 
-async function fetchWithTimeout(resource: RequestInfo, options: RequestInit & { timeout?: number } = {}) {
-  const { timeout = 5000, ...rest } = options;
-  const controller = new AbortController();
-  const id = setTimeout(() => controller.abort(), timeout);
-  try {
-    const response = await fetch(resource, {
-      ...rest,
-      signal: controller.signal,
-    });
-    clearTimeout(id);
-    return response;
-  } catch {
-    clearTimeout(id);
-    throw new Error("Timeout or fetch error");
-  }
+const ALPHA_KEY = process.env.ALPHA_VANTAGE_KEY;
+const INDEXES = [
+  { name: "S&P 500", symbol: "^GSPC" },
+  { name: "나스닥", symbol: "^IXIC" },
+  { name: "다우존스", symbol: "^DJI" },
+];
+
+async function fetchAlphaVantage(url: string) {
+  const res = await fetch(url);
+  return res.json();
 }
 
 export async function GET() {
   // 환율
   let usdkrw: number | null = null;
   try {
-    const fxRes = await fetchWithTimeout("https://api.exchangerate.host/latest?base=USD&symbols=KRW");
-    const fxData = await fxRes.json();
-    usdkrw = fxData.rates.KRW;
-  } catch {}
-
-  // 3대 지수
-  let indexes: { symbol: string; price: number | null; change: number | null }[] = [];
-  try {
-    const symbols = ["^GSPC", "^IXIC", "^DJI"];
-    const idxRes = await fetchWithTimeout(
-      `https://query1.finance.yahoo.com/v7/finance/quote?symbols=${symbols.join(",")}`,
-      {
-        headers: {
-          "User-Agent": "Mozilla/5.0 (compatible; PoliticianStockBot/1.0)"
-        },
-      }
+    const fxData = await fetchAlphaVantage(
+      `https://www.alphavantage.co/query?function=CURRENCY_EXCHANGE_RATE&from_currency=USD&to_currency=KRW&apikey=${ALPHA_KEY}`
     );
-    const idxData = await idxRes.json();
-    indexes = idxData.quoteResponse.result.map((item: Record<string, unknown>) => ({
-      symbol: String(item.symbol),
-      price: typeof item.regularMarketPrice === "number" ? item.regularMarketPrice : null,
-      change: typeof item.regularMarketChangePercent === "number" ? item.regularMarketChangePercent : null,
-    }));
+    usdkrw = parseFloat(fxData["Realtime Currency Exchange Rate"]["5. Exchange Rate"]);
   } catch {}
 
-  if (!usdkrw && indexes.length === 0) {
-    return NextResponse.json({ usdkrw: null, indexes: [] });
-  }
+  // 3대 지수 (현재가 + 그래프용 데이터)
+  const indexes = await Promise.all(
+    INDEXES.map(async (idx) => {
+      let price: number | null = null;
+      let change: number | null = null;
+      let history: number[] = [];
+      try {
+        // 현재가 및 변동률
+        const quoteData = await fetchAlphaVantage(
+          `https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${encodeURIComponent(idx.symbol)}&apikey=${ALPHA_KEY}`
+        );
+        price = parseFloat(quoteData["Global Quote"]["05. price"]);
+        change = parseFloat(quoteData["Global Quote"]["10. change percent"]?.replace("%", "") ?? "0");
+        // 최근 30개 데이터 (5분봉)
+        const histData = await fetchAlphaVantage(
+          `https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=${encodeURIComponent(idx.symbol)}&interval=5min&outputsize=compact&apikey=${ALPHA_KEY}`
+        );
+        const series = histData["Time Series (5min)"] || {};
+        history = Object.values(series)
+          .map((v: any) => parseFloat(v["4. close"]))
+          .filter((v) => !isNaN(v))
+          .slice(0, 30)
+          .reverse();
+      } catch {}
+      return {
+        name: idx.name,
+        symbol: idx.symbol,
+        price,
+        change,
+        history,
+      };
+    })
+  );
+
   return NextResponse.json({ usdkrw, indexes });
 } 
