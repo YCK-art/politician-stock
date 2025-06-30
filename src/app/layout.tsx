@@ -31,7 +31,6 @@ export default function RootLayout({
       >
         <Topbar />
         {children}
-        <div style={{position: 'fixed', left: 0, right: 0, bottom: 0, height: '120px', background: 'rgba(0,0,0,0.8)', zIndex: 20, pointerEvents: 'none'}} />
         <Footer />
       </body>
     </html>
