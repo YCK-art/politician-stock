@@ -46,6 +46,19 @@ interface Trade {
   return: string;
 }
 
+// QuiverTrade 타입 정의 추가
+interface QuiverTrade {
+  Ticker: string;
+  Company?: string;
+  TickerType: string;
+  Transaction: string;
+  Trade_Size_USD?: string;
+  Filed?: string;
+  Traded?: string;
+  Description?: string;
+  excess_return?: string;
+}
+
 export default function PoliticianDetailPage() {
   const params = useParams();
   const name = (params.name as string) || "nancy-pelosi";
@@ -63,7 +76,7 @@ export default function PoliticianDetailPage() {
         const data = await res.json();
         if (data.items && Array.isArray(data.items) && data.items.length > 0) {
           // 필드명 변환
-          const mapped = data.items.map((t: any) => ({
+          const mapped = data.items.map((t: QuiverTrade) => ({
             stock: t.Ticker,
             name: t.Company || "",
             type: t.TickerType === "ST" ? "주식" : "옵션",
