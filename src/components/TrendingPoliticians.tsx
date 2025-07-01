@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
+import Link from "next/link";
 
 interface TrendingPoliticiansProps {
   now: string; // 'hh:mm:ss' 형식
@@ -79,11 +80,13 @@ export default function TrendingPoliticians({ now }: TrendingPoliticiansProps) {
       <div className="text-lg font-bold mb-2">트렌딩 정치인 <span className="text-xs text-gray-400">{baseTime} 기준</span></div>
       <ol className="flex flex-col gap-2">
         {politicians.map((p, i) => (
-          <li
-            key={p.en}
-            className={`flex items-center gap-2 text-white/90 font-semibold ${active === i ? "bg-white/10 rounded-lg px-2 py-1" : ""}`}
-          >
-            {i + 1}. {p.name} <span className="text-xs text-gray-400">{p.en} · {p.party}</span>
+          <li key={p.en} className="list-none">
+            <Link
+              href={`/politician/${p.en.toLowerCase().replace(/ /g, "-")}`}
+              className={`flex items-center gap-2 text-white/90 font-semibold ${active === i ? "bg-white/10" : ""} rounded-lg px-2 py-1 hover:bg-white/20 transition cursor-pointer`}
+            >
+              {i + 1}. {p.name} <span className="text-xs text-gray-400">{p.en} · {p.party}</span>
+            </Link>
           </li>
         ))}
       </ol>

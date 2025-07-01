@@ -1,24 +1,55 @@
 import { NextResponse } from "next/server";
-import Parser from "rss-parser";
 
-const RSS_URL = "https://news.naver.com/main/list.naver?mode=LSD&mid=sec&sid1=101&listType=paper";
+const API_KEY = process.env.FMP_API_KEY;
+const BASE_URL = "https://financialmodelingprep.com/api/v3/stock_news";
+
+// 주요 주제: 미국경제, 미국주식, 미국정치인
+const TOPICS = [
+  "us economy",
+  "us stock",
+  "us equities",
+  "us finance",
+  "us politician",
+  "congress",
+  "senator",
+  "representative",
+  "white house"
+];
 
 export async function GET() {
-  const parser = new Parser();
-  let items = [];
-  try {
-    const feed = await parser.parseURL(RSS_URL);
-    items = feed.items.map(item => ({
-      title: item.title,
-      link: item.link,
-      pubDate: item.pubDate,
-      summary: item.contentSnippet || item.content || "",
-      // 썸네일 추출 (네이버 RSS는 media:thumbnail 또는 description에 img 태그가 있을 수 있음)
-      thumbnail: item.enclosure?.url || (item.content && item.content.match(/src=['"](https?:\/\/[^'"]+)['"]/i)?.[1]) || null,
-      source: feed.title,
-    }));
-  } catch (e) {
-    return NextResponse.json({ error: "RSS 파싱 실패", detail: String(e) }, { status: 500 });
+  if (!API_KEY) {
+    return NextResponse.json({ error: "API 키가 설정되지 않았습니다." }, { status: 500 });
   }
-  return NextResponse.json({ items });
+  // 미국 대표 주식 심볼로 뉴스 요청 (AAPL, MSFT, GOOG)
+  const url = `${BASE_URL}?tickers=AAPL,MSFT,GOOG&limit=10&apikey=${API_KEY}`;
+  try {
+    const res = await fetch(url);
+    const data = await res.json();
+    // 응답 전체 콘솔 출력
+    console.log('FMP API 응답:', JSON.stringify(data, null, 2));
+    // 필요한 필드만 추출
+    const items = (data as unknown[]).map((item) => {
+      const it = item as {
+        title: string;
+        text: string;
+        url: string;
+        publishedDate: string;
+        site: string;
+        image: string;
+        symbol?: string;
+      };
+      return {
+        title: it.title,
+        summary: it.text,
+        url: it.url,
+        published_at: it.publishedDate,
+        source: it.site,
+        image: it.image || null,
+      };
+    });
+    return NextResponse.json({ items });
+  } catch (e: unknown) {
+    const msg = e instanceof Error ? e.message : String(e);
+    return NextResponse.json({ error: "FMP API fetch 실패", detail: msg }, { status: 500 });
+  }
 } 

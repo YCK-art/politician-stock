@@ -1,23 +1,39 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
-// 더미 뉴스 데이터
-const dummyNews = Array.from({ length: 20 }).map((_, i) => ({
-  id: i + 1,
-  title: `뉴스 제목 예시 ${i + 1}`,
-  summary: `이곳에 뉴스 요약 또는 부제목이 들어갑니다. (예시 ${i + 1})`,
-  source: "연합뉴스",
-  time: `${2 + i}시간 전`,
-  image: `https://source.unsplash.com/400x240/?finance,stock,news&sig=${i}`,
-}));
+const CATEGORIES = ["전체"];
 
-const CATEGORIES = ["전체", "정치", "경제", "기술", "기업", "해외", "증시"];
+interface NewsItem {
+  title: string;
+  summary: string;
+  url: string;
+  published_at: string;
+  source: string;
+  image: string | null;
+}
 
 export default function NewsPage() {
   const [selected, setSelected] = useState("전체");
   const [visible, setVisible] = useState(8); // 처음 8개만 보임
+  const [news, setNews] = useState<NewsItem[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
-  const filtered = selected === "전체" ? dummyNews : dummyNews.filter(n => n.title.includes(selected));
+  useEffect(() => {
+    setLoading(true);
+    fetch("/api/news")
+      .then(res => res.json())
+      .then(data => {
+        setNews(data.items || []);
+        setLoading(false);
+      })
+      .catch(() => {
+        setError("뉴스를 불러오지 못했습니다.");
+        setLoading(false);
+      });
+  }, []);
+
+  const filtered = news; // 카테고리 확장 시 필터링
 
   return (
     <main className="min-h-screen w-full bg-[#18171c] text-white flex flex-col items-center pt-20 pb-16">
@@ -38,9 +54,11 @@ export default function NewsPage() {
       </div>
       {/* 뉴스 리스트 */}
       <section className="w-full max-w-3xl px-4 flex flex-col gap-6">
-        {filtered.slice(0, visible).map(news => (
-          <article key={news.id} className="flex gap-4 bg-[#23272f] rounded-xl overflow-hidden shadow-md hover:scale-[1.01] transition-transform cursor-pointer">
-            <img src={news.image} alt="뉴스 이미지" className="w-40 h-28 object-cover flex-shrink-0" />
+        {loading && <div className="text-center text-gray-400 py-12">뉴스를 불러오는 중입니다...</div>}
+        {error && <div className="text-center text-red-400 py-12">{error}</div>}
+        {!loading && !error && filtered.slice(0, visible).map((news, i) => (
+          <a key={i} href={news.url} target="_blank" rel="noopener noreferrer" className="flex gap-4 bg-[#23272f] rounded-xl overflow-hidden shadow-md hover:scale-[1.01] transition-transform cursor-pointer">
+            <img src={news.image || "/vercel.svg"} alt="뉴스 이미지" className="w-40 h-28 object-cover flex-shrink-0 bg-black/30" />
             <div className="flex flex-col justify-between py-3 pr-3 flex-1">
               <div>
                 <h2 className="text-lg font-bold mb-1 line-clamp-2">{news.title}</h2>
@@ -49,13 +67,13 @@ export default function NewsPage() {
               <div className="flex items-center gap-2 mt-2 text-xs text-gray-500">
                 <span>{news.source}</span>
                 <span>·</span>
-                <span>{news.time}</span>
+                <span>{news.published_at ? new Date(news.published_at).toLocaleString("ko-KR", { hour12: false }) : ""}</span>
               </div>
             </div>
-          </article>
+          </a>
         ))}
         {/* 더보기 드롭다운 */}
-        {visible < filtered.length && (
+        {!loading && !error && visible < filtered.length && (
           <div className="flex justify-center mt-4">
             <button
               className="px-6 py-2 bg-[#23272f] rounded-full text-gray-300 hover:bg-white/10 transition text-sm font-semibold flex items-center gap-2"
