@@ -33,6 +33,19 @@ const TABS = [
   { label: "입법안", key: "bills" },
 ];
 
+// Trade 타입 정의 추가
+interface Trade {
+  stock: string;
+  name: string;
+  type: string;
+  transaction: string;
+  amount: string;
+  filed: string;
+  traded: string;
+  desc: string;
+  return: string;
+}
+
 export default function PoliticianDetailPage() {
   const params = useParams();
   const name = (params.name as string) || "nancy-pelosi";
@@ -40,7 +53,7 @@ export default function PoliticianDetailPage() {
   const [sortField, setSortField] = useState<'filed'|'traded'|null>(null);
   const [sortDir, setSortDir] = useState<'asc'|'desc'>('desc');
   const [showReturnInfo, setShowReturnInfo] = useState(false);
-  const [trades, setTrades] = useState<any[]>(p.trades);
+  const [trades, setTrades] = useState<Trade[]>(p.trades);
 
   // Quiver API 연동: 낸시 펠로시 거래내역 fetch
   useEffect(() => {
@@ -73,7 +86,7 @@ export default function PoliticianDetailPage() {
   }, [name]);
 
   // 정렬 함수
-  function getSortedTrades(trades: any[]) {
+  function getSortedTrades(trades: Trade[]) {
     if (!sortField) return trades;
     return [...trades].sort((a, b) => {
       const aVal = a[sortField];
@@ -216,7 +229,7 @@ export default function PoliticianDetailPage() {
                     </tr>
                   </thead>
                   <tbody>
-                    {sortedTrades.map((t: any, i: number) => {
+                    {sortedTrades.map((t: Trade, i: number) => {
                       const isPlus = t.return.startsWith("+");
                       const isMinus = t.return.startsWith("-");
                       return (

@@ -3,19 +3,6 @@ import { NextResponse } from "next/server";
 const API_KEY = process.env.FMP_API_KEY;
 const BASE_URL = "https://financialmodelingprep.com/api/v3/stock_news";
 
-// 주요 주제: 미국경제, 미국주식, 미국정치인
-const TOPICS = [
-  "us economy",
-  "us stock",
-  "us equities",
-  "us finance",
-  "us politician",
-  "congress",
-  "senator",
-  "representative",
-  "white house"
-];
-
 export async function GET() {
   if (!API_KEY) {
     return NextResponse.json({ error: "API 키가 설정되지 않았습니다." }, { status: 500 });
