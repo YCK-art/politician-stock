@@ -2,8 +2,50 @@
 import { useParams } from "next/navigation";
 import { useState, useEffect } from "react";
 
+// Trade 타입 정의 추가
+interface Trade {
+  stock: string;
+  name: string;
+  type: string;
+  transaction: string;
+  amount: string;
+  filed: string;
+  traded: string;
+  desc: string;
+  return: string;
+}
+
+// QuiverTrade 타입 정의 추가
+interface QuiverTrade {
+  Ticker: string;
+  Company?: string;
+  TickerType: string;
+  Transaction: string;
+  Trade_Size_USD?: string;
+  Filed?: string;
+  Traded?: string;
+  Description?: string;
+  excess_return?: string;
+}
+
+// Politician 타입 정의 추가
+interface Politician {
+  name: string;
+  en: string;
+  party: string;
+  netWorth: string;
+  tradeVolume: string;
+  totalTrades: number;
+  lastTraded: string;
+  currentMember: boolean;
+  yearsActive: string;
+  age: number;
+  profile: string;
+  trades: Trade[];
+}
+
 // 더미 정치인 데이터 (실제 구현 시 DB/API 연동)
-const POLITICIANS: Record<string, any> = {
+const POLITICIANS: Record<string, Politician> = {
   "nancy-pelosi": {
     name: "낸시 펠로시",
     en: "Nancy Pelosi",
@@ -32,32 +74,6 @@ const TABS = [
   { label: "후원자", key: "donors" },
   { label: "입법안", key: "bills" },
 ];
-
-// Trade 타입 정의 추가
-interface Trade {
-  stock: string;
-  name: string;
-  type: string;
-  transaction: string;
-  amount: string;
-  filed: string;
-  traded: string;
-  desc: string;
-  return: string;
-}
-
-// QuiverTrade 타입 정의 추가
-interface QuiverTrade {
-  Ticker: string;
-  Company?: string;
-  TickerType: string;
-  Transaction: string;
-  Trade_Size_USD?: string;
-  Filed?: string;
-  Traded?: string;
-  Description?: string;
-  excess_return?: string;
-}
 
 export default function PoliticianDetailPage() {
   const params = useParams();
