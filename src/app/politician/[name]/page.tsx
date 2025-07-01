@@ -75,6 +75,18 @@ const TABS = [
   { label: "입법안", key: "bills" },
 ];
 
+// 설명 줄바꿈 및 글자수 제한 함수 추가
+function formatDesc(desc: string) {
+  if (desc.length <= 15) return desc;
+  if (desc.length <= 30) return desc.slice(0, 15) + "\n" + desc.slice(15, 30);
+  return desc.slice(0, 15) + "\n" + desc.slice(15, 30) + "...";
+}
+
+// 회사명 10자 제한 함수 추가
+function formatCompany(name: string) {
+  return name.length > 10 ? name.slice(0, 10) + "..." : name;
+}
+
 export default function PoliticianDetailPage() {
   const params = useParams();
   const name = (params.name as string) || "nancy-pelosi";
@@ -131,7 +143,7 @@ export default function PoliticianDetailPage() {
       <div className="w-full max-w-7xl flex flex-col gap-8">
         <div className="flex flex-col md:flex-row gap-8">
           {/* 좌측: 프로필/요약/전략 */}
-          <section className="w-full md:w-80 flex flex-col gap-6">
+          <section className="w-full md:w-[320px] flex flex-col gap-6">
             {/* 프로필 카드 */}
             <div className="bg-[#23272f] rounded-2xl p-7 shadow-lg flex flex-col items-center gap-3 border border-[#23272f]">
               <img src={p.profile} alt={p.name} className="w-28 h-28 rounded-full border-4 border-[#23272f] object-cover mb-2 shadow" />
@@ -172,7 +184,7 @@ export default function PoliticianDetailPage() {
               ))}
             </nav>
             {/* 거래 차트/섹터 */}
-            <div className="bg-[#23272f] rounded-2xl p-7 shadow-lg mb-4 min-h-[220px] flex flex-col gap-2 border border-[#23272f]">
+            <div className="bg-[#23272f] rounded-2xl p-7 shadow-lg mb-4 min-h-[220px] flex flex-col gap-2 border border-[#23272f] max-w-[900px]">
               <div className="flex justify-between items-center mb-2">
                 <div className="text-xl font-bold text-white">연도별 거래량</div>
                 <div className="flex gap-4 text-sm text-gray-400">
@@ -198,13 +210,13 @@ export default function PoliticianDetailPage() {
               </div>
             </div>
             {/* 거래내역 테이블 */}
-            <div className="bg-[#23272f] rounded-2xl p-7 shadow-lg border border-[#23272f]">
+            <div className="bg-[#23272f] rounded-2xl p-7 shadow-lg border border-[#23272f] max-w-[900px]">
               <div className="text-xl font-bold mb-2 text-white">거래내역</div>
               <div className="overflow-visible">
                 <table className="min-w-full text-sm">
                   <thead>
                     <tr className="text-gray-400 border-b border-[#23272f]">
-                      <th className="px-4 py-2 min-w-[120px] whitespace-nowrap">종목</th>
+                      <th className="px-1 py-2 min-w-[40px] w-[60px] max-w-[70px] whitespace-nowrap">종목</th>
                       <th className="px-4 py-2 min-w-[80px] whitespace-nowrap">구분</th>
                       <th className="px-4 py-2 min-w-[120px] whitespace-nowrap">금액</th>
                       <th className="px-4 py-2 min-w-[110px] whitespace-nowrap cursor-pointer select-none" onClick={() => {
@@ -263,14 +275,12 @@ export default function PoliticianDetailPage() {
                       const isMinus = t.return.startsWith("-");
                       return (
                         <tr key={i} className="border-b border-[#23272f] hover:bg-[#23272f]/60 transition">
-                          <td className="px-4 py-2 font-bold text-white min-w-[120px] whitespace-nowrap">
-                            <div className="flex items-center gap-3">
-                              <img src={`https://financialmodelingprep.com/image-stock/${t.stock}.png`} alt={t.stock} className="w-8 h-8 rounded bg-white" />
-                              <div className="flex flex-col justify-center">
-                                <span className="text-base font-bold text-[#60a5fa] leading-tight">{t.stock}</span>
-                                <span className="text-xs text-gray-300 leading-tight">{t.name}</span>
-                                <span className="text-xs text-gray-400 leading-tight mt-0.5">{t.type}</span>
-                              </div>
+                          <td className="px-1 py-2 font-bold text-white min-w-[40px] w-[60px] max-w-[70px] whitespace-nowrap">
+                            <div className="flex flex-col items-center gap-1">
+                              <img src={`https://financialmodelingprep.com/image-stock/${t.stock}.png`} alt={t.stock} className="w-7 h-7 rounded bg-white" />
+                              <span className="text-xs font-bold text-[#60a5fa] leading-tight">{t.stock}</span>
+                              <span className="text-[10px] text-gray-300 leading-tight">{formatCompany(t.name)}</span>
+                              <span className="text-[10px] text-gray-400 leading-tight">{t.type}</span>
                             </div>
                           </td>
                           <td
@@ -285,7 +295,7 @@ export default function PoliticianDetailPage() {
                           <td className="px-4 py-2 min-w-[120px] whitespace-nowrap text-white">{t.amount}</td>
                           <td className="px-4 py-2 min-w-[110px] whitespace-nowrap text-white">{t.filed}</td>
                           <td className="px-4 py-2 min-w-[110px] whitespace-nowrap text-white">{t.traded}</td>
-                          <td className="px-4 py-2 min-w-[220px] whitespace-nowrap text-white">{t.desc}</td>
+                          <td className="px-4 py-2 min-w-[220px] whitespace-nowrap text-white" style={{whiteSpace: 'pre-line'}}>{formatDesc(t.desc)}</td>
                           <td className={`px-4 py-2 min-w-[90px] whitespace-nowrap text-right font-bold ${isPlus ? 'text-red-500' : isMinus ? 'text-blue-500' : 'text-white'}`}>{t.return}</td>
                         </tr>
                       );
