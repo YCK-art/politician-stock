@@ -105,8 +105,8 @@ export default function Topbar() {
                     {user.displayName ? user.displayName[0] : user.email ? user.email[0] : "?"}
                   </div>
                 )}
-                <span className={`absolute left-1/2 -translate-x-1/2 top-9 px-3 py-1 rounded-full text-xs font-bold whitespace-nowrap ${isPro ? "bg-black text-white border border-white" : "bg-white text-black"} font-[Pretendard]`}
-                  style={{ minWidth: 44, textAlign: 'center', fontFamily: 'Pretendard, sans-serif' }}>
+                <span className={`absolute left-1/2 -translate-x-1/2 top-7 px-2 py-0.5 rounded-full font-bold whitespace-nowrap ${isPro ? "bg-black text-white border border-white" : "bg-white text-black"} font-[Pretendard]`}
+                  style={{ minWidth: 36, textAlign: 'center', fontFamily: 'Pretendard, sans-serif', fontSize: '11px', lineHeight: '16px' }}>
                   {isPro ? "PRO" : "FREE"}
                 </span>
               </div>
@@ -161,42 +161,81 @@ export default function Topbar() {
       {/* 설정 모달 */}
       {showSettings && typeof window !== "undefined" && createPortal(
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
-          <div className="bg-[#23272f] rounded-2xl p-8 min-w-[400px] max-w-full flex flex-col gap-6 shadow-2xl" style={{width: 440}}>
-            <div className="flex gap-8">
-              {/* 왼쪽 탭 */}
-              <nav className="flex flex-col gap-2 min-w-[120px]">
-                <button className="text-left px-4 py-2 rounded-lg bg-white/10 text-white font-bold">일반</button>
-                <button className="text-left px-4 py-2 rounded-lg text-gray-400 hover:bg-white/10">알림</button>
-                <button className="text-left px-4 py-2 rounded-lg text-gray-400 hover:bg-white/10">개인 맞춤 설정</button>
-                <button className="text-left px-4 py-2 rounded-lg text-gray-400 hover:bg-white/10">커넥터</button>
-                <button className="text-left px-4 py-2 rounded-lg text-gray-400 hover:bg-white/10">데이터 제어</button>
-                <button className="text-left px-4 py-2 rounded-lg text-gray-400 hover:bg-white/10">보안</button>
-                <button className="text-left px-4 py-2 rounded-lg text-gray-400 hover:bg-white/10">계정</button>
+          <div className="bg-[#23272f] rounded-2xl p-0 min-w-[400px] max-w-full flex flex-col gap-0 shadow-2xl" style={{width: 600}}>
+            <div className="flex gap-0">
+              {/* 왼쪽 탭 - 전체 배경색 적용 및 상단 X버튼 */}
+              <nav className="relative flex flex-col gap-2 min-w-[180px] bg-[#202127] rounded-l-2xl py-6 px-2 border-r border-white/10 items-stretch" style={{height: '420px'}}>
+                {/* X 닫기 버튼 */}
+                <button
+                  className="absolute top-3 left-3 w-8 h-8 flex items-center justify-center rounded-lg hover:bg-white/10 transition text-gray-400 hover:text-white text-xl"
+                  onClick={() => setShowSettings(false)}
+                  aria-label="닫기"
+                  tabIndex={0}
+                >
+                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M6 6l8 8M14 6l-8 8" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/></svg>
+                </button>
+                <button className="text-left px-4 py-2 rounded-lg bg-white/10 text-white font-bold mt-12 flex items-center gap-2 text-sm">
+                  {/* 일반: 홈/설정 아이콘 */}
+                  <svg width="18" height="18" fill="none" viewBox="0 0 24 24" className="text-white"><path d="M12 3L3 9v12h6v-6h6v6h6V9z" stroke="currentColor" strokeWidth="2" strokeLinejoin="round"/></svg>
+                  일반
+                </button>
+                <button className="text-left px-4 py-2 rounded-lg text-gray-400 hover:bg-white/10 flex items-center gap-2 text-sm">
+                  {/* 알림: 종/알림 아이콘 */}
+                  <svg width="18" height="18" fill="none" viewBox="0 0 24 24" className="text-white"><path d="M12 22a2 2 0 0 0 2-2H10a2 2 0 0 0 2 2zm6-6V11a6 6 0 1 0-12 0v5l-2 2v1h16v-1l-2-2z" stroke="currentColor" strokeWidth="2" strokeLinejoin="round"/></svg>
+                  알림
+                </button>
+                <button className="text-left px-4 py-2 rounded-lg text-gray-400 hover:bg-white/10 flex items-center gap-2 text-sm">
+                  {/* 개인 맞춤 설정: 슬라이더/조절 아이콘 */}
+                  <svg width="18" height="18" fill="none" viewBox="0 0 24 24" className="text-white"><path d="M4 21v-7m0 0a2 2 0 1 1 4 0v7m-4-7h4m6-7V3m0 0a2 2 0 1 1 4 0v4m-4-4h4" stroke="currentColor" strokeWidth="2" strokeLinejoin="round"/></svg>
+                  개인 맞춤 설정
+                </button>
+                <button className="text-left px-4 py-2 rounded-lg text-gray-400 hover:bg-white/10 flex items-center gap-2 text-sm">
+                  {/* 커넥터: 링크/연결 아이콘 */}
+                  <svg width="18" height="18" fill="none" viewBox="0 0 24 24" className="text-white"><path d="M17 7a5 5 0 0 1 0 7l-1 1m-4-4l1-1a5 5 0 0 1 7 0m-7 7a5 5 0 0 1-7 0l-1-1m4-4l-1 1a5 5 0 0 1 0-7" stroke="currentColor" strokeWidth="2" strokeLinejoin="round"/></svg>
+                  커넥터
+                </button>
+                <button className="text-left px-4 py-2 rounded-lg text-gray-400 hover:bg-white/10 flex items-center gap-2 text-sm">
+                  {/* 데이터 제어: 데이터/차트 아이콘 */}
+                  <svg width="18" height="18" fill="none" viewBox="0 0 24 24" className="text-white"><path d="M3 17v-2a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4v2M16 3.13a4 4 0 0 1 0 7.75M8 3.13a4 4 0 0 0 0 7.75" stroke="currentColor" strokeWidth="2" strokeLinejoin="round"/></svg>
+                  데이터 제어
+                </button>
+                <button className="text-left px-4 py-2 rounded-lg text-gray-400 hover:bg-white/10 flex items-center gap-2 text-sm">
+                  {/* 보안: 자물쇠 아이콘 */}
+                  <svg width="18" height="18" fill="none" viewBox="0 0 24 24" className="text-white"><path d="M6 10V7a6 6 0 1 1 12 0v3m-1 10H7a2 2 0 0 1-2-2v-6a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2z" stroke="currentColor" strokeWidth="2" strokeLinejoin="round"/></svg>
+                  보안
+                </button>
+                <button className="text-left px-4 py-2 rounded-lg text-gray-400 hover:bg-white/10 flex items-center gap-2 text-sm">
+                  {/* 계정: 유저/사람 아이콘 */}
+                  <svg width="18" height="18" fill="none" viewBox="0 0 24 24" className="text-white"><path d="M12 12a5 5 0 1 0 0-10 5 5 0 0 0 0 10zm0 2c-4.418 0-8 2.239-8 5v3h16v-3c0-2.761-3.582-5-8-5z" stroke="currentColor" strokeWidth="2" strokeLinejoin="round"/></svg>
+                  계정
+                </button>
               </nav>
               {/* 오른쪽 내용 */}
-              <section className="flex-1 flex flex-col gap-6">
+              <section className="flex-1 flex flex-col gap-6 p-8 text-sm">
                 <div className="text-xl font-bold mb-2">설정</div>
                 <div className="flex flex-col gap-4">
                   <div className="flex items-center gap-4">
-                    <span className="text-gray-400 min-w-[80px]">내 계정</span>
-                    <span className="text-white font-semibold">{user?.email}</span>
+                    <span className="text-gray-400 min-w-[80px] text-sm">내 계정</span>
+                    <span className="text-white font-semibold font-[Pretendard] flex-1 min-w-0 truncate break-all overflow-hidden text-sm" style={{fontFamily: 'Pretendard, sans-serif'}}>{user?.email}</span>
                   </div>
-                  <div className="flex items-center gap-4">
-                    <span className="text-gray-400 min-w-[80px]">테마</span>
-                    <select
-                      className="bg-[#18171c] text-white px-4 py-2 rounded-lg border border-white/10 focus:outline-none"
-                      value={theme}
-                      onChange={e => setTheme(e.target.value as 'system' | 'light' | 'dark')}
-                    >
-                      <option value="system">시스템</option>
-                      <option value="light">라이트</option>
-                      <option value="dark">다크</option>
-                    </select>
+                  <div className="my-2 border-b border-white/10 w-full" />
+                  <div className="flex items-center gap-2">
+                    <span className="text-gray-400 min-w-[80px] text-sm">테마</span>
+                    <div className="flex-1 flex items-center">
+                      <select
+                        className="bg-[#18171c] text-white px-2 py-2 rounded-lg border border-white/10 focus:outline-none w-auto min-w-[80px] text-sm"
+                        value={theme}
+                        onChange={e => setTheme(e.target.value as 'system' | 'light' | 'dark')}
+                      >
+                        <option value="system">시스템</option>
+                        <option value="light">라이트</option>
+                        <option value="dark">다크</option>
+                      </select>
+                    </div>
                   </div>
                 </div>
               </section>
             </div>
-            <button className="mt-2 text-xs text-gray-400 hover:text-white underline self-end" onClick={() => setShowSettings(false)}>닫기</button>
           </div>
         </div>,
         document.body
