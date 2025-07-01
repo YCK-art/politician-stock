@@ -49,7 +49,7 @@ interface Trade {
 export default function PoliticianDetailPage() {
   const params = useParams();
   const name = (params.name as string) || "nancy-pelosi";
-  const p = POLITICIANS[name] || POLITICIANS["nancy-pelosi"];
+  const p: typeof POLITICIANS["nancy-pelosi"] = POLITICIANS[name] || POLITICIANS["nancy-pelosi"];
   const [sortField, setSortField] = useState<'filed'|'traded'|null>(null);
   const [sortDir, setSortDir] = useState<'asc'|'desc'>('desc');
   const [showReturnInfo, setShowReturnInfo] = useState(false);
