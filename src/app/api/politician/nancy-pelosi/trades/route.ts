@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 const API_KEY = process.env.QUIVER_API_KEY;
 
 // 10분(600초) 메모리 캐시
-let cache: any = null;
+let cache: unknown = null;
 let cacheTime = 0;
 const CACHE_DURATION = 600 * 1000; // 10분(ms)
 
