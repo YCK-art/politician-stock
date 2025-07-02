@@ -1,7 +1,27 @@
 import { NextResponse } from "next/server";
-import POLITICIANS from "@/app/politician/[name]/page";
+// POLITICIANS import는 실제로 사용하지 않으므로 삭제
 
 const API_KEY = process.env.QUIVER_API_KEY;
+
+// Quiver API 데이터 타입 정의
+interface QuiverTrade {
+  Name: string;
+  Ticker: string;
+  Company?: string;
+  TickerType: string;
+  Transaction: string;
+  Trade_Size_USD?: string;
+  Filed?: string;
+  Traded?: string;
+  Description?: string;
+  excess_return?: string;
+  Party?: string;
+  NetWorth?: string;
+  CurrentMember?: boolean;
+  StartDate?: string;
+  EndDate?: string;
+  Age?: number;
+}
 
 // 캐시 구현
 let cache: { politicians: { en: string; ko: string }[]; time: number } | null = null;
@@ -31,19 +51,19 @@ export async function GET() {
       }, { status: res.status });
     }
     
-    const data = await res.json();
+    const data: QuiverTrade[] = await res.json();
     
     // Name 필드만 추출, 중복 제거, 정렬
     const names = data
-      .map((item: any) => item.Name)
-      .filter((name: any) => name && name !== null && name !== undefined && name.trim() !== '')
-      .filter((name: any, index: number, arr: any[]) => arr.indexOf(name) === index)
+      .map((item) => item.Name)
+      .filter((name) => name && name !== null && name !== undefined && name.trim() !== '')
+      .filter((name, index, arr) => arr.indexOf(name) === index)
       .sort();
     
     // 한글/영문 매핑 (더미 POLITICIANS 활용, 없으면 한글은 빈 문자열)
+    // 실제로 POLITICIANS를 사용하지 않으므로, ko는 빈 문자열로 둠
     const politicians = names.map((en: string) => {
-      const found = Object.values(POLITICIANS).find(p => p.en === en);
-      return { en, ko: found ? found.name : "" };
+      return { en, ko: "" };
     });
     
     // 캐시 저장
