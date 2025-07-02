@@ -17,9 +17,9 @@ function nameToSlug(name: string) {
 function highlight(text: string, keyword: string) {
   if (!keyword) return text;
   const regex = new RegExp(`(${keyword})`, "gi");
-  return text.split(regex).map((part, i) =>
+  return text.split(regex).map(part =>
     part.toLowerCase() === keyword.toLowerCase()
-      ? <span key={i} style={{ background: "#ffe066", color: "#222", borderRadius: 4, padding: "0 2px" }}>{part}</span>
+      ? <span style={{ background: "#ffe066", color: "#222", borderRadius: 4, padding: "0 2px" }}>{part}</span>
       : part
   );
 }
