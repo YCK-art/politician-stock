@@ -2,6 +2,7 @@
 import { useParams } from "next/navigation";
 import { useState, useEffect } from "react";
 import YearlyTradeBarChart from "@/components/YearlyTradeBarChart";
+import { toKoreanName } from "@/components/TrendingPoliticians";
 
 // Trade 타입 정의 추가
 interface Trade {
@@ -46,26 +47,52 @@ interface Politician {
 }
 
 // 더미 정치인 데이터 (실제 구현 시 DB/API 연동)
-const POLITICIANS: Record<string, Politician> = {
+const POLITICIANS: Record<string, Politician & { slug: string; profile: string }> = {
   "nancy-pelosi": {
     name: "낸시 펠로시",
     en: "Nancy Pelosi",
     party: "민주당 / 하원 / 캘리포니아",
     netWorth: "약 2,561억 원",
-    tradeVolume: "약 1,611억 원",
-    totalTrades: 180,
-    lastTraded: "2025년 1월 14일",
+    tradeVolume: "-",
+    totalTrades: 0,
+    lastTraded: "-",
     currentMember: true,
     yearsActive: "1987 - 현재",
     age: 84,
-    profile: "/vercel.svg", // 실제 이미지로 교체 필요
-    trades: [
-      { stock: "AMZN", name: "AMAZON.COM, INC.", type: "옵션", transaction: "매수", amount: "약 3~6억 원", filed: "2025-01-17", traded: "2025-01-14", desc: "50 콜옵션 매수", return: "-5.37%" },
-      { stock: "GOOGL", name: "ALPHABET INC.", type: "옵션", transaction: "매수", amount: "약 3~6억 원", filed: "2025-01-17", traded: "2025-01-14", desc: "50 콜옵션 매수", return: "-13.20%" },
-      { stock: "NVDA", name: "NVIDIA CORPORATION", type: "옵션", transaction: "매수", amount: "약 6~13억 원", filed: "2025-01-17", traded: "2025-01-14", desc: "50 콜옵션 매수", return: "+13.79%" },
-      { stock: "AAPL", name: "APPLE INC.", type: "주식", transaction: "매도", amount: "약 66~330억 원", filed: "2024-12-31", traded: "2024-12-31", desc: "31,600주 매도", return: "-23.49%" },
-    ],
+    profile: "/vercel.svg",
+    trades: [],
+    slug: "Nancy Pelosi"
   },
+  "dan-crenshaw": {
+    name: "댄 크렌쇼",
+    en: "Dan Crenshaw",
+    party: "공화당 / 하원 / 텍사스",
+    netWorth: "-",
+    tradeVolume: "-",
+    totalTrades: 0,
+    lastTraded: "-",
+    currentMember: true,
+    yearsActive: "2019 - 현재",
+    age: 40,
+    profile: "/vercel.svg",
+    trades: [],
+    slug: "Dan Crenshaw"
+  },
+  "john-ossoff": {
+    name: "존 오소프",
+    en: "Jon Ossoff",
+    party: "민주당 / 상원 / 조지아",
+    netWorth: "-",
+    tradeVolume: "-",
+    totalTrades: 0,
+    lastTraded: "-",
+    currentMember: true,
+    yearsActive: "2021 - 현재",
+    age: 37,
+    profile: "/vercel.svg",
+    trades: [],
+    slug: "Jon Ossoff"
+  }
 };
 
 const TABS = [
@@ -107,14 +134,101 @@ function formatAmount(tradeSize: string | number | undefined) {
   return tradeAmountRanges[key] || `$${Number(tradeSize).toLocaleString()}~`;
 }
 
-export default function PoliticianDetailPage() {
+// 한글 이름 예외 사전
+const KOREAN_NAME_EXCEPTIONS: Record<string, string> = {
+  "John": "존",
+  "James": "제임스",
+  "William": "윌리엄",
+  "Nancy": "낸시",
+  "Michael": "마이클",
+  "Robert": "로버트",
+  "David": "데이비드",
+  "Richard": "리처드",
+  "Charles": "찰스",
+  "Thomas": "토머스",
+  "Daniel": "다니엘",
+  "Paul": "폴",
+  "Mark": "마크",
+  "George": "조지",
+  "Steven": "스티븐",
+  "Edward": "에드워드",
+  "Joseph": "조셉",
+  "Donald": "도널드",
+  "Ronald": "로널드",
+  "Kenneth": "케네스",
+  "Kevin": "케빈",
+  "Brian": "브라이언",
+  "Anthony": "앤서니",
+  "Timothy": "티모시",
+  "Jason": "제이슨",
+  "Jeffrey": "제프리",
+  "Ryan": "라이언",
+  "Jacob": "제이콥",
+  "Gary": "게리",
+  "Eric": "에릭",
+  "Stephen": "스티븐",
+  "Andrew": "앤드류",
+  "Joshua": "조슈아",
+  "Larry": "래리",
+  "Frank": "프랭크",
+  "Scott": "스콧",
+  "Brandon": "브랜든",
+  "Gregory": "그레고리",
+  "Samuel": "사무엘",
+  "Benjamin": "벤자민",
+  "Adam": "아담",
+  "Patrick": "패트릭",
+  "Alexander": "알렉산더",
+  "Jack": "잭",
+  "Dennis": "데니스",
+  "Jerry": "제리",
+  "Tyler": "타일러",
+  "Aaron": "아론",
+  "Jose": "호세",
+  "Henry": "헨리",
+  "Douglas": "더글라스",
+  "Peter": "피터",
+  "Walter": "월터",
+  "Zachary": "재커리",
+  "Kyle": "카일",
+  "Carl": "칼",
+  "Arthur": "아서",
+  "Raymond": "레이먼드",
+  "Juan": "후안",
+  "Joe": "조",
+  "Albert": "앨버트",
+  "Justin": "저스틴",
+  "Gerald": "제럴드",
+  "Keith": "키스",
+  "Willie": "윌리",
+  "Lawrence": "로렌스",
+  "Ralph": "랄프",
+  "Billy": "빌리",
+  "Bruce": "브루스",
+  "Bryan": "브라이언",
+  "Eugene": "유진",
+  "Louis": "루이스",
+  "Wayne": "웨인",
+  "Alan": "앨런",
+  "Sean": "션",
+  "Johnny": "조니",
+  "Austin": "오스틴",
+  "Jesse": "제시",
+  "Christian": "크리스천",
+  "Roger": "로저",
+  "Terry": "테리"
+};
+
+function PoliticianDetailPage() {
   const params = useParams();
   const name = (params.name as string) || "nancy-pelosi";
-  const p: typeof POLITICIANS["nancy-pelosi"] = POLITICIANS[name] || POLITICIANS["nancy-pelosi"];
+  // 등록되지 않은 정치인은 낸시 펠로시로 fallback
+  const fallback = POLITICIANS.hasOwnProperty(name) ? POLITICIANS[name] : POLITICIANS["nancy-pelosi"];
+  const [p, setP] = useState<Politician>(fallback);
   const [sortField, setSortField] = useState<'filed'|'traded'|null>(null);
   const [sortDir, setSortDir] = useState<'asc'|'desc'>('desc');
   const [showReturnInfo, setShowReturnInfo] = useState(false);
-  const [trades, setTrades] = useState<Trade[]>(p.trades);
+  const [trades, setTrades] = useState<Trade[]>(fallback.trades);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
   const totalPages = Math.ceil(trades.length / itemsPerPage);
@@ -124,15 +238,20 @@ export default function PoliticianDetailPage() {
   const startPage = pageGroup * 10 + 1;
   const endPage = Math.min(startPage + 9, totalPages);
 
-  // Quiver API 연동: 낸시 펠로시 거래내역 fetch
+  // 연도별 거래량 차트 데이터 상태
+  const [yearlyData, setYearlyData] = useState<{year:number;buy:number;sell:number}[]>([]);
+
+  // Quiver API 연동: 정치인 상세 정보 + 거래내역 fetch
   useEffect(() => {
-    async function fetchTrades() {
-      if (name === "nancy-pelosi") {
-        const res = await fetch("/api/politician/nancy-pelosi/trades");
-        const data = await res.json();
-        if (data.items && Array.isArray(data.items) && data.items.length > 0) {
-          // 필드명 변환
-          const mapped = data.items.map((t: QuiverTrade) => ({
+    async function fetchPolitician() {
+      try {
+        // 1. 거래내역은 기존 API 라우트 사용
+        const tradesRes = await fetch(`/api/politician/${name}/trades`);
+        const tradesData = await tradesRes.json();
+        
+        if (tradesData.items && Array.isArray(tradesData.items) && tradesData.items.length > 0) {
+          // 거래내역 변환
+          const mapped = tradesData.items.map((t: QuiverTrade) => ({
             stock: t.Ticker,
             name: t.Company || "",
             type: t.TickerType === "ST" ? "주식" : "옵션",
@@ -147,11 +266,10 @@ export default function PoliticianDetailPage() {
                   : `${Number(t.excess_return).toFixed(2)}%`)
               : "",
           }));
-          setTrades(mapped);
-
+          
           // 연도별 거래량 집계 (매수/매도)
           const yearly: Record<string, { buy: number; sell: number }> = {};
-          data.items.forEach((t: QuiverTrade) => {
+          tradesData.items.forEach((t: QuiverTrade) => {
             if (!t.Traded || !t.Trade_Size_USD) return;
             const year = t.Traded.slice(0, 4);
             const isBuy = t.Transaction !== "Sale";
@@ -177,36 +295,55 @@ export default function PoliticianDetailPage() {
           setYearlyData(yearlyData);
 
           // 총 거래금액, 건수, 최근 거래일 계산
-          // 총 거래금액: Trade_Size_USD의 범위 중 최대값을 모두 더함 (대략적 추정)
           let totalAmount = 0;
-          data.items.forEach((t: QuiverTrade) => {
+          tradesData.items.forEach((t: QuiverTrade) => {
             if (t.Trade_Size_USD) {
-              // 범위의 최대값 추출
               const str = String(t.Trade_Size_USD);
               const match = str.match(/\$(\d{1,3}(,\d{3})*)(\+)?/g);
               if (match && match.length > 0) {
-                // $50,001~$100,000 → 100000, $50,000,001+ → 50000001
                 const last = match[match.length-1].replace(/[^\d]/g, "");
                 totalAmount += Number(last);
               }
             }
           });
-          // 총 거래건수
-          const totalTrades = data.items.length;
-          // 최근 거래일
-          const lastTraded = data.items.reduce((latest: string, t: QuiverTrade) => {
+          const totalTrades = tradesData.items.length;
+          const lastTraded = tradesData.items.reduce((latest: string, t: QuiverTrade) => {
             if (t.Traded && (!latest || t.Traded > latest)) return t.Traded;
             return latest;
           }, "");
 
-          // p 객체의 값도 동적으로 변경
-          p.tradeVolume = totalAmount ? `약 $${totalAmount.toLocaleString()}` : "-";
-          p.totalTrades = totalTrades;
-          p.lastTraded = lastTraded ? lastTraded.slice(0, 10) : "-";
+          // 2. 정치인 상세 정보는 첫 번째 거래 데이터에서 추출
+          const firstTrade = tradesData.items[0];
+          if (firstTrade) {
+            setP({
+              name: firstTrade.Name || fallback.name,
+              en: firstTrade.Name || fallback.en,
+              party: firstTrade.Party || fallback.party,
+              netWorth: firstTrade.NetWorth || fallback.netWorth || "-",
+              tradeVolume: totalAmount ? `약 $${totalAmount.toLocaleString()}` : "-",
+              totalTrades,
+              lastTraded: lastTraded ? lastTraded.slice(0, 10) : "-",
+              currentMember: firstTrade.CurrentMember !== undefined ? firstTrade.CurrentMember : fallback.currentMember,
+              yearsActive: firstTrade.StartDate ? `${firstTrade.StartDate.slice(0,4)} - ${firstTrade.EndDate ? firstTrade.EndDate.slice(0,4) : '현재'}` : fallback.yearsActive,
+              age: firstTrade.Age || fallback.age || 0,
+              profile: fallback.profile, // Quiver API에 이미지 없으므로 fallback
+              trades: mapped
+            });
+          }
+          setTrades(mapped);
+        } else {
+          // 거래내역이 없으면 fallback 사용
+          setP(fallback);
+          setTrades(fallback.trades);
         }
+      } catch (error) {
+        console.error('Error fetching politician data:', error);
+        // 에러 시 fallback 사용
+        setP(fallback);
+        setTrades(fallback.trades);
       }
     }
-    fetchTrades();
+    fetchPolitician();
   }, [name]);
 
   // 정렬 함수
@@ -221,9 +358,6 @@ export default function PoliticianDetailPage() {
   }
   const sortedTrades = getSortedTrades(pagedTrades);
 
-  // 연도별 거래량 차트 데이터 상태
-  const [yearlyData, setYearlyData] = useState<{year:number;buy:number;sell:number}[]>([]);
-
   return (
     <main className="min-h-screen w-full bg-[#18171c] text-white flex flex-col items-center pt-28 pb-16 font-sans">
       <div className="w-full max-w-7xl flex flex-col gap-8">
@@ -234,8 +368,7 @@ export default function PoliticianDetailPage() {
             <div className="bg-[#23272f] rounded-2xl p-7 shadow-lg flex flex-col items-center gap-3 border border-[#23272f]">
               <img src={p.profile} alt={p.name} className="w-28 h-28 rounded-full border-4 border-[#23272f] object-cover mb-2 shadow" />
               <div className="text-2xl font-extrabold mb-1 tracking-tight text-white flex flex-col items-center">
-                {p.name}
-                <span className="text-sm text-gray-400 font-normal mt-1">{p.en}</span>
+                {toKoreanName(p.name)}
               </div>
               <div className="text-base text-gray-400 mb-2 font-semibold">{p.party}</div>
               <div className="flex flex-col gap-1 text-base w-full">
@@ -413,4 +546,6 @@ export default function PoliticianDetailPage() {
       </div>
     </main>
   );
-} 
+}
+
+export { PoliticianDetailPage as default, POLITICIANS }; 

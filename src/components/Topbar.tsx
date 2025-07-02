@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import { signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "firebase/auth";
 import { auth } from "../firebase";
@@ -13,8 +13,29 @@ const menus = [
   { name: "내부자 고르기", path: "/insiders" },
 ];
 
+// 슬러그 변환 함수 (API와 동일하게)
+function nameToSlug(name: string) {
+  return name
+    .toLowerCase()
+    .replace(/\./g, '')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/(^-|-$)/g, '');
+}
+
+// 하이라이트 함수
+function highlight(text: string, keyword: string) {
+  if (!keyword) return text;
+  const regex = new RegExp(`(${keyword})`, "gi");
+  return text.split(regex).map((part, i) =>
+    part.toLowerCase() === keyword.toLowerCase()
+      ? <span key={i} style={{ background: "#ffe066", color: "#222", borderRadius: 4, padding: "0 2px" }}>{part}</span>
+      : part
+  );
+}
+
 export default function Topbar() {
   const pathname = usePathname();
+  const router = useRouter();
   const [showLogin, setShowLogin] = useState(false);
   const [user, setUser] = useState<User | null>(null);
   // 임시: 유료 구독 여부 (실제 구현 시 DB/결제 연동)
@@ -23,11 +44,38 @@ export default function Topbar() {
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const [theme, setTheme] = useState<'system' | 'light' | 'dark'>('system');
+  const [search, setSearch] = useState("");
+  const [politicians, setPoliticians] = useState<{en: string, ko: string}[]>([]);
+  const [results, setResults] = useState<{en: string, ko: string}[]>([]);
 
   useEffect(() => {
     const unsub = onAuthStateChanged(auth, (u) => setUser(u));
     return () => unsub();
   }, []);
+
+  // 정치인 목록 불러오기 (최초 1회)
+  useEffect(() => {
+    fetch("/api/politician/list")
+      .then(res => res.json())
+      .then(data => {
+        setPoliticians(data.politicians || []);
+      });
+  }, []);
+
+  // 검색어 입력 시 필터링
+  useEffect(() => {
+    if (!search) {
+      setResults([]);
+      return;
+    }
+    setResults(
+      politicians.filter(
+        p =>
+          p.en.toLowerCase().includes(search.toLowerCase()) ||
+          p.ko.includes(search)
+      )
+    );
+  }, [search, politicians]);
 
   // 구글 로그인 핸들러
   const handleGoogleLogin = async () => {
@@ -82,11 +130,53 @@ export default function Topbar() {
         </nav>
         {/* 검색창 & 로그인 */}
         <div className="flex items-center gap-4">
-          <input
-            type="text"
-            placeholder="🔍 눌러 검색하세요"
-            className="bg-[#222c] text-white px-4 py-2 rounded-md w-56 outline-none placeholder:text-gray-400 border border-transparent focus:border-white/40 transition"
-          />
+          <div style={{ position: "relative" }}>
+            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none">
+              <svg width="18" height="18" fill="none" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7" stroke="currentColor" strokeWidth="2"/><path stroke="currentColor" strokeWidth="2" strokeLinecap="round" d="M20 20l-3.5-3.5"/></svg>
+            </span>
+            <input
+              value={search}
+              onChange={e => setSearch(e.target.value)}
+              placeholder="정치인 이름(한글/영문) 검색"
+              style={{ padding: 8, borderRadius: 4, border: "1px solid #ccc", width: 260, paddingLeft: 36 }}
+            />
+            {results.length > 0 && (
+              <ul style={{
+                position: "absolute",
+                top: 40,
+                left: 0,
+                background: "#23272f",
+                border: "1px solid #eee",
+                width: 220,
+                zIndex: 10,
+                listStyle: "none",
+                margin: 0,
+                padding: 0,
+                color: "#fff"
+              }}>
+                {results.map(p => (
+                  <li
+                    key={p.en}
+                    onClick={() => {
+                      setSearch("");
+                      setResults([]);
+                      router.push(`/politician/${nameToSlug(p.en)}`);
+                    }}
+                    style={{ padding: 8, cursor: "pointer", borderBottom: "1px solid #2c2c2c", background: "none" }}
+                    onMouseOver={e => (e.currentTarget.style.background = "#333")}
+                    onMouseOut={e => (e.currentTarget.style.background = "none")}
+                  >
+                    <div style={{ fontWeight: 500, fontSize: 15 }}>
+                      {highlight(p.ko, search)}
+                    </div>
+                    <div style={{ fontSize: 13, color: "#bbb" }}>
+                      {highlight(p.en, search)}
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
           {/* 로그인/프로필 영역 */}
           {!user ? (
             <button
