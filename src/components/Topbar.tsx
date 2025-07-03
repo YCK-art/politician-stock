@@ -2,6 +2,7 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
+import Image from "next/image";
 import { signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "firebase/auth";
 import { auth } from "../firebase";
 import { createPortal } from "react-dom";
@@ -189,7 +190,7 @@ export default function Topbar() {
             <div className="relative flex items-center">
               <div className="cursor-pointer" onClick={() => setDropdownOpen((v) => !v)}>
                 {user.photoURL ? (
-                  <img src={user.photoURL} alt="프로필" className="w-10 h-10 rounded-full border-2 border-white shadow object-cover" />
+                  <Image src={user.photoURL} alt="프로필" width={40} height={40} className="w-10 h-10 rounded-full border-2 border-white shadow object-cover" />
                 ) : (
                   <div className="w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center text-white font-bold text-lg border-2 border-white shadow">
                     {user.displayName ? user.displayName[0] : user.email ? user.email[0] : "?"}
@@ -221,21 +222,21 @@ export default function Topbar() {
               className="w-full flex items-center justify-center gap-2 bg-white text-black font-semibold py-2 rounded-lg hover:bg-gray-200 transition"
               onClick={handleGoogleLogin}
             >
-              <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="구글" className="w-5 h-5" />
+                                <Image src="https://www.svgrepo.com/show/475656/google-color.svg" alt="구글" width={20} height={20} className="w-5 h-5" />
               구글 로그인
             </button>
             <button
               className="w-full flex items-center justify-center gap-2 bg-gray-100 text-gray-600 font-semibold py-2 rounded-lg cursor-not-allowed opacity-60"
               disabled
             >
-              <img src="https://www.svgrepo.com/show/475647/facebook-color.svg" alt="페이스북" className="w-5 h-5" />
+                                <Image src="https://www.svgrepo.com/show/475647/facebook-color.svg" alt="페이스북" width={20} height={20} className="w-5 h-5" />
               페이스북 로그인 (준비중)
             </button>
             <button
               className="w-full flex items-center justify-center gap-2 bg-yellow-100 text-yellow-800 font-semibold py-2 rounded-lg cursor-not-allowed opacity-60"
               disabled
             >
-              <img src="https://www.svgrepo.com/show/448234/kakao-talk.svg" alt="카카오" className="w-5 h-5" />
+                                <Image src="https://www.svgrepo.com/show/448234/kakao-talk.svg" alt="카카오" width={20} height={20} className="w-5 h-5" />
               카카오 로그인 (준비중)
             </button>
             <button

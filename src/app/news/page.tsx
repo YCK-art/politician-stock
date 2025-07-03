@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
+import Image from "next/image";
 
 const CATEGORIES = ["전체"];
 
@@ -58,7 +59,7 @@ export default function NewsPage() {
         {error && <div className="text-center text-red-400 py-12">{error}</div>}
         {!loading && !error && filtered.slice(0, visible).map((news, i) => (
           <a key={i} href={news.url} target="_blank" rel="noopener noreferrer" className="flex gap-4 bg-[#23272f] rounded-xl overflow-hidden shadow-md hover:scale-[1.01] transition-transform cursor-pointer">
-            <img src={news.image || "/vercel.svg"} alt="뉴스 이미지" className="w-40 h-28 object-cover flex-shrink-0 bg-black/30" />
+            <Image src={news.image || "/vercel.svg"} alt="뉴스 이미지" width={160} height={112} className="w-40 h-28 object-cover flex-shrink-0 bg-black/30" />
             <div className="flex flex-col justify-between py-3 pr-3 flex-1">
               <div>
                 <h2 className="text-lg font-bold mb-1 line-clamp-2">{news.title}</h2>

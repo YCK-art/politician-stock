@@ -45,9 +45,9 @@ interface CacheEntry {
 const cache: Record<string, CacheEntry> = {};
 let nameList: PoliticianNameList = [];
 
-export async function GET(req: NextRequest, { params }: { params: { name: string } }) {
+export async function GET(req: NextRequest, { params }: { params: Promise<{ name: string }> }) {
   try {
-    const { name: slug } = params;
+    const { name: slug } = await params;
     const now = Date.now();
 
     // 최초 1회 전체 정치인 이름 목록을 받아옴

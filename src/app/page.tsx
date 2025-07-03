@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 import TrendingPoliticians from "../components/TrendingPoliticians";
 import MarketSummary from "../components/MarketSummary";
 
@@ -17,9 +18,9 @@ function nameToSlug(name: string) {
 function highlight(text: string, keyword: string) {
   if (!keyword) return text;
   const regex = new RegExp(`(${keyword})`, "gi");
-  return text.split(regex).map(part =>
+  return text.split(regex).map((part, index) =>
     part.toLowerCase() === keyword.toLowerCase()
-      ? <span style={{ background: "#ffe066", color: "#222", borderRadius: 4, padding: "0 2px" }}>{part}</span>
+      ? <span key={index} style={{ background: "#ffe066", color: "#222", borderRadius: 4, padding: "0 2px" }}>{part}</span>
       : part
   );
 }
@@ -92,15 +93,17 @@ export default function Home() {
             {/* 검색 결과 드롭다운 */}
             {results.length > 0 && (
               <ul className="absolute left-0 right-0 mt-2 bg-[#23272f] rounded-lg shadow-lg z-20 max-h-72 overflow-y-auto border border-white/10">
-                {results.map((p, i) => (
+                {results.map((p) => (
                   <li
                     key={p.en}
                     className="flex items-center gap-3 px-4 py-2 cursor-pointer hover:bg-white/10 transition"
                     onClick={() => router.push(`/politician/${nameToSlug(p.en)}`)}
                   >
-                    <img
+                    <Image
                       src={p.image || "/default-profile.png"}
                       alt={p.ko}
+                      width={32}
+                      height={32}
                       className="w-8 h-8 rounded-full object-cover bg-gray-700"
                     />
                     <div className="flex flex-col">

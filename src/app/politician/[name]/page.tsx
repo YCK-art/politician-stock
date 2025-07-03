@@ -1,6 +1,7 @@
 "use client";
 import { useParams } from "next/navigation";
 import { useState, useEffect } from "react";
+import Image from "next/image";
 import YearlyTradeBarChart from "@/components/YearlyTradeBarChart";
 import { toKoreanName } from "@/components/TrendingPoliticians";
 
@@ -259,7 +260,7 @@ function PoliticianDetailPage() {
       }
     }
     fetchPolitician();
-  }, [name]);
+  }, [name, fallback]);
 
   // 정렬 함수
   function getSortedTrades(trades: Trade[]) {
@@ -281,7 +282,7 @@ function PoliticianDetailPage() {
           <section className="w-full md:w-[320px] flex flex-col gap-6">
             {/* 프로필 카드 */}
             <div className="bg-[#23272f] rounded-2xl p-7 shadow-lg flex flex-col items-center gap-3 border border-[#23272f]">
-              <img src={p.profile} alt={p.name} className="w-28 h-28 rounded-full border-4 border-[#23272f] object-cover mb-2 shadow" />
+              <Image src={p.profile} alt={p.name} width={112} height={112} className="w-28 h-28 rounded-full border-4 border-[#23272f] object-cover mb-2 shadow" />
               <div className="text-2xl font-extrabold mb-1 tracking-tight text-white flex flex-col items-center">
                 {toKoreanName(p.name)}
               </div>
@@ -398,7 +399,7 @@ function PoliticianDetailPage() {
                         >
                           <td className="px-1 py-2 font-bold text-white min-w-[40px] w-[60px] max-w-[70px] whitespace-nowrap">
                             <div className="flex flex-col items-center gap-1">
-                              <img src={`https://financialmodelingprep.com/image-stock/${t.stock}.png`} alt={t.stock} className="w-7 h-7 rounded bg-white" />
+                              <Image src={`https://financialmodelingprep.com/image-stock/${t.stock}.png`} alt={t.stock} width={28} height={28} className="w-7 h-7 rounded bg-white" />
                               <span className="text-xs font-bold text-[#60a5fa] leading-tight">{t.stock}</span>
                               <span className="text-[10px] text-gray-300 leading-tight">{formatCompany(t.name)}</span>
                               <span className="text-[10px] text-gray-400 leading-tight">{t.type}</span>
@@ -463,4 +464,4 @@ function PoliticianDetailPage() {
   );
 }
 
-export { PoliticianDetailPage as default, POLITICIANS }; 
+export default PoliticianDetailPage; 
