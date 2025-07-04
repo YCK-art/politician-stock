@@ -148,37 +148,6 @@ function normalizeName(name: string) {
   return name.toLowerCase().replace(/\s+/g, '');
 }
 
-// 주요 인물 수동 매핑 (예시)
-const manualGovtrackIds: Record<string, string> = {
-  'nancypelosi': '400314',
-  'dancrenshaw': '412809',
-  'jonossoff': '456841',
-  // 필요시 추가
-};
-
-// GovTrack 인물 캐시
-const govtrackCache: { [name: string]: string } = {};
-let govtrackLoaded = false;
-
-// GovTrack 전체 인물 목록을 불러와서 캐시에 저장 (정규화된 이름으로)
-async function loadGovtrackCache() {
-  if (govtrackLoaded) return;
-  try {
-    const res = await fetch("https://www.govtrack.us/api/v2/role?current=true&limit=600");
-    const data = await res.json();
-    if (data.objects) {
-      data.objects.forEach((obj: GovTrackPerson) => {
-        if (obj.person && obj.person.name && obj.person.id) {
-          govtrackCache[normalizeName(obj.person.name)] = String(obj.person.id);
-        }
-      });
-      govtrackLoaded = true;
-    }
-  } catch {
-    // 실패 시 무시
-  }
-}
-
 // 금액 범위에서 중간값 추출 함수 추가
 function parseAmountRange(str: string | number | undefined): number {
   if (typeof str === "number") return str;
