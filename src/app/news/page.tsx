@@ -54,17 +54,28 @@ const leftSecondNews: NewsItem = {
   url: "#"
 };
 
+// 왼쪽 세 번째 주요 뉴스 - 미 달러화 기사
+const leftThirdNews: NewsItem = {
+  image: "/news/us-dollar-liz-truss.jpg",
+  title: "미 달러화, '리즈 트러스 순간' 위기 맞나… 관세 혼란 속 신뢰 흔들려",
+  summary: `미국의 재정적자와 달러화 가치 하락이 위험 신호를 보내고 있다는 우려가 커지고 있다. 최근 미국 달러는 금리가 오르는데도 주요 통화 대비 13.5% 하락하며, 2022년 리즈 트러스 당시 영국이 맞닥뜨린 채권 위기와 비슷한 양상을 보인다는 지적이 나온다. 트럼프 행정부와 공화당이 추진하는 대규모 적자 확대 정책이 달러 신뢰를 훼손해 미국의 글로벌 리더십을 위협할 수 있다는 경고가 잇따른다.`,
+  content: `2025년 7월 4일(현지시간) 아시아타임스에 따르면, 올해 들어 달러 가치는 주요국 통화 대비 13.5% 급락하며 불안한 흐름을 보이고 있다. 특히 최근에는 미 국채 금리가 오름에도 불구하고 달러가 계속 약세를 보이고 있어 전문가들은 2022년 영국에서 발생한 '리즈 트러스 사태'를 떠올리고 있다. 당시 영국 정부의 무책임한 감세안 발표로 채권 시장이 붕괴하고 파운드화가 급락한 바 있다.\n\n브루킹스연구소의 로빈 브룩스는 "달러가 금리 차가 확대되는데도 약세를 이어가는 것은 심상치 않다"며 "긴 재정적자와 관세 불확실성으로 달러에 위험 프리미엄이 붙기 시작했다"고 말했다. 워런 버핏의 "썰물이 빠지면 누가 벌거숭이로 수영했는지 알게 된다"는 말처럼, 37조 달러에 달하는 미국의 막대한 부채가 본격적으로 문제로 드러나고 있다는 것이다.\n\n문제의 핵심에는 트럼프와 공화당이 추진하는 '빅, 뷰티풀 빌'이 있다. 이 법안은 연방 적자를 4조 달러나 늘릴 것으로 예상되는데, 이는 일본 연간 GDP 규모와 맞먹는다. 이미 미국의 국가신용등급은 2011년 이후 잇따라 강등돼, 최근 무디스도 100년 넘게 유지하던 최상위 등급을 철회했다. 스탠퍼드대의 대럴 더피 교수는 "미국이 더는 재정 규율을 지키지 않고 있다"고 지적했다.\n\n경제학자 필립 럭은 "미국의 부채 문제는 이제 단순한 위험이 아니라 국가 안보와 리더십을 제한하는 전략적 족쇄가 됐다"며 "지금 같은 추세라면 2055년에는 부채가 GDP의 156%에 달하게 된다"고 경고했다. 그는 "달러 패권이 미국을 보호해줄 것이란 착각이 가장 위험하다"며, 재정 개혁 없이는 국방과 외교 등 핵심 분야의 투자마저 위태로워질 것이라고 우려했다.\n\n특히 아시아가 보유한 미 국채는 2조5000억 달러에 달해 이번 위기에 노출돼 있다. 일본이 1조1000억 달러, 중국이 7700억 달러를 보유하고 있어 이들 국가도 불안감을 표출하고 있다. 중국은 이미 2009년 글로벌 금융위기 당시 "미국의 신뢰를 믿어야 할지 걱정된다"는 입장을 내놨다.\n\n브룩스는 "지금의 비정상적인 가격 흐름은 매우 이례적이며, 오랜 기간 방치된 재정 불균형과 관세 불확실성이 달러에 대한 신뢰를 시험하고 있다"고 말했다. 전문가들은 미국이 더 늦기 전에 재정 건전성을 회복하지 않으면, 신용등급과 함께 세계 경제 리더십도 잃을 수 있다고 경고했다.\n\n<저작권자(c) Asia Times, 무단 전재-재배포, AI 학습 및 활용 금지>`,
+  source: "Asia Times",
+  published_at: "2025-07-04 21:00:00",
+  url: "#"
+};
+
 const mainNews: NewsItem = {
   image: "/news/trump.jpg",
   title: "트럼프의 '빅, 뷰티풀 빌(국경 장벽·강경 이민법)'이 공화당에 부담으로… 민주당, 중간선거 역공 카드로 활용",
   summary: "도널드 트럼프 전 대통령이 주도해 통과시킨 '빅, 뷰티풀 빌'(남부 국경 장벽 건설과 초강경 이민 정책을 담은 법안)이 2025년 중간선거를 앞두고 공화당의 발목을 잡고 있다. 시행 이후 과도한 예산 부담과 인권 침해 논란이 불거지면서 여론이 악화됐고, 민주당은 이를 공화당을 공격할 주요 소재로 삼아 라틴계와 무당층 유권자를 집중 공략하고 있다. 공화당 내부에서도 법안의 부작용을 우려하며 전략 수정이 필요하다는 목소리가 나오고 있다.",
-  content: `2025년 7월 4일(현지시간) 워싱턴포스트는 트럼프 전 대통령과 공화당 지도부가 올해 초 의회를 통과시킨 &apos;빅, 뷰티풀 빌&apos;이 정치적 역풍을 불러일으키고 있다고 보도했다. 남부 국경에 대규모 장벽을 건설하고 이민자 송환을 강화하며, 이를 위해 수십억 달러의 예산을 투입하는 내용을 담은 이 법안은 공화당이 그동안 강조해온 &apos;국가 안보 강화&apos;를 상징하는 법안이었다. 트럼프는 이 법안을 &quot;미국 역사상 가장 강력하고 아름다운 법&quot;이라고 치켜세우며 자신의 정치적 승리로 포장했지만, 시행 이후 드러난 부작용은 공화당의 선거 전략을 뒤흔들고 있다.
+  content: `2025년 7월 4일(현지시간) 워싱턴포스트는 트럼프 전 대통령과 공화당 지도부가 올해 초 의회를 통과시킨 '빅, 뷰티풀 빌'이 정치적 역풍을 불러일으키고 있다고 보도했다. 남부 국경에 대규모 장벽을 건설하고 이민자 송환을 강화하며, 이를 위해 수십억 달러의 예산을 투입하는 내용을 담은 이 법안은 공화당이 그동안 강조해온 '국가 안보 강화'를 상징하는 법안이었다. 트럼프는 이 법안을 "미국 역사상 가장 강력하고 아름다운 법"이라고 치켜세우며 자신의 정치적 승리로 포장했지만, 시행 이후 드러난 부작용은 공화당의 선거 전략을 뒤흔들고 있다.
 
-법안 통과 이후 남부 국경에서의 혼란은 오히려 커졌다. 강제 송환 과정에서 가족 단위 이민자들이 장기간 수용시설에 갇히거나, 아이들이 부모와 격리되는 사례가 잇따라 발생하며 국제사회의 비판도 거세졌다. 또 장벽 건설과 인프라 유지에 드는 비용이 애초 계획을 크게 초과하고 있다는 사실이 알려지면서 재정 부담에 대한 우려도 커졌다. 특히 경합주의 라틴계 유권자들 사이에서 &apos;불필요하게 가혹하다&apos;는 인식이 확산되면서 공화당에 대한 지지가 약화되고 있다는 여론조사 결과가 속속 나오고 있다.
+법안 통과 이후 남부 국경에서의 혼란은 오히려 커졌다. 강제 송환 과정에서 가족 단위 이민자들이 장기간 수용시설에 갇히거나, 아이들이 부모와 격리되는 사례가 잇따라 발생하며 국제사회의 비판도 거세졌다. 또 장벽 건설과 인프라 유지에 드는 비용이 애초 계획을 크게 초과하고 있다는 사실이 알려지면서 재정 부담에 대한 우려도 커졌다. 특히 경합주의 라틴계 유권자들 사이에서 '불필요하게 가혹하다'는 인식이 확산되면서 공화당에 대한 지지가 약화되고 있다는 여론조사 결과가 속속 나오고 있다.
 
-민주당은 이를 호재로 삼아 &apos;공화당은 불필요하게 잔혹하고 비효율적인 정책을 고집한다&apos;는 메시지를 내세우며 공격을 강화하고 있다. 민주당 선거 전략가들은 경합주에서 이 법안을 주요 쟁점으로 만들며, 무당층과 소수인종 표심을 공략하는 데 집중하고 있다. 한 민주당 관계자는 &quot;이 법안 덕분에 공화당이 중도층과 젊은 유권자들에게 자신들의 민낯을 드러냈다&quot;며 &quot;우리가 이 기회를 최대한 활용할 것&quot;이라고 말했다.
+민주당은 이를 호재로 삼아 '공화당은 불필요하게 잔혹하고 비효율적인 정책을 고집한다'는 메시지를 내세우며 공격을 강화하고 있다. 민주당 선거 전략가들은 경합주에서 이 법안을 주요 쟁점으로 만들며, 무당층과 소수인종 표심을 공략하는 데 집중하고 있다. 한 민주당 관계자는 "이 법안 덕분에 공화당이 중도층과 젊은 유권자들에게 자신들의 민낯을 드러냈다"며 "우리가 이 기회를 최대한 활용할 것"이라고 말했다.
 
-공화당 내부에서도 균열이 감지되고 있다. 일부 온건 성향 의원들은 &quot;법안의 장기적 정치적 손해가 이익을 상회할 수 있다&quot;며 수정 논의를 요구하고 있다. 한 중진 의원은 익명을 전제로 &quot;우리는 안보를 지키기 위해 싸운다는 입장이지만, 유권자들이 그 대가를 받아들이지 못한다면 결국 정치적으로 실패하는 셈&quot;이라고 말했다. 반면 트럼프와 지도부는 여전히 &quot;국가 안보가 최우선&quot;이라는 기조를 유지하며 후퇴하지 않겠다는 입장을 고수하고 있다. 이런 가운데 당내 분열이 본격화될지, 공화당의 선거 전략에 어떤 변화를 가져올지가 주목된다.
+공화당 내부에서도 균열이 감지되고 있다. 일부 온건 성향 의원들은 "법안의 장기적 정치적 손해가 이익을 상회할 수 있다"며 수정 논의를 요구하고 있다. 한 중진 의원은 익명을 전제로 "우리는 안보를 지키기 위해 싸운다는 입장이지만, 유권자들이 그 대가를 받아들이지 못한다면 결국 정치적으로 실패하는 셈"이라고 말했다. 반면 트럼프와 지도부는 여전히 "국가 안보가 최우선"이라는 기조를 유지하며 후퇴하지 않겠다는 입장을 고수하고 있다. 이런 가운데 당내 분열이 본격화될지, 공화당의 선거 전략에 어떤 변화를 가져올지가 주목된다.
 
 <저작권자(c) The Washington Post, 무단 전재-재배포, AI 학습 및 활용 금지>`,
   source: "The Washington Post",
@@ -132,6 +143,17 @@ const rightThirdNews: NewsItem = {
 <저작권자(c) Axios, 무단 전재-재배포, AI 학습 및 활용 금지>`,
   source: "Axios",
   published_at: "2025-07-04 08:30:00",
+  url: "#"
+};
+
+// 오른쪽 네 번째 주요 뉴스 - 델몬트 파산 기사
+const rightFourthNews: NewsItem = {
+  image: "/news/del-monte-bankruptcy.jpg",
+  title: "139년 전통의 델몬트, 재정 압박에 파산 보호 신청",
+  summary: `139년 동안 통조림 과일과 채소를 생산해온 미국의 델몬트 푸즈가 파산보호를 신청하고 매각 절차에 들어갔다. 회사는 법원의 감독하에 매각을 추진하면서 9억 달러 규모의 신규 자금을 확보해 정상 영업을 유지할 방침이다. 델몬트는 변화하는 소비자 수요와 어려운 경제 여건 속에서도 '지속 가능한 재도약'을 다짐했다.`,
+  content: `2025년 7월 3일(현지시간) 발표에 따르면, 통조림 과일과 채소로 잘 알려진 미국의 델몬트 푸즈(Del Monte Foods)가 챕터 11 파산보호를 신청하며 139년 역사의 전환점을 맞았다. 회사는 법원의 감독 아래 매각 절차를 진행하면서도 운영을 이어가겠다는 계획을 밝혔다.\n\n델몬트는 '델몬트' 브랜드 외에도 콘타디나(Contadina), 조이바(Joyba), 칼리지 인(College Inn) 등 여러 식품 브랜드를 보유하고 있다. 그렉 롱스트리트 CEO는 이날 성명을 통해 "모든 옵션을 면밀히 검토한 결과, 법원의 감독하에 매각 절차를 진행하는 것이 회사의 재도약을 가속화하고 델몬트 푸즈를 더 강하고 지속 가능한 회사로 만들 수 있는 최선의 방법이라고 판단했다"고 밝혔다.\n\n델몬트는 법원이 감독하는 구조조정 절차의 일환으로 자산 전체를 매각할 인수를 찾고 있다. 이를 위해 9억1,250만 달러(약 1조2천억 원)의 신규 자금을 확보해 현재 한창 진행 중인 포장 시즌 동안에도 정상 운영을 이어갈 계획이다.\n\n롱스트리트 CEO는 "최근 급변하는 거시 경제 환경 속에서 소비자 수요의 변화로 많은 어려움을 겪어 왔다"며 "그러나 델몬트는 거의 140년 동안 가족들의 식탁을 지켜온 만큼, 앞으로도 영양가 높고 맛있는 음식을 더 많은 사람들에게 제공하겠다는 사명을 이어갈 것"이라고 강조했다. 그는 "장기적 목표를 이루기 위해 힘을 보태준 임직원, 생산자, 고객, 거래처, 그리고 대출 기관에 깊이 감사드린다"고 덧붙였다.\n\n<저작권자(c) MLive, 무단 전재-재배포, AI 학습 및 활용 금지>`,
+  source: "MLive",
+  published_at: "2025-07-04 03:24:00",
   url: "#"
 };
 
@@ -215,6 +237,21 @@ export default function NewsPage() {
               <span className="text-xs text-gray-500 mt-2">{formatKoreanDate(leftSecondNews.published_at)}</span>
             </div>
           </button>
+          {/* 세 번째 카드: 미 달러화 기사 */}
+          <button
+            className="flex flex-col bg-[#23272f] rounded-xl overflow-hidden shadow hover:scale-[1.01] transition-transform cursor-pointer text-left"
+            style={{padding:0, border:'none'}}
+            onClick={() => setModalOpen('leftThird')}
+            aria-label="뉴스 상세 열기"
+          >
+            <Image src={leftThirdNews.image || "/vercel.svg"} alt="뉴스 이미지" width={600} height={340} className="w-full h-40 object-cover bg-black/30" />
+            <div className="flex flex-col gap-1 p-4">
+              <span className="text-xs text-gray-400 font-semibold uppercase tracking-widest mb-1">{leftThirdNews.source}</span>
+              <h3 className="text-base font-bold leading-tight mb-1 line-clamp-2">{leftThirdNews.title}</h3>
+              <p className="text-xs text-gray-400 line-clamp-2">{leftThirdNews.summary}</p>
+              <span className="text-xs text-gray-500 mt-2">{formatKoreanDate(leftThirdNews.published_at)}</span>
+            </div>
+          </button>
           {/* 나머지 카드 placeholder */}
           {[1].map(i => <CardPlaceholder key={i} />)}
         </section>
@@ -241,7 +278,7 @@ export default function NewsPage() {
           </div>
         </section>
         {/* 우측: Most Recent & Featured */}
-        <aside className="flex flex-col gap-8 min-h-[420px]">
+        <section className="flex flex-col gap-6 min-h-[420px]">
           <h2 className="text-lg font-bold mb-2 tracking-tight px-1 invisible md:visible">&nbsp;</h2>
           <div className="flex flex-col gap-4">
             {/* 첫 번째 카드: 테슬라 기사 (더 넓게) */}
@@ -286,6 +323,20 @@ export default function NewsPage() {
                 <span className="text-xs text-gray-500 mt-1">{formatKoreanDate(rightThirdNews.published_at)}</span>
               </div>
             </button>
+            {/* 네 번째 카드: 델몬트 파산 기사 (넓게) */}
+            <button
+              className="flex items-center gap-7 bg-[#23272f] rounded-2xl overflow-hidden shadow hover:scale-[1.01] transition-transform cursor-pointer px-6 py-6 text-left min-h-[120px]"
+              style={{padding:0, border:'none'}}
+              onClick={() => setModalOpen('rightFourth')}
+              aria-label="뉴스 상세 열기"
+            >
+              <Image src={rightFourthNews.image || "/vercel.svg"} alt="뉴스 이미지" width={96} height={96} className="w-24 h-24 object-cover rounded-xl bg-black/30 flex-shrink-0" />
+              <div className="flex flex-col min-w-0 flex-1 gap-2 ml-2 mr-3">
+                <h4 className="text-base font-bold leading-tight line-clamp-2 pr-2">{rightFourthNews.title}</h4>
+                <span className="text-xs text-gray-400 mt-1">{rightFourthNews.source}</span>
+                <span className="text-xs text-gray-500 mt-1">{formatKoreanDate(rightFourthNews.published_at)}</span>
+              </div>
+            </button>
             {/* 마지막 1개 placeholder 카드 (넓게) */}
             <div className="flex items-center gap-7 bg-[#23272f] rounded-2xl overflow-hidden shadow px-6 py-6 min-h-[120px] animate-pulse">
               <div className="w-24 h-24 rounded-xl bg-gray-700 flex-shrink-0" />
@@ -300,7 +351,7 @@ export default function NewsPage() {
           <div className="bg-[#23272f] rounded-2xl overflow-hidden shadow flex flex-col min-h-[160px]">
             <CardPlaceholder height="h-40" />
           </div>
-        </aside>
+        </section>
       </div>
       {/* 뉴스 상세 모달: 왼쪽 맨 위 주요 뉴스 */}
       {modalOpen === 'leftTop' && (
@@ -308,6 +359,15 @@ export default function NewsPage() {
           className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/70 backdrop-blur-sm"
           onClick={() => setModalOpen(false)}
         >
+          {/* X 버튼을 오버레이에 고정 */}
+          <button
+            className="fixed top-8 right-12 text-gray-400 hover:text-white text-3xl font-bold z-[100000]"
+            style={{boxShadow:'0 2px 8px #0008', background:'rgba(35,39,47,0.85)', borderRadius: '50%', width: 48, height: 48, display: 'flex', alignItems: 'center', justifyContent: 'center'}} 
+            onClick={() => setModalOpen(false)}
+            aria-label="닫기"
+          >
+            ×
+          </button>
           <div
             className="bg-[#23272f] rounded-2xl shadow-2xl max-w-2xl w-full mx-4 p-8 relative animate-fadein"
             style={{maxHeight:'90vh', overflowY:'auto'}}
@@ -364,18 +424,20 @@ export default function NewsPage() {
           className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/70 backdrop-blur-sm"
           onClick={() => setModalOpen(false)}
         >
+          {/* X 버튼을 오버레이에 고정 */}
+          <button
+            className="fixed top-8 right-12 text-gray-400 hover:text-white text-3xl font-bold z-[100000]"
+            style={{boxShadow:'0 2px 8px #0008', background:'rgba(35,39,47,0.85)', borderRadius: '50%', width: 48, height: 48, display: 'flex', alignItems: 'center', justifyContent: 'center'}} 
+            onClick={() => setModalOpen(false)}
+            aria-label="닫기"
+          >
+            ×
+          </button>
           <div
             className="bg-[#23272f] rounded-2xl shadow-2xl max-w-2xl w-full mx-4 p-8 relative animate-fadein"
             style={{maxHeight:'90vh', overflowY:'auto'}}
             onClick={e => e.stopPropagation()}
           >
-            <button
-              className="absolute top-4 right-4 text-gray-400 hover:text-white text-2xl font-bold"
-              onClick={() => setModalOpen(false)}
-              aria-label="닫기"
-            >
-              ×
-            </button>
             <Image src={mainNews.image || "/vercel.svg"} alt="뉴스 이미지" width={900} height={420} className="w-full h-64 object-cover rounded-xl mb-6 bg-black/30" />
             <div className="mb-2 text-xs text-gray-400 font-semibold uppercase tracking-widest">{mainNews.source}</div>
             <h1 className="text-2xl md:text-3xl font-extrabold leading-tight mb-3">{mainNews.title}</h1>
@@ -420,23 +482,83 @@ export default function NewsPage() {
           className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/70 backdrop-blur-sm"
           onClick={() => setModalOpen(false)}
         >
+          {/* X 버튼을 오버레이에 고정 */}
+          <button
+            className="fixed top-8 right-12 text-gray-400 hover:text-white text-3xl font-bold z-[100000]"
+            style={{boxShadow:'0 2px 8px #0008', background:'rgba(35,39,47,0.85)', borderRadius: '50%', width: 48, height: 48, display: 'flex', alignItems: 'center', justifyContent: 'center'}} 
+            onClick={() => setModalOpen(false)}
+            aria-label="닫기"
+          >
+            ×
+          </button>
           <div
             className="bg-[#23272f] rounded-2xl shadow-2xl max-w-2xl w-full mx-4 p-8 relative animate-fadein"
             style={{maxHeight:'90vh', overflowY:'auto'}}
             onClick={e => e.stopPropagation()}
           >
-            <button
-              className="absolute top-4 right-4 text-gray-400 hover:text-white text-2xl font-bold"
-              onClick={() => setModalOpen(false)}
-              aria-label="닫기"
-            >
-              ×
-            </button>
             <Image src={leftSecondNews.image || "/vercel.svg"} alt="뉴스 이미지" width={900} height={420} className="w-full h-64 object-cover rounded-xl mb-6 bg-black/30" />
             <div className="mb-2 text-xs text-gray-400 font-semibold uppercase tracking-widest">{leftSecondNews.source}</div>
             <h1 className="text-2xl md:text-3xl font-extrabold leading-tight mb-3">{leftSecondNews.title}</h1>
             <div className="text-sm text-gray-400 mb-4">{formatKoreanDate(leftSecondNews.published_at)}</div>
             <div className="text-base text-gray-200 whitespace-pre-line leading-relaxed mb-2">{leftSecondNews.content}</div>
+            {/* 다음 뉴스 섹션 */}
+            <div className="mt-10 pt-8 border-t border-[#333]">
+              <div className="text-xl font-bold mb-5 text-white">다음 뉴스</div>
+              <div className="flex flex-col gap-5">
+                {/* 더미 뉴스 1 */}
+                <div className="flex items-center gap-4 bg-[#23272f] rounded-xl p-3 shadow hover:bg-[#282c34] transition cursor-pointer">
+                  <Image src="/news/hiring.jpg" alt="공공일자리" width={72} height={72} className="w-18 h-18 rounded-xl object-cover" />
+                  <div className="flex flex-col flex-1 min-w-0">
+                    <div className="font-semibold text-base text-white line-clamp-2">공공일자리 무려 10배나 늘었다…미국 &apos;깜짝고용&apos; 숨은 배경은</div>
+                    <div className="text-xs text-gray-400 mt-1">11시간 전 · 매일경제</div>
+                  </div>
+                </div>
+                {/* 더미 뉴스 2 */}
+                <div className="flex items-center gap-4 bg-[#23272f] rounded-xl p-3 shadow hover:bg-[#282c34] transition cursor-pointer">
+                  <Image src="/news/goldholiday.jpg" alt="황금연휴" width={72} height={72} className="w-18 h-18 rounded-xl object-cover" />
+                  <div className="flex flex-col flex-1 min-w-0">
+                    <div className="font-semibold text-base text-white line-clamp-2">&quot;10월 황금연휴 온다&quot;…노랑풍선·하나투어 꿈틀</div>
+                    <div className="text-xs text-gray-400 mt-1">16시간 전 · 한국경제</div>
+                  </div>
+                </div>
+                {/* 더미 뉴스 3 */}
+                <div className="flex items-center gap-4 bg-[#23272f] rounded-xl p-3 shadow hover:bg-[#282c34] transition cursor-pointer">
+                  <Image src="/news/china-casino.jpg" alt="중국인 무비자 카지노" width={72} height={72} className="w-18 h-18 rounded-xl object-cover" />
+                  <div className="flex flex-col flex-1 min-w-0">
+                    <div className="font-semibold text-base text-white line-clamp-2">중국인 무비자에 카지노주 &apos;껑충&apos;</div>
+                    <div className="text-xs text-gray-400 mt-1">16시간 전 · 매일경제</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+      {/* 뉴스 상세 모달: 왼쪽 세 번째 주요 뉴스 */}
+      {modalOpen === 'leftThird' && (
+        <div
+          className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/70 backdrop-blur-sm"
+          onClick={() => setModalOpen(false)}
+        >
+          {/* X 버튼을 오버레이에 고정 */}
+          <button
+            className="fixed top-8 right-12 text-gray-400 hover:text-white text-3xl font-bold z-[100000]"
+            style={{boxShadow:'0 2px 8px #0008', background:'rgba(35,39,47,0.85)', borderRadius: '50%', width: 48, height: 48, display: 'flex', alignItems: 'center', justifyContent: 'center'}} 
+            onClick={() => setModalOpen(false)}
+            aria-label="닫기"
+          >
+            ×
+          </button>
+          <div
+            className="bg-[#23272f] rounded-2xl shadow-2xl max-w-2xl w-full mx-4 p-8 relative animate-fadein"
+            style={{maxHeight:'90vh', overflowY:'auto'}}
+            onClick={e => e.stopPropagation()}
+          >
+            <Image src={leftThirdNews.image || "/vercel.svg"} alt="뉴스 이미지" width={900} height={420} className="w-full h-64 object-cover rounded-xl mb-6 bg-black/30" />
+            <div className="mb-2 text-xs text-gray-400 font-semibold uppercase tracking-widest">{leftThirdNews.source}</div>
+            <h1 className="text-2xl md:text-3xl font-extrabold leading-tight mb-3">{leftThirdNews.title}</h1>
+            <div className="text-sm text-gray-400 mb-4">{formatKoreanDate(leftThirdNews.published_at)}</div>
+            <div className="text-base text-gray-200 whitespace-pre-line leading-relaxed mb-2">{leftThirdNews.content}</div>
             {/* 다음 뉴스 섹션 */}
             <div className="mt-10 pt-8 border-t border-[#333]">
               <div className="text-xl font-bold mb-5 text-white">다음 뉴스</div>
@@ -476,18 +598,20 @@ export default function NewsPage() {
           className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/70 backdrop-blur-sm"
           onClick={() => setModalOpen(false)}
         >
+          {/* X 버튼을 오버레이에 고정 */}
+          <button
+            className="fixed top-8 right-12 text-gray-400 hover:text-white text-3xl font-bold z-[100000]"
+            style={{boxShadow:'0 2px 8px #0008', background:'rgba(35,39,47,0.85)', borderRadius: '50%', width: 48, height: 48, display: 'flex', alignItems: 'center', justifyContent: 'center'}} 
+            onClick={() => setModalOpen(false)}
+            aria-label="닫기"
+          >
+            ×
+          </button>
           <div
             className="bg-[#23272f] rounded-2xl shadow-2xl max-w-2xl w-full mx-4 p-8 relative animate-fadein"
             style={{maxHeight:'90vh', overflowY:'auto'}}
             onClick={e => e.stopPropagation()}
           >
-            <button
-              className="absolute top-4 right-4 text-gray-400 hover:text-white text-2xl font-bold"
-              onClick={() => setModalOpen(false)}
-              aria-label="닫기"
-            >
-              ×
-            </button>
             <Image src={rightTopNews.image || "/vercel.svg"} alt="뉴스 이미지" width={900} height={420} className="w-full h-64 object-cover rounded-xl mb-6 bg-black/30" />
             <div className="mb-2 text-xs text-gray-400 font-semibold uppercase tracking-widest">{rightTopNews.source}</div>
             <h1 className="text-2xl md:text-3xl font-extrabold leading-tight mb-3">{rightTopNews.title}</h1>
@@ -532,18 +656,20 @@ export default function NewsPage() {
           className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/70 backdrop-blur-sm"
           onClick={() => setModalOpen(false)}
         >
+          {/* X 버튼을 오버레이에 고정 */}
+          <button
+            className="fixed top-8 right-12 text-gray-400 hover:text-white text-3xl font-bold z-[100000]"
+            style={{boxShadow:'0 2px 8px #0008', background:'rgba(35,39,47,0.85)', borderRadius: '50%', width: 48, height: 48, display: 'flex', alignItems: 'center', justifyContent: 'center'}} 
+            onClick={() => setModalOpen(false)}
+            aria-label="닫기"
+          >
+            ×
+          </button>
           <div
             className="bg-[#23272f] rounded-2xl shadow-2xl max-w-2xl w-full mx-4 p-8 relative animate-fadein"
             style={{maxHeight:'90vh', overflowY:'auto'}}
             onClick={e => e.stopPropagation()}
           >
-            <button
-              className="absolute top-4 right-4 text-gray-400 hover:text-white text-2xl font-bold"
-              onClick={() => setModalOpen(false)}
-              aria-label="닫기"
-            >
-              ×
-            </button>
             <Image src={rightSecondNews.image || "/vercel.svg"} alt="뉴스 이미지" width={900} height={420} className="w-full h-64 object-cover rounded-xl mb-6 bg-black/30" />
             <div className="mb-2 text-xs text-gray-400 font-semibold uppercase tracking-widest">{rightSecondNews.source}</div>
             <h1 className="text-2xl md:text-3xl font-extrabold leading-tight mb-3">{rightSecondNews.title}</h1>
@@ -588,23 +714,83 @@ export default function NewsPage() {
           className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/70 backdrop-blur-sm"
           onClick={() => setModalOpen(false)}
         >
+          {/* X 버튼을 오버레이에 고정 */}
+          <button
+            className="fixed top-8 right-12 text-gray-400 hover:text-white text-3xl font-bold z-[100000]"
+            style={{boxShadow:'0 2px 8px #0008', background:'rgba(35,39,47,0.85)', borderRadius: '50%', width: 48, height: 48, display: 'flex', alignItems: 'center', justifyContent: 'center'}} 
+            onClick={() => setModalOpen(false)}
+            aria-label="닫기"
+          >
+            ×
+          </button>
           <div
             className="bg-[#23272f] rounded-2xl shadow-2xl max-w-2xl w-full mx-4 p-8 relative animate-fadein"
             style={{maxHeight:'90vh', overflowY:'auto'}}
             onClick={e => e.stopPropagation()}
           >
-            <button
-              className="absolute top-4 right-4 text-gray-400 hover:text-white text-2xl font-bold"
-              onClick={() => setModalOpen(false)}
-              aria-label="닫기"
-            >
-              ×
-            </button>
             <Image src={rightThirdNews.image || "/vercel.svg"} alt="뉴스 이미지" width={900} height={420} className="w-full h-64 object-cover rounded-xl mb-6 bg-black/30" />
             <div className="mb-2 text-xs text-gray-400 font-semibold uppercase tracking-widest">{rightThirdNews.source}</div>
             <h1 className="text-2xl md:text-3xl font-extrabold leading-tight mb-3">{rightThirdNews.title}</h1>
             <div className="text-sm text-gray-400 mb-4">{formatKoreanDate(rightThirdNews.published_at)}</div>
             <div className="text-base text-gray-200 whitespace-pre-line leading-relaxed mb-2">{rightThirdNews.content}</div>
+            {/* 다음 뉴스 섹션 */}
+            <div className="mt-10 pt-8 border-t border-[#333]">
+              <div className="text-xl font-bold mb-5 text-white">다음 뉴스</div>
+              <div className="flex flex-col gap-5">
+                {/* 더미 뉴스 1 */}
+                <div className="flex items-center gap-4 bg-[#23272f] rounded-xl p-3 shadow hover:bg-[#282c34] transition cursor-pointer">
+                  <Image src="/news/hiring.jpg" alt="공공일자리" width={72} height={72} className="w-18 h-18 rounded-xl object-cover" />
+                  <div className="flex flex-col flex-1 min-w-0">
+                    <div className="font-semibold text-base text-white line-clamp-2">공공일자리 무려 10배나 늘었다…미국 &apos;깜짝고용&apos; 숨은 배경은</div>
+                    <div className="text-xs text-gray-400 mt-1">11시간 전 · 매일경제</div>
+                  </div>
+                </div>
+                {/* 더미 뉴스 2 */}
+                <div className="flex items-center gap-4 bg-[#23272f] rounded-xl p-3 shadow hover:bg-[#282c34] transition cursor-pointer">
+                  <Image src="/news/goldholiday.jpg" alt="황금연휴" width={72} height={72} className="w-18 h-18 rounded-xl object-cover" />
+                  <div className="flex flex-col flex-1 min-w-0">
+                    <div className="font-semibold text-base text-white line-clamp-2">&quot;10월 황금연휴 온다&quot;…노랑풍선·하나투어 꿈틀</div>
+                    <div className="text-xs text-gray-400 mt-1">16시간 전 · 한국경제</div>
+                  </div>
+                </div>
+                {/* 더미 뉴스 3 */}
+                <div className="flex items-center gap-4 bg-[#23272f] rounded-xl p-3 shadow hover:bg-[#282c34] transition cursor-pointer">
+                  <Image src="/news/china-casino.jpg" alt="중국인 무비자 카지노" width={72} height={72} className="w-18 h-18 rounded-xl object-cover" />
+                  <div className="flex flex-col flex-1 min-w-0">
+                    <div className="font-semibold text-base text-white line-clamp-2">중국인 무비자에 카지노주 &apos;껑충&apos;</div>
+                    <div className="text-xs text-gray-400 mt-1">16시간 전 · 매일경제</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+      {/* 뉴스 상세 모달: 오른쪽 네 번째 주요 뉴스 */}
+      {modalOpen === 'rightFourth' && (
+        <div
+          className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/70 backdrop-blur-sm"
+          onClick={() => setModalOpen(false)}
+        >
+          {/* X 버튼을 오버레이에 고정 */}
+          <button
+            className="fixed top-8 right-12 text-gray-400 hover:text-white text-3xl font-bold z-[100000]"
+            style={{boxShadow:'0 2px 8px #0008', background:'rgba(35,39,47,0.85)', borderRadius: '50%', width: 48, height: 48, display: 'flex', alignItems: 'center', justifyContent: 'center'}} 
+            onClick={() => setModalOpen(false)}
+            aria-label="닫기"
+          >
+            ×
+          </button>
+          <div
+            className="bg-[#23272f] rounded-2xl shadow-2xl max-w-2xl w-full mx-4 p-8 relative animate-fadein"
+            style={{maxHeight:'90vh', overflowY:'auto'}}
+            onClick={e => e.stopPropagation()}
+          >
+            <Image src={rightFourthNews.image || "/vercel.svg"} alt="뉴스 이미지" width={900} height={420} className="w-full h-64 object-cover rounded-xl mb-6 bg-black/30" />
+            <div className="mb-2 text-xs text-gray-400 font-semibold uppercase tracking-widest">{rightFourthNews.source}</div>
+            <h1 className="text-2xl md:text-3xl font-extrabold leading-tight mb-3">{rightFourthNews.title}</h1>
+            <div className="text-sm text-gray-400 mb-4">{formatKoreanDate(rightFourthNews.published_at)}</div>
+            <div className="text-base text-gray-200 whitespace-pre-line leading-relaxed mb-2">{rightFourthNews.content}</div>
             {/* 다음 뉴스 섹션 */}
             <div className="mt-10 pt-8 border-t border-[#333]">
               <div className="text-xl font-bold mb-5 text-white">다음 뉴스</div>
