@@ -47,32 +47,6 @@ const YearlyTradeBarChart: React.FC<Props> = ({ data }) => {
 
   return (
     <div ref={chartRef} className="w-full overflow-x-auto relative" style={{ marginLeft: 0 }}>
-      {/* 범례: 차트 div의 오른쪽 상단에 고정 */}
-      <div
-        style={{
-          position: 'absolute',
-          top: 18,
-          right: 36,
-          zIndex: 10,
-          display: 'flex',
-          alignItems: 'center',
-          gap: 24,
-          background: 'rgba(24,23,28,0.92)',
-          borderRadius: 12,
-          padding: '6px 18px 6px 16px',
-          boxShadow: '0 2px 8px #0004',
-          border: '1.5px solid #23272f',
-        }}
-      >
-        <span style={{ display: 'flex', alignItems: 'center', gap: 7 }}>
-          <span style={{ width: 16, height: 16, borderRadius: 4, background: BUY_COLOR, display: 'inline-block' }} />
-          <span style={{ color: BUY_COLOR, fontWeight: 700, fontSize: 16 }}>매수</span>
-        </span>
-        <span style={{ display: 'flex', alignItems: 'center', gap: 7 }}>
-          <span style={{ width: 16, height: 16, borderRadius: 4, background: SELL_COLOR, display: 'inline-block' }} />
-          <span style={{ color: SELL_COLOR, fontWeight: 700, fontSize: 16 }}>매도</span>
-        </span>
-      </div>
       <svg width={chartWidth} height={CHART_HEIGHT + 40} className="block mx-auto" style={{ position: 'relative', zIndex: 1 }}>
         {/* y축 라벨 */}
         {[0.25,0.5,0.75,1].map((p,i) => (

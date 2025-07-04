@@ -476,9 +476,32 @@ function PoliticianDetailPage() {
               ))}
             </nav>
             {/* 거래 차트/섹터 */}
-            <div className="bg-[#23272f] rounded-2xl p-7 shadow-lg mb-4 min-h-[320px] flex flex-col gap-2 border border-[#23272f] max-w-[950px]">
-              <div className="flex justify-between items-center mb-2">
-                <div className="text-xl font-bold text-white">연도별 거래량</div>
+            <div className="bg-[#23272f] rounded-2xl p-7 shadow-lg mb-4 min-h-[320px] flex flex-col gap-2 border border-[#23272f] max-w-[950px] relative">
+              {/* 범례: 우측 상단 고정 */}
+              <div
+                style={{
+                  position: 'absolute',
+                  top: 18,
+                  right: 36,
+                  zIndex: 10,
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 24,
+                  background: 'rgba(24,23,28,0.92)',
+                  borderRadius: 12,
+                  padding: '6px 18px 6px 16px',
+                  boxShadow: '0 2px 8px #0004',
+                  border: '1.5px solid #23272f',
+                }}
+              >
+                <span style={{ display: 'flex', alignItems: 'center', gap: 7 }}>
+                  <span style={{ width: 16, height: 16, borderRadius: 4, background: '#34d399', display: 'inline-block' }} />
+                  <span style={{ color: '#34d399', fontWeight: 700, fontSize: 16 }}>매수</span>
+                </span>
+                <span style={{ display: 'flex', alignItems: 'center', gap: 7 }}>
+                  <span style={{ width: 16, height: 16, borderRadius: 4, background: '#fb923c', display: 'inline-block' }} />
+                  <span style={{ color: '#fb923c', fontWeight: 700, fontSize: 16 }}>매도</span>
+                </span>
               </div>
               <div className="flex-1 w-full flex items-center justify-center px-2" style={{minHeight:220}}>
                 <YearlyTradeBarChart data={yearlyData} />
