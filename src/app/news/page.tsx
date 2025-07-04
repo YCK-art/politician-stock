@@ -212,6 +212,34 @@ const rightEighthNews: NewsItem = {
   url: "#"
 };
 
+// 모든 뉴스 데이터를 배열로 정리
+const allNews: NewsItem[] = [
+  mainNews,
+  leftTopNews,
+  leftSecondNews,
+  leftThirdNews,
+  rightTopNews,
+  rightSecondNews,
+  rightThirdNews,
+  rightFourthNews,
+  rightFifthNews,
+  centerSecondNews,
+  rightSixthNews,
+  rightSeventhNews,
+  rightEighthNews
+];
+
+// 현재 뉴스를 제외한 다른 뉴스들을 반환하는 함수
+function getOtherNews(currentNews: NewsItem): NewsItem[] {
+  const otherNews = allNews.filter(news => news.title !== currentNews.title);
+  
+  // 랜덤하게 섞기
+  const shuffled = otherNews.sort(() => Math.random() - 0.5);
+  
+  // 처음 3개 반환
+  return shuffled.slice(0, 3);
+}
+
 export default function NewsPage() {
   // 모달 상태
   const [modalOpen, setModalOpen] = useState<string|false>(false);
@@ -492,30 +520,37 @@ export default function NewsPage() {
             <div className="mt-10 pt-8 border-t border-[#333]">
               <div className="text-xl font-bold mb-5 text-white">다음 뉴스</div>
               <div className="flex flex-col gap-5">
-                {/* 더미 뉴스 1 */}
-                <div className="flex items-center gap-4 bg-[#23272f] rounded-xl p-3 shadow hover:bg-[#282c34] transition cursor-pointer">
-                  <Image src="/news/hiring.jpg" alt="공공일자리" width={72} height={72} className="w-18 h-18 rounded-xl object-cover" />
-                  <div className="flex flex-col flex-1 min-w-0">
-                    <div className="font-semibold text-base text-white line-clamp-2">공공일자리 무려 10배나 늘었다…미국 &apos;깜짝고용&apos; 숨은 배경은</div>
-                    <div className="text-xs text-gray-400 mt-1">11시간 전 · 매일경제</div>
+                {getOtherNews(leftTopNews).map((news, index) => (
+                  <div
+                    key={index}
+                    className="flex items-center gap-4 bg-[#23272f] rounded-xl p-3 shadow hover:bg-[#282c34] transition cursor-pointer"
+                    onClick={() => {
+                      setModalOpen(false);
+                      setTimeout(() => {
+                        const modalKey = allNews.findIndex(n => n.title === news.title);
+                        if (modalKey === 0) setModalOpen('main');
+                        else if (modalKey === 1) setModalOpen('leftTop');
+                        else if (modalKey === 2) setModalOpen('leftSecond');
+                        else if (modalKey === 3) setModalOpen('leftThird');
+                        else if (modalKey === 4) setModalOpen('rightTop');
+                        else if (modalKey === 5) setModalOpen('rightSecond');
+                        else if (modalKey === 6) setModalOpen('rightThird');
+                        else if (modalKey === 7) setModalOpen('rightFourth');
+                        else if (modalKey === 8) setModalOpen('rightFifth');
+                        else if (modalKey === 9) setModalOpen('centerSecond');
+                        else if (modalKey === 10) setModalOpen('rightSixth');
+                        else if (modalKey === 11) setModalOpen('rightSeventh');
+                        else if (modalKey === 12) setModalOpen('rightEighth');
+                      }, 100);
+                    }}
+                  >
+                    <Image src={news.image || "/vercel.svg"} alt={news.title} width={72} height={72} className="w-18 h-18 rounded-xl object-cover" />
+                    <div className="flex flex-col flex-1 min-w-0">
+                      <div className="font-semibold text-base text-white line-clamp-2">{news.title}</div>
+                      <div className="text-xs text-gray-400 mt-1">{formatKoreanDate(news.published_at)} · {news.source}</div>
+                    </div>
                   </div>
-                </div>
-                {/* 더미 뉴스 2 */}
-                <div className="flex items-center gap-4 bg-[#23272f] rounded-xl p-3 shadow hover:bg-[#282c34] transition cursor-pointer">
-                  <Image src="/news/goldholiday.jpg" alt="황금연휴" width={72} height={72} className="w-18 h-18 rounded-xl object-cover" />
-                  <div className="flex flex-col flex-1 min-w-0">
-                    <div className="font-semibold text-base text-white line-clamp-2">&quot;10월 황금연휴 온다&quot;…노랑풍선·하나투어 꿈틀</div>
-                    <div className="text-xs text-gray-400 mt-1">16시간 전 · 한국경제</div>
-                  </div>
-                </div>
-                {/* 더미 뉴스 3 */}
-                <div className="flex items-center gap-4 bg-[#23272f] rounded-xl p-3 shadow hover:bg-[#282c34] transition cursor-pointer">
-                  <Image src="/news/china-casino.jpg" alt="중국인 무비자 카지노" width={72} height={72} className="w-18 h-18 rounded-xl object-cover" />
-                  <div className="flex flex-col flex-1 min-w-0">
-                    <div className="font-semibold text-base text-white line-clamp-2">중국인 무비자에 카지노주 &apos;껑충&apos;</div>
-                    <div className="text-xs text-gray-400 mt-1">16시간 전 · 매일경제</div>
-                  </div>
-                </div>
+                ))}
               </div>
             </div>
           </div>
@@ -550,30 +585,37 @@ export default function NewsPage() {
             <div className="mt-10 pt-8 border-t border-[#333]">
               <div className="text-xl font-bold mb-5 text-white">다음 뉴스</div>
               <div className="flex flex-col gap-5">
-                {/* 더미 뉴스 1 */}
-                <div className="flex items-center gap-4 bg-[#23272f] rounded-xl p-3 shadow hover:bg-[#282c34] transition cursor-pointer">
-                  <Image src="/news/hiring.jpg" alt="공공일자리" width={72} height={72} className="w-18 h-18 rounded-xl object-cover" />
-                  <div className="flex flex-col flex-1 min-w-0">
-                    <div className="font-semibold text-base text-white line-clamp-2">공공일자리 무려 10배나 늘었다…미국 &apos;깜짝고용&apos; 숨은 배경은</div>
-                    <div className="text-xs text-gray-400 mt-1">11시간 전 · 매일경제</div>
+                {getOtherNews(mainNews).map((news, index) => (
+                  <div
+                    key={index}
+                    className="flex items-center gap-4 bg-[#23272f] rounded-xl p-3 shadow hover:bg-[#282c34] transition cursor-pointer"
+                    onClick={() => {
+                      setModalOpen(false);
+                      setTimeout(() => {
+                        const modalKey = allNews.findIndex(n => n.title === news.title);
+                        if (modalKey === 0) setModalOpen('main');
+                        else if (modalKey === 1) setModalOpen('leftTop');
+                        else if (modalKey === 2) setModalOpen('leftSecond');
+                        else if (modalKey === 3) setModalOpen('leftThird');
+                        else if (modalKey === 4) setModalOpen('rightTop');
+                        else if (modalKey === 5) setModalOpen('rightSecond');
+                        else if (modalKey === 6) setModalOpen('rightThird');
+                        else if (modalKey === 7) setModalOpen('rightFourth');
+                        else if (modalKey === 8) setModalOpen('rightFifth');
+                        else if (modalKey === 9) setModalOpen('centerSecond');
+                        else if (modalKey === 10) setModalOpen('rightSixth');
+                        else if (modalKey === 11) setModalOpen('rightSeventh');
+                        else if (modalKey === 12) setModalOpen('rightEighth');
+                      }, 100);
+                    }}
+                  >
+                    <Image src={news.image || "/vercel.svg"} alt={news.title} width={72} height={72} className="w-18 h-18 rounded-xl object-cover" />
+                    <div className="flex flex-col flex-1 min-w-0">
+                      <div className="font-semibold text-base text-white line-clamp-2">{news.title}</div>
+                      <div className="text-xs text-gray-400 mt-1">{formatKoreanDate(news.published_at)} · {news.source}</div>
+                    </div>
                   </div>
-                </div>
-                {/* 더미 뉴스 2 */}
-                <div className="flex items-center gap-4 bg-[#23272f] rounded-xl p-3 shadow hover:bg-[#282c34] transition cursor-pointer">
-                  <Image src="/news/goldholiday.jpg" alt="황금연휴" width={72} height={72} className="w-18 h-18 rounded-xl object-cover" />
-                  <div className="flex flex-col flex-1 min-w-0">
-                    <div className="font-semibold text-base text-white line-clamp-2">&quot;10월 황금연휴 온다&quot;…노랑풍선·하나투어 꿈틀</div>
-                    <div className="text-xs text-gray-400 mt-1">16시간 전 · 한국경제</div>
-                  </div>
-                </div>
-                {/* 더미 뉴스 3 */}
-                <div className="flex items-center gap-4 bg-[#23272f] rounded-xl p-3 shadow hover:bg-[#282c34] transition cursor-pointer">
-                  <Image src="/news/china-casino.jpg" alt="중국인 무비자 카지노" width={72} height={72} className="w-18 h-18 rounded-xl object-cover" />
-                  <div className="flex flex-col flex-1 min-w-0">
-                    <div className="font-semibold text-base text-white line-clamp-2">중국인 무비자에 카지노주 &apos;껑충&apos;</div>
-                    <div className="text-xs text-gray-400 mt-1">16시간 전 · 매일경제</div>
-                  </div>
-                </div>
+                ))}
               </div>
             </div>
           </div>
@@ -608,30 +650,37 @@ export default function NewsPage() {
             <div className="mt-10 pt-8 border-t border-[#333]">
               <div className="text-xl font-bold mb-5 text-white">다음 뉴스</div>
               <div className="flex flex-col gap-5">
-                {/* 더미 뉴스 1 */}
-                <div className="flex items-center gap-4 bg-[#23272f] rounded-xl p-3 shadow hover:bg-[#282c34] transition cursor-pointer">
-                  <Image src="/news/hiring.jpg" alt="공공일자리" width={72} height={72} className="w-18 h-18 rounded-xl object-cover" />
-                  <div className="flex flex-col flex-1 min-w-0">
-                    <div className="font-semibold text-base text-white line-clamp-2">공공일자리 무려 10배나 늘었다…미국 &apos;깜짝고용&apos; 숨은 배경은</div>
-                    <div className="text-xs text-gray-400 mt-1">11시간 전 · 매일경제</div>
+                {getOtherNews(leftSecondNews).map((news, index) => (
+                  <div
+                    key={index}
+                    className="flex items-center gap-4 bg-[#23272f] rounded-xl p-3 shadow hover:bg-[#282c34] transition cursor-pointer"
+                    onClick={() => {
+                      setModalOpen(false);
+                      setTimeout(() => {
+                        const modalKey = allNews.findIndex(n => n.title === news.title);
+                        if (modalKey === 0) setModalOpen('main');
+                        else if (modalKey === 1) setModalOpen('leftTop');
+                        else if (modalKey === 2) setModalOpen('leftSecond');
+                        else if (modalKey === 3) setModalOpen('leftThird');
+                        else if (modalKey === 4) setModalOpen('rightTop');
+                        else if (modalKey === 5) setModalOpen('rightSecond');
+                        else if (modalKey === 6) setModalOpen('rightThird');
+                        else if (modalKey === 7) setModalOpen('rightFourth');
+                        else if (modalKey === 8) setModalOpen('rightFifth');
+                        else if (modalKey === 9) setModalOpen('centerSecond');
+                        else if (modalKey === 10) setModalOpen('rightSixth');
+                        else if (modalKey === 11) setModalOpen('rightSeventh');
+                        else if (modalKey === 12) setModalOpen('rightEighth');
+                      }, 100);
+                    }}
+                  >
+                    <Image src={news.image || "/vercel.svg"} alt={news.title} width={72} height={72} className="w-18 h-18 rounded-xl object-cover" />
+                    <div className="flex flex-col flex-1 min-w-0">
+                      <div className="font-semibold text-base text-white line-clamp-2">{news.title}</div>
+                      <div className="text-xs text-gray-400 mt-1">{formatKoreanDate(news.published_at)} · {news.source}</div>
+                    </div>
                   </div>
-                </div>
-                {/* 더미 뉴스 2 */}
-                <div className="flex items-center gap-4 bg-[#23272f] rounded-xl p-3 shadow hover:bg-[#282c34] transition cursor-pointer">
-                  <Image src="/news/goldholiday.jpg" alt="황금연휴" width={72} height={72} className="w-18 h-18 rounded-xl object-cover" />
-                  <div className="flex flex-col flex-1 min-w-0">
-                    <div className="font-semibold text-base text-white line-clamp-2">&quot;10월 황금연휴 온다&quot;…노랑풍선·하나투어 꿈틀</div>
-                    <div className="text-xs text-gray-400 mt-1">16시간 전 · 한국경제</div>
-                  </div>
-                </div>
-                {/* 더미 뉴스 3 */}
-                <div className="flex items-center gap-4 bg-[#23272f] rounded-xl p-3 shadow hover:bg-[#282c34] transition cursor-pointer">
-                  <Image src="/news/china-casino.jpg" alt="중국인 무비자 카지노" width={72} height={72} className="w-18 h-18 rounded-xl object-cover" />
-                  <div className="flex flex-col flex-1 min-w-0">
-                    <div className="font-semibold text-base text-white line-clamp-2">중국인 무비자에 카지노주 &apos;껑충&apos;</div>
-                    <div className="text-xs text-gray-400 mt-1">16시간 전 · 매일경제</div>
-                  </div>
-                </div>
+                ))}
               </div>
             </div>
           </div>
@@ -666,30 +715,37 @@ export default function NewsPage() {
             <div className="mt-10 pt-8 border-t border-[#333]">
               <div className="text-xl font-bold mb-5 text-white">다음 뉴스</div>
               <div className="flex flex-col gap-5">
-                {/* 더미 뉴스 1 */}
-                <div className="flex items-center gap-4 bg-[#23272f] rounded-xl p-3 shadow hover:bg-[#282c34] transition cursor-pointer">
-                  <Image src="/news/hiring.jpg" alt="공공일자리" width={72} height={72} className="w-18 h-18 rounded-xl object-cover" />
-                  <div className="flex flex-col flex-1 min-w-0">
-                    <div className="font-semibold text-base text-white line-clamp-2">공공일자리 무려 10배나 늘었다…미국 &apos;깜짝고용&apos; 숨은 배경은</div>
-                    <div className="text-xs text-gray-400 mt-1">11시간 전 · 매일경제</div>
+                {getOtherNews(leftThirdNews).map((news, index) => (
+                  <div
+                    key={index}
+                    className="flex items-center gap-4 bg-[#23272f] rounded-xl p-3 shadow hover:bg-[#282c34] transition cursor-pointer"
+                    onClick={() => {
+                      setModalOpen(false);
+                      setTimeout(() => {
+                        const modalKey = allNews.findIndex(n => n.title === news.title);
+                        if (modalKey === 0) setModalOpen('main');
+                        else if (modalKey === 1) setModalOpen('leftTop');
+                        else if (modalKey === 2) setModalOpen('leftSecond');
+                        else if (modalKey === 3) setModalOpen('leftThird');
+                        else if (modalKey === 4) setModalOpen('rightTop');
+                        else if (modalKey === 5) setModalOpen('rightSecond');
+                        else if (modalKey === 6) setModalOpen('rightThird');
+                        else if (modalKey === 7) setModalOpen('rightFourth');
+                        else if (modalKey === 8) setModalOpen('rightFifth');
+                        else if (modalKey === 9) setModalOpen('centerSecond');
+                        else if (modalKey === 10) setModalOpen('rightSixth');
+                        else if (modalKey === 11) setModalOpen('rightSeventh');
+                        else if (modalKey === 12) setModalOpen('rightEighth');
+                      }, 100);
+                    }}
+                  >
+                    <Image src={news.image || "/vercel.svg"} alt={news.title} width={72} height={72} className="w-18 h-18 rounded-xl object-cover" />
+                    <div className="flex flex-col flex-1 min-w-0">
+                      <div className="font-semibold text-base text-white line-clamp-2">{news.title}</div>
+                      <div className="text-xs text-gray-400 mt-1">{formatKoreanDate(news.published_at)} · {news.source}</div>
+                    </div>
                   </div>
-                </div>
-                {/* 더미 뉴스 2 */}
-                <div className="flex items-center gap-4 bg-[#23272f] rounded-xl p-3 shadow hover:bg-[#282c34] transition cursor-pointer">
-                  <Image src="/news/goldholiday.jpg" alt="황금연휴" width={72} height={72} className="w-18 h-18 rounded-xl object-cover" />
-                  <div className="flex flex-col flex-1 min-w-0">
-                    <div className="font-semibold text-base text-white line-clamp-2">&quot;10월 황금연휴 온다&quot;…노랑풍선·하나투어 꿈틀</div>
-                    <div className="text-xs text-gray-400 mt-1">16시간 전 · 한국경제</div>
-                  </div>
-                </div>
-                {/* 더미 뉴스 3 */}
-                <div className="flex items-center gap-4 bg-[#23272f] rounded-xl p-3 shadow hover:bg-[#282c34] transition cursor-pointer">
-                  <Image src="/news/china-casino.jpg" alt="중국인 무비자 카지노" width={72} height={72} className="w-18 h-18 rounded-xl object-cover" />
-                  <div className="flex flex-col flex-1 min-w-0">
-                    <div className="font-semibold text-base text-white line-clamp-2">중국인 무비자에 카지노주 &apos;껑충&apos;</div>
-                    <div className="text-xs text-gray-400 mt-1">16시간 전 · 매일경제</div>
-                  </div>
-                </div>
+                ))}
               </div>
             </div>
           </div>
@@ -724,30 +780,37 @@ export default function NewsPage() {
             <div className="mt-10 pt-8 border-t border-[#333]">
               <div className="text-xl font-bold mb-5 text-white">다음 뉴스</div>
               <div className="flex flex-col gap-5">
-                {/* 더미 뉴스 1 */}
-                <div className="flex items-center gap-4 bg-[#23272f] rounded-xl p-3 shadow hover:bg-[#282c34] transition cursor-pointer">
-                  <Image src="/news/hiring.jpg" alt="공공일자리" width={72} height={72} className="w-18 h-18 rounded-xl object-cover" />
-                  <div className="flex flex-col flex-1 min-w-0">
-                    <div className="font-semibold text-base text-white line-clamp-2">공공일자리 무려 10배나 늘었다…미국 &apos;깜짝고용&apos; 숨은 배경은</div>
-                    <div className="text-xs text-gray-400 mt-1">11시간 전 · 매일경제</div>
+                {getOtherNews(rightTopNews).map((news, index) => (
+                  <div
+                    key={index}
+                    className="flex items-center gap-4 bg-[#23272f] rounded-xl p-3 shadow hover:bg-[#282c34] transition cursor-pointer"
+                    onClick={() => {
+                      setModalOpen(false);
+                      setTimeout(() => {
+                        const modalKey = allNews.findIndex(n => n.title === news.title);
+                        if (modalKey === 0) setModalOpen('main');
+                        else if (modalKey === 1) setModalOpen('leftTop');
+                        else if (modalKey === 2) setModalOpen('leftSecond');
+                        else if (modalKey === 3) setModalOpen('leftThird');
+                        else if (modalKey === 4) setModalOpen('rightTop');
+                        else if (modalKey === 5) setModalOpen('rightSecond');
+                        else if (modalKey === 6) setModalOpen('rightThird');
+                        else if (modalKey === 7) setModalOpen('rightFourth');
+                        else if (modalKey === 8) setModalOpen('rightFifth');
+                        else if (modalKey === 9) setModalOpen('centerSecond');
+                        else if (modalKey === 10) setModalOpen('rightSixth');
+                        else if (modalKey === 11) setModalOpen('rightSeventh');
+                        else if (modalKey === 12) setModalOpen('rightEighth');
+                      }, 100);
+                    }}
+                  >
+                    <Image src={news.image || "/vercel.svg"} alt={news.title} width={72} height={72} className="w-18 h-18 rounded-xl object-cover" />
+                    <div className="flex flex-col flex-1 min-w-0">
+                      <div className="font-semibold text-base text-white line-clamp-2">{news.title}</div>
+                      <div className="text-xs text-gray-400 mt-1">{formatKoreanDate(news.published_at)} · {news.source}</div>
+                    </div>
                   </div>
-                </div>
-                {/* 더미 뉴스 2 */}
-                <div className="flex items-center gap-4 bg-[#23272f] rounded-xl p-3 shadow hover:bg-[#282c34] transition cursor-pointer">
-                  <Image src="/news/goldholiday.jpg" alt="황금연휴" width={72} height={72} className="w-18 h-18 rounded-xl object-cover" />
-                  <div className="flex flex-col flex-1 min-w-0">
-                    <div className="font-semibold text-base text-white line-clamp-2">&quot;10월 황금연휴 온다&quot;…노랑풍선·하나투어 꿈틀</div>
-                    <div className="text-xs text-gray-400 mt-1">16시간 전 · 한국경제</div>
-                  </div>
-                </div>
-                {/* 더미 뉴스 3 */}
-                <div className="flex items-center gap-4 bg-[#23272f] rounded-xl p-3 shadow hover:bg-[#282c34] transition cursor-pointer">
-                  <Image src="/news/china-casino.jpg" alt="중국인 무비자 카지노" width={72} height={72} className="w-18 h-18 rounded-xl object-cover" />
-                  <div className="flex flex-col flex-1 min-w-0">
-                    <div className="font-semibold text-base text-white line-clamp-2">중국인 무비자에 카지노주 &apos;껑충&apos;</div>
-                    <div className="text-xs text-gray-400 mt-1">16시간 전 · 매일경제</div>
-                  </div>
-                </div>
+                ))}
               </div>
             </div>
           </div>
@@ -782,30 +845,37 @@ export default function NewsPage() {
             <div className="mt-10 pt-8 border-t border-[#333]">
               <div className="text-xl font-bold mb-5 text-white">다음 뉴스</div>
               <div className="flex flex-col gap-5">
-                {/* 더미 뉴스 1 */}
-                <div className="flex items-center gap-4 bg-[#23272f] rounded-xl p-3 shadow hover:bg-[#282c34] transition cursor-pointer">
-                  <Image src="/news/hiring.jpg" alt="공공일자리" width={72} height={72} className="w-18 h-18 rounded-xl object-cover" />
-                  <div className="flex flex-col flex-1 min-w-0">
-                    <div className="font-semibold text-base text-white line-clamp-2">공공일자리 무려 10배나 늘었다…미국 &apos;깜짝고용&apos; 숨은 배경은</div>
-                    <div className="text-xs text-gray-400 mt-1">11시간 전 · 매일경제</div>
+                {getOtherNews(rightSecondNews).map((news, index) => (
+                  <div
+                    key={index}
+                    className="flex items-center gap-4 bg-[#23272f] rounded-xl p-3 shadow hover:bg-[#282c34] transition cursor-pointer"
+                    onClick={() => {
+                      setModalOpen(false);
+                      setTimeout(() => {
+                        const modalKey = allNews.findIndex(n => n.title === news.title);
+                        if (modalKey === 0) setModalOpen('main');
+                        else if (modalKey === 1) setModalOpen('leftTop');
+                        else if (modalKey === 2) setModalOpen('leftSecond');
+                        else if (modalKey === 3) setModalOpen('leftThird');
+                        else if (modalKey === 4) setModalOpen('rightTop');
+                        else if (modalKey === 5) setModalOpen('rightSecond');
+                        else if (modalKey === 6) setModalOpen('rightThird');
+                        else if (modalKey === 7) setModalOpen('rightFourth');
+                        else if (modalKey === 8) setModalOpen('rightFifth');
+                        else if (modalKey === 9) setModalOpen('centerSecond');
+                        else if (modalKey === 10) setModalOpen('rightSixth');
+                        else if (modalKey === 11) setModalOpen('rightSeventh');
+                        else if (modalKey === 12) setModalOpen('rightEighth');
+                      }, 100);
+                    }}
+                  >
+                    <Image src={news.image || "/vercel.svg"} alt={news.title} width={72} height={72} className="w-18 h-18 rounded-xl object-cover" />
+                    <div className="flex flex-col flex-1 min-w-0">
+                      <div className="font-semibold text-base text-white line-clamp-2">{news.title}</div>
+                      <div className="text-xs text-gray-400 mt-1">{formatKoreanDate(news.published_at)} · {news.source}</div>
+                    </div>
                   </div>
-                </div>
-                {/* 더미 뉴스 2 */}
-                <div className="flex items-center gap-4 bg-[#23272f] rounded-xl p-3 shadow hover:bg-[#282c34] transition cursor-pointer">
-                  <Image src="/news/goldholiday.jpg" alt="황금연휴" width={72} height={72} className="w-18 h-18 rounded-xl object-cover" />
-                  <div className="flex flex-col flex-1 min-w-0">
-                    <div className="font-semibold text-base text-white line-clamp-2">&quot;10월 황금연휴 온다&quot;…노랑풍선·하나투어 꿈틀</div>
-                    <div className="text-xs text-gray-400 mt-1">16시간 전 · 한국경제</div>
-                  </div>
-                </div>
-                {/* 더미 뉴스 3 */}
-                <div className="flex items-center gap-4 bg-[#23272f] rounded-xl p-3 shadow hover:bg-[#282c34] transition cursor-pointer">
-                  <Image src="/news/china-casino.jpg" alt="중국인 무비자 카지노" width={72} height={72} className="w-18 h-18 rounded-xl object-cover" />
-                  <div className="flex flex-col flex-1 min-w-0">
-                    <div className="font-semibold text-base text-white line-clamp-2">중국인 무비자에 카지노주 &apos;껑충&apos;</div>
-                    <div className="text-xs text-gray-400 mt-1">16시간 전 · 매일경제</div>
-                  </div>
-                </div>
+                ))}
               </div>
             </div>
           </div>
@@ -840,30 +910,37 @@ export default function NewsPage() {
             <div className="mt-10 pt-8 border-t border-[#333]">
               <div className="text-xl font-bold mb-5 text-white">다음 뉴스</div>
               <div className="flex flex-col gap-5">
-                {/* 더미 뉴스 1 */}
-                <div className="flex items-center gap-4 bg-[#23272f] rounded-xl p-3 shadow hover:bg-[#282c34] transition cursor-pointer">
-                  <Image src="/news/hiring.jpg" alt="공공일자리" width={72} height={72} className="w-18 h-18 rounded-xl object-cover" />
-                  <div className="flex flex-col flex-1 min-w-0">
-                    <div className="font-semibold text-base text-white line-clamp-2">공공일자리 무려 10배나 늘었다…미국 &apos;깜짝고용&apos; 숨은 배경은</div>
-                    <div className="text-xs text-gray-400 mt-1">11시간 전 · 매일경제</div>
+                {getOtherNews(rightThirdNews).map((news, index) => (
+                  <div
+                    key={index}
+                    className="flex items-center gap-4 bg-[#23272f] rounded-xl p-3 shadow hover:bg-[#282c34] transition cursor-pointer"
+                    onClick={() => {
+                      setModalOpen(false);
+                      setTimeout(() => {
+                        const modalKey = allNews.findIndex(n => n.title === news.title);
+                        if (modalKey === 0) setModalOpen('main');
+                        else if (modalKey === 1) setModalOpen('leftTop');
+                        else if (modalKey === 2) setModalOpen('leftSecond');
+                        else if (modalKey === 3) setModalOpen('leftThird');
+                        else if (modalKey === 4) setModalOpen('rightTop');
+                        else if (modalKey === 5) setModalOpen('rightSecond');
+                        else if (modalKey === 6) setModalOpen('rightThird');
+                        else if (modalKey === 7) setModalOpen('rightFourth');
+                        else if (modalKey === 8) setModalOpen('rightFifth');
+                        else if (modalKey === 9) setModalOpen('centerSecond');
+                        else if (modalKey === 10) setModalOpen('rightSixth');
+                        else if (modalKey === 11) setModalOpen('rightSeventh');
+                        else if (modalKey === 12) setModalOpen('rightEighth');
+                      }, 100);
+                    }}
+                  >
+                    <Image src={news.image || "/vercel.svg"} alt={news.title} width={72} height={72} className="w-18 h-18 rounded-xl object-cover" />
+                    <div className="flex flex-col flex-1 min-w-0">
+                      <div className="font-semibold text-base text-white line-clamp-2">{news.title}</div>
+                      <div className="text-xs text-gray-400 mt-1">{formatKoreanDate(news.published_at)} · {news.source}</div>
+                    </div>
                   </div>
-                </div>
-                {/* 더미 뉴스 2 */}
-                <div className="flex items-center gap-4 bg-[#23272f] rounded-xl p-3 shadow hover:bg-[#282c34] transition cursor-pointer">
-                  <Image src="/news/goldholiday.jpg" alt="황금연휴" width={72} height={72} className="w-18 h-18 rounded-xl object-cover" />
-                  <div className="flex flex-col flex-1 min-w-0">
-                    <div className="font-semibold text-base text-white line-clamp-2">&quot;10월 황금연휴 온다&quot;…노랑풍선·하나투어 꿈틀</div>
-                    <div className="text-xs text-gray-400 mt-1">16시간 전 · 한국경제</div>
-                  </div>
-                </div>
-                {/* 더미 뉴스 3 */}
-                <div className="flex items-center gap-4 bg-[#23272f] rounded-xl p-3 shadow hover:bg-[#282c34] transition cursor-pointer">
-                  <Image src="/news/china-casino.jpg" alt="중국인 무비자 카지노" width={72} height={72} className="w-18 h-18 rounded-xl object-cover" />
-                  <div className="flex flex-col flex-1 min-w-0">
-                    <div className="font-semibold text-base text-white line-clamp-2">중국인 무비자에 카지노주 &apos;껑충&apos;</div>
-                    <div className="text-xs text-gray-400 mt-1">16시간 전 · 매일경제</div>
-                  </div>
-                </div>
+                ))}
               </div>
             </div>
           </div>
@@ -898,30 +975,37 @@ export default function NewsPage() {
             <div className="mt-10 pt-8 border-t border-[#333]">
               <div className="text-xl font-bold mb-5 text-white">다음 뉴스</div>
               <div className="flex flex-col gap-5">
-                {/* 더미 뉴스 1 */}
-                <div className="flex items-center gap-4 bg-[#23272f] rounded-xl p-3 shadow hover:bg-[#282c34] transition cursor-pointer">
-                  <Image src="/news/hiring.jpg" alt="공공일자리" width={72} height={72} className="w-18 h-18 rounded-xl object-cover" />
-                  <div className="flex flex-col flex-1 min-w-0">
-                    <div className="font-semibold text-base text-white line-clamp-2">공공일자리 무려 10배나 늘었다…미국 &apos;깜짝고용&apos; 숨은 배경은</div>
-                    <div className="text-xs text-gray-400 mt-1">11시간 전 · 매일경제</div>
+                {getOtherNews(rightFourthNews).map((news, index) => (
+                  <div
+                    key={index}
+                    className="flex items-center gap-4 bg-[#23272f] rounded-xl p-3 shadow hover:bg-[#282c34] transition cursor-pointer"
+                    onClick={() => {
+                      setModalOpen(false);
+                      setTimeout(() => {
+                        const modalKey = allNews.findIndex(n => n.title === news.title);
+                        if (modalKey === 0) setModalOpen('main');
+                        else if (modalKey === 1) setModalOpen('leftTop');
+                        else if (modalKey === 2) setModalOpen('leftSecond');
+                        else if (modalKey === 3) setModalOpen('leftThird');
+                        else if (modalKey === 4) setModalOpen('rightTop');
+                        else if (modalKey === 5) setModalOpen('rightSecond');
+                        else if (modalKey === 6) setModalOpen('rightThird');
+                        else if (modalKey === 7) setModalOpen('rightFourth');
+                        else if (modalKey === 8) setModalOpen('rightFifth');
+                        else if (modalKey === 9) setModalOpen('centerSecond');
+                        else if (modalKey === 10) setModalOpen('rightSixth');
+                        else if (modalKey === 11) setModalOpen('rightSeventh');
+                        else if (modalKey === 12) setModalOpen('rightEighth');
+                      }, 100);
+                    }}
+                  >
+                    <Image src={news.image || "/vercel.svg"} alt={news.title} width={72} height={72} className="w-18 h-18 rounded-xl object-cover" />
+                    <div className="flex flex-col flex-1 min-w-0">
+                      <div className="font-semibold text-base text-white line-clamp-2">{news.title}</div>
+                      <div className="text-xs text-gray-400 mt-1">{formatKoreanDate(news.published_at)} · {news.source}</div>
+                    </div>
                   </div>
-                </div>
-                {/* 더미 뉴스 2 */}
-                <div className="flex items-center gap-4 bg-[#23272f] rounded-xl p-3 shadow hover:bg-[#282c34] transition cursor-pointer">
-                  <Image src="/news/goldholiday.jpg" alt="황금연휴" width={72} height={72} className="w-18 h-18 rounded-xl object-cover" />
-                  <div className="flex flex-col flex-1 min-w-0">
-                    <div className="font-semibold text-base text-white line-clamp-2">&quot;10월 황금연휴 온다&quot;…노랑풍선·하나투어 꿈틀</div>
-                    <div className="text-xs text-gray-400 mt-1">16시간 전 · 한국경제</div>
-                  </div>
-                </div>
-                {/* 더미 뉴스 3 */}
-                <div className="flex items-center gap-4 bg-[#23272f] rounded-xl p-3 shadow hover:bg-[#282c34] transition cursor-pointer">
-                  <Image src="/news/china-casino.jpg" alt="중국인 무비자 카지노" width={72} height={72} className="w-18 h-18 rounded-xl object-cover" />
-                  <div className="flex flex-col flex-1 min-w-0">
-                    <div className="font-semibold text-base text-white line-clamp-2">중국인 무비자에 카지노주 &apos;껑충&apos;</div>
-                    <div className="text-xs text-gray-400 mt-1">16시간 전 · 매일경제</div>
-                  </div>
-                </div>
+                ))}
               </div>
             </div>
           </div>
@@ -956,30 +1040,37 @@ export default function NewsPage() {
             <div className="mt-10 pt-8 border-t border-[#333]">
               <div className="text-xl font-bold mb-5 text-white">다음 뉴스</div>
               <div className="flex flex-col gap-5">
-                {/* 더미 뉴스 1 */}
-                <div className="flex items-center gap-4 bg-[#23272f] rounded-xl p-3 shadow hover:bg-[#282c34] transition cursor-pointer">
-                  <Image src="/news/hiring.jpg" alt="공공일자리" width={72} height={72} className="w-18 h-18 rounded-xl object-cover" />
-                  <div className="flex flex-col flex-1 min-w-0">
-                    <div className="font-semibold text-base text-white line-clamp-2">공공일자리 무려 10배나 늘었다…미국 &apos;깜짝고용&apos; 숨은 배경은</div>
-                    <div className="text-xs text-gray-400 mt-1">11시간 전 · 매일경제</div>
+                {getOtherNews(rightFifthNews).map((news, index) => (
+                  <div
+                    key={index}
+                    className="flex items-center gap-4 bg-[#23272f] rounded-xl p-3 shadow hover:bg-[#282c34] transition cursor-pointer"
+                    onClick={() => {
+                      setModalOpen(false);
+                      setTimeout(() => {
+                        const modalKey = allNews.findIndex(n => n.title === news.title);
+                        if (modalKey === 0) setModalOpen('main');
+                        else if (modalKey === 1) setModalOpen('leftTop');
+                        else if (modalKey === 2) setModalOpen('leftSecond');
+                        else if (modalKey === 3) setModalOpen('leftThird');
+                        else if (modalKey === 4) setModalOpen('rightTop');
+                        else if (modalKey === 5) setModalOpen('rightSecond');
+                        else if (modalKey === 6) setModalOpen('rightThird');
+                        else if (modalKey === 7) setModalOpen('rightFourth');
+                        else if (modalKey === 8) setModalOpen('rightFifth');
+                        else if (modalKey === 9) setModalOpen('centerSecond');
+                        else if (modalKey === 10) setModalOpen('rightSixth');
+                        else if (modalKey === 11) setModalOpen('rightSeventh');
+                        else if (modalKey === 12) setModalOpen('rightEighth');
+                      }, 100);
+                    }}
+                  >
+                    <Image src={news.image || "/vercel.svg"} alt={news.title} width={72} height={72} className="w-18 h-18 rounded-xl object-cover" />
+                    <div className="flex flex-col flex-1 min-w-0">
+                      <div className="font-semibold text-base text-white line-clamp-2">{news.title}</div>
+                      <div className="text-xs text-gray-400 mt-1">{formatKoreanDate(news.published_at)} · {news.source}</div>
+                    </div>
                   </div>
-                </div>
-                {/* 더미 뉴스 2 */}
-                <div className="flex items-center gap-4 bg-[#23272f] rounded-xl p-3 shadow hover:bg-[#282c34] transition cursor-pointer">
-                  <Image src="/news/goldholiday.jpg" alt="황금연휴" width={72} height={72} className="w-18 h-18 rounded-xl object-cover" />
-                  <div className="flex flex-col flex-1 min-w-0">
-                    <div className="font-semibold text-base text-white line-clamp-2">&quot;10월 황금연휴 온다&quot;…노랑풍선·하나투어 꿈틀</div>
-                    <div className="text-xs text-gray-400 mt-1">16시간 전 · 한국경제</div>
-                  </div>
-                </div>
-                {/* 더미 뉴스 3 */}
-                <div className="flex items-center gap-4 bg-[#23272f] rounded-xl p-3 shadow hover:bg-[#282c34] transition cursor-pointer">
-                  <Image src="/news/china-casino.jpg" alt="중국인 무비자 카지노" width={72} height={72} className="w-18 h-18 rounded-xl object-cover" />
-                  <div className="flex flex-col flex-1 min-w-0">
-                    <div className="font-semibold text-base text-white line-clamp-2">중국인 무비자에 카지노주 &apos;껑충&apos;</div>
-                    <div className="text-xs text-gray-400 mt-1">16시간 전 · 매일경제</div>
-                  </div>
-                </div>
+                ))}
               </div>
             </div>
           </div>
@@ -1014,30 +1105,37 @@ export default function NewsPage() {
             <div className="mt-10 pt-8 border-t border-[#333]">
               <div className="text-xl font-bold mb-5 text-white">다음 뉴스</div>
               <div className="flex flex-col gap-5">
-                {/* 더미 뉴스 1 */}
-                <div className="flex items-center gap-4 bg-[#23272f] rounded-xl p-3 shadow hover:bg-[#282c34] transition cursor-pointer">
-                  <Image src="/news/hiring.jpg" alt="공공일자리" width={72} height={72} className="w-18 h-18 rounded-xl object-cover" />
-                  <div className="flex flex-col flex-1 min-w-0">
-                    <div className="font-semibold text-base text-white line-clamp-2">공공일자리 무려 10배나 늘었다…미국 &apos;깜짝고용&apos; 숨은 배경은</div>
-                    <div className="text-xs text-gray-400 mt-1">11시간 전 · 매일경제</div>
+                {getOtherNews(centerSecondNews).map((news, index) => (
+                  <div
+                    key={index}
+                    className="flex items-center gap-4 bg-[#23272f] rounded-xl p-3 shadow hover:bg-[#282c34] transition cursor-pointer"
+                    onClick={() => {
+                      setModalOpen(false);
+                      setTimeout(() => {
+                        const modalKey = allNews.findIndex(n => n.title === news.title);
+                        if (modalKey === 0) setModalOpen('main');
+                        else if (modalKey === 1) setModalOpen('leftTop');
+                        else if (modalKey === 2) setModalOpen('leftSecond');
+                        else if (modalKey === 3) setModalOpen('leftThird');
+                        else if (modalKey === 4) setModalOpen('rightTop');
+                        else if (modalKey === 5) setModalOpen('rightSecond');
+                        else if (modalKey === 6) setModalOpen('rightThird');
+                        else if (modalKey === 7) setModalOpen('rightFourth');
+                        else if (modalKey === 8) setModalOpen('rightFifth');
+                        else if (modalKey === 9) setModalOpen('centerSecond');
+                        else if (modalKey === 10) setModalOpen('rightSixth');
+                        else if (modalKey === 11) setModalOpen('rightSeventh');
+                        else if (modalKey === 12) setModalOpen('rightEighth');
+                      }, 100);
+                    }}
+                  >
+                    <Image src={news.image || "/vercel.svg"} alt={news.title} width={72} height={72} className="w-18 h-18 rounded-xl object-cover" />
+                    <div className="flex flex-col flex-1 min-w-0">
+                      <div className="font-semibold text-base text-white line-clamp-2">{news.title}</div>
+                      <div className="text-xs text-gray-400 mt-1">{formatKoreanDate(news.published_at)} · {news.source}</div>
+                    </div>
                   </div>
-                </div>
-                {/* 더미 뉴스 2 */}
-                <div className="flex items-center gap-4 bg-[#23272f] rounded-xl p-3 shadow hover:bg-[#282c34] transition cursor-pointer">
-                  <Image src="/news/goldholiday.jpg" alt="황금연휴" width={72} height={72} className="w-18 h-18 rounded-xl object-cover" />
-                  <div className="flex flex-col flex-1 min-w-0">
-                    <div className="font-semibold text-base text-white line-clamp-2">&quot;10월 황금연휴 온다&quot;…노랑풍선·하나투어 꿈틀</div>
-                    <div className="text-xs text-gray-400 mt-1">16시간 전 · 한국경제</div>
-                  </div>
-                </div>
-                {/* 더미 뉴스 3 */}
-                <div className="flex items-center gap-4 bg-[#23272f] rounded-xl p-3 shadow hover:bg-[#282c34] transition cursor-pointer">
-                  <Image src="/news/china-casino.jpg" alt="중국인 무비자 카지노" width={72} height={72} className="w-18 h-18 rounded-xl object-cover" />
-                  <div className="flex flex-col flex-1 min-w-0">
-                    <div className="font-semibold text-base text-white line-clamp-2">중국인 무비자에 카지노주 &apos;껑충&apos;</div>
-                    <div className="text-xs text-gray-400 mt-1">16시간 전 · 매일경제</div>
-                  </div>
-                </div>
+                ))}
               </div>
             </div>
           </div>
@@ -1072,30 +1170,37 @@ export default function NewsPage() {
             <div className="mt-10 pt-8 border-t border-[#333]">
               <div className="text-xl font-bold mb-5 text-white">다음 뉴스</div>
               <div className="flex flex-col gap-5">
-                {/* 더미 뉴스 1 */}
-                <div className="flex items-center gap-4 bg-[#23272f] rounded-xl p-3 shadow hover:bg-[#282c34] transition cursor-pointer">
-                  <Image src="/news/hiring.jpg" alt="공공일자리" width={72} height={72} className="w-18 h-18 rounded-xl object-cover" />
-                  <div className="flex flex-col flex-1 min-w-0">
-                    <div className="font-semibold text-base text-white line-clamp-2">공공일자리 무려 10배나 늘었다…미국 &apos;깜짝고용&apos; 숨은 배경은</div>
-                    <div className="text-xs text-gray-400 mt-1">11시간 전 · 매일경제</div>
+                {getOtherNews(rightSixthNews).map((news, index) => (
+                  <div
+                    key={index}
+                    className="flex items-center gap-4 bg-[#23272f] rounded-xl p-3 shadow hover:bg-[#282c34] transition cursor-pointer"
+                    onClick={() => {
+                      setModalOpen(false);
+                      setTimeout(() => {
+                        const modalKey = allNews.findIndex(n => n.title === news.title);
+                        if (modalKey === 0) setModalOpen('main');
+                        else if (modalKey === 1) setModalOpen('leftTop');
+                        else if (modalKey === 2) setModalOpen('leftSecond');
+                        else if (modalKey === 3) setModalOpen('leftThird');
+                        else if (modalKey === 4) setModalOpen('rightTop');
+                        else if (modalKey === 5) setModalOpen('rightSecond');
+                        else if (modalKey === 6) setModalOpen('rightThird');
+                        else if (modalKey === 7) setModalOpen('rightFourth');
+                        else if (modalKey === 8) setModalOpen('rightFifth');
+                        else if (modalKey === 9) setModalOpen('centerSecond');
+                        else if (modalKey === 10) setModalOpen('rightSixth');
+                        else if (modalKey === 11) setModalOpen('rightSeventh');
+                        else if (modalKey === 12) setModalOpen('rightEighth');
+                      }, 100);
+                    }}
+                  >
+                    <Image src={news.image || "/vercel.svg"} alt={news.title} width={72} height={72} className="w-18 h-18 rounded-xl object-cover" />
+                    <div className="flex flex-col flex-1 min-w-0">
+                      <div className="font-semibold text-base text-white line-clamp-2">{news.title}</div>
+                      <div className="text-xs text-gray-400 mt-1">{formatKoreanDate(news.published_at)} · {news.source}</div>
+                    </div>
                   </div>
-                </div>
-                {/* 더미 뉴스 2 */}
-                <div className="flex items-center gap-4 bg-[#23272f] rounded-xl p-3 shadow hover:bg-[#282c34] transition cursor-pointer">
-                  <Image src="/news/goldholiday.jpg" alt="황금연휴" width={72} height={72} className="w-18 h-18 rounded-xl object-cover" />
-                  <div className="flex flex-col flex-1 min-w-0">
-                    <div className="font-semibold text-base text-white line-clamp-2">&quot;10월 황금연휴 온다&quot;…노랑풍선·하나투어 꿈틀</div>
-                    <div className="text-xs text-gray-400 mt-1">16시간 전 · 한국경제</div>
-                  </div>
-                </div>
-                {/* 더미 뉴스 3 */}
-                <div className="flex items-center gap-4 bg-[#23272f] rounded-xl p-3 shadow hover:bg-[#282c34] transition cursor-pointer">
-                  <Image src="/news/china-casino.jpg" alt="중국인 무비자 카지노" width={72} height={72} className="w-18 h-18 rounded-xl object-cover" />
-                  <div className="flex flex-col flex-1 min-w-0">
-                    <div className="font-semibold text-base text-white line-clamp-2">중국인 무비자에 카지노주 &apos;껑충&apos;</div>
-                    <div className="text-xs text-gray-400 mt-1">16시간 전 · 매일경제</div>
-                  </div>
-                </div>
+                ))}
               </div>
             </div>
           </div>
@@ -1130,30 +1235,37 @@ export default function NewsPage() {
             <div className="mt-10 pt-8 border-t border-[#333]">
               <div className="text-xl font-bold mb-5 text-white">다음 뉴스</div>
               <div className="flex flex-col gap-5">
-                {/* 더미 뉴스 1 */}
-                <div className="flex items-center gap-4 bg-[#23272f] rounded-xl p-3 shadow hover:bg-[#282c34] transition cursor-pointer">
-                  <Image src="/news/hiring.jpg" alt="공공일자리" width={72} height={72} className="w-18 h-18 rounded-xl object-cover" />
-                  <div className="flex flex-col flex-1 min-w-0">
-                    <div className="font-semibold text-base text-white line-clamp-2">공공일자리 무려 10배나 늘었다…미국 &apos;깜짝고용&apos; 숨은 배경은</div>
-                    <div className="text-xs text-gray-400 mt-1">11시간 전 · 매일경제</div>
+                {getOtherNews(rightSeventhNews).map((news, index) => (
+                  <div
+                    key={index}
+                    className="flex items-center gap-4 bg-[#23272f] rounded-xl p-3 shadow hover:bg-[#282c34] transition cursor-pointer"
+                    onClick={() => {
+                      setModalOpen(false);
+                      setTimeout(() => {
+                        const modalKey = allNews.findIndex(n => n.title === news.title);
+                        if (modalKey === 0) setModalOpen('main');
+                        else if (modalKey === 1) setModalOpen('leftTop');
+                        else if (modalKey === 2) setModalOpen('leftSecond');
+                        else if (modalKey === 3) setModalOpen('leftThird');
+                        else if (modalKey === 4) setModalOpen('rightTop');
+                        else if (modalKey === 5) setModalOpen('rightSecond');
+                        else if (modalKey === 6) setModalOpen('rightThird');
+                        else if (modalKey === 7) setModalOpen('rightFourth');
+                        else if (modalKey === 8) setModalOpen('rightFifth');
+                        else if (modalKey === 9) setModalOpen('centerSecond');
+                        else if (modalKey === 10) setModalOpen('rightSixth');
+                        else if (modalKey === 11) setModalOpen('rightSeventh');
+                        else if (modalKey === 12) setModalOpen('rightEighth');
+                      }, 100);
+                    }}
+                  >
+                    <Image src={news.image || "/vercel.svg"} alt={news.title} width={72} height={72} className="w-18 h-18 rounded-xl object-cover" />
+                    <div className="flex flex-col flex-1 min-w-0">
+                      <div className="font-semibold text-base text-white line-clamp-2">{news.title}</div>
+                      <div className="text-xs text-gray-400 mt-1">{formatKoreanDate(news.published_at)} · {news.source}</div>
+                    </div>
                   </div>
-                </div>
-                {/* 더미 뉴스 2 */}
-                <div className="flex items-center gap-4 bg-[#23272f] rounded-xl p-3 shadow hover:bg-[#282c34] transition cursor-pointer">
-                  <Image src="/news/goldholiday.jpg" alt="황금연휴" width={72} height={72} className="w-18 h-18 rounded-xl object-cover" />
-                  <div className="flex flex-col flex-1 min-w-0">
-                    <div className="font-semibold text-base text-white line-clamp-2">&quot;10월 황금연휴 온다&quot;…노랑풍선·하나투어 꿈틀</div>
-                    <div className="text-xs text-gray-400 mt-1">16시간 전 · 한국경제</div>
-                  </div>
-                </div>
-                {/* 더미 뉴스 3 */}
-                <div className="flex items-center gap-4 bg-[#23272f] rounded-xl p-3 shadow hover:bg-[#282c34] transition cursor-pointer">
-                  <Image src="/news/china-casino.jpg" alt="중국인 무비자 카지노" width={72} height={72} className="w-18 h-18 rounded-xl object-cover" />
-                  <div className="flex flex-col flex-1 min-w-0">
-                    <div className="font-semibold text-base text-white line-clamp-2">중국인 무비자에 카지노주 &apos;껑충&apos;</div>
-                    <div className="text-xs text-gray-400 mt-1">16시간 전 · 매일경제</div>
-                  </div>
-                </div>
+                ))}
               </div>
             </div>
           </div>
@@ -1188,30 +1300,37 @@ export default function NewsPage() {
             <div className="mt-10 pt-8 border-t border-[#333]">
               <div className="text-xl font-bold mb-5 text-white">다음 뉴스</div>
               <div className="flex flex-col gap-5">
-                {/* 더미 뉴스 1 */}
-                <div className="flex items-center gap-4 bg-[#23272f] rounded-xl p-3 shadow hover:bg-[#282c34] transition cursor-pointer">
-                  <Image src="/news/hiring.jpg" alt="공공일자리" width={72} height={72} className="w-18 h-18 rounded-xl object-cover" />
-                  <div className="flex flex-col flex-1 min-w-0">
-                    <div className="font-semibold text-base text-white line-clamp-2">공공일자리 무려 10배나 늘었다…미국 &apos;깜짝고용&apos; 숨은 배경은</div>
-                    <div className="text-xs text-gray-400 mt-1">11시간 전 · 매일경제</div>
+                {getOtherNews(rightEighthNews).map((news, index) => (
+                  <div
+                    key={index}
+                    className="flex items-center gap-4 bg-[#23272f] rounded-xl p-3 shadow hover:bg-[#282c34] transition cursor-pointer"
+                    onClick={() => {
+                      setModalOpen(false);
+                      setTimeout(() => {
+                        const modalKey = allNews.findIndex(n => n.title === news.title);
+                        if (modalKey === 0) setModalOpen('main');
+                        else if (modalKey === 1) setModalOpen('leftTop');
+                        else if (modalKey === 2) setModalOpen('leftSecond');
+                        else if (modalKey === 3) setModalOpen('leftThird');
+                        else if (modalKey === 4) setModalOpen('rightTop');
+                        else if (modalKey === 5) setModalOpen('rightSecond');
+                        else if (modalKey === 6) setModalOpen('rightThird');
+                        else if (modalKey === 7) setModalOpen('rightFourth');
+                        else if (modalKey === 8) setModalOpen('rightFifth');
+                        else if (modalKey === 9) setModalOpen('centerSecond');
+                        else if (modalKey === 10) setModalOpen('rightSixth');
+                        else if (modalKey === 11) setModalOpen('rightSeventh');
+                        else if (modalKey === 12) setModalOpen('rightEighth');
+                      }, 100);
+                    }}
+                  >
+                    <Image src={news.image || "/vercel.svg"} alt={news.title} width={72} height={72} className="w-18 h-18 rounded-xl object-cover" />
+                    <div className="flex flex-col flex-1 min-w-0">
+                      <div className="font-semibold text-base text-white line-clamp-2">{news.title}</div>
+                      <div className="text-xs text-gray-400 mt-1">{formatKoreanDate(news.published_at)} · {news.source}</div>
+                    </div>
                   </div>
-                </div>
-                {/* 더미 뉴스 2 */}
-                <div className="flex items-center gap-4 bg-[#23272f] rounded-xl p-3 shadow hover:bg-[#282c34] transition cursor-pointer">
-                  <Image src="/news/goldholiday.jpg" alt="황금연휴" width={72} height={72} className="w-18 h-18 rounded-xl object-cover" />
-                  <div className="flex flex-col flex-1 min-w-0">
-                    <div className="font-semibold text-base text-white line-clamp-2">&quot;10월 황금연휴 온다&quot;…노랑풍선·하나투어 꿈틀</div>
-                    <div className="text-xs text-gray-400 mt-1">16시간 전 · 한국경제</div>
-                  </div>
-                </div>
-                {/* 더미 뉴스 3 */}
-                <div className="flex items-center gap-4 bg-[#23272f] rounded-xl p-3 shadow hover:bg-[#282c34] transition cursor-pointer">
-                  <Image src="/news/china-casino.jpg" alt="중국인 무비자 카지노" width={72} height={72} className="w-18 h-18 rounded-xl object-cover" />
-                  <div className="flex flex-col flex-1 min-w-0">
-                    <div className="font-semibold text-base text-white line-clamp-2">중국인 무비자에 카지노주 &apos;껑충&apos;</div>
-                    <div className="text-xs text-gray-400 mt-1">16시간 전 · 매일경제</div>
-                  </div>
-                </div>
+                ))}
               </div>
             </div>
           </div>
