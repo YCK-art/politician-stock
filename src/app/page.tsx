@@ -61,7 +61,7 @@ export default function Home() {
       .then(data => {
         // 'ms. nancy pelosi'를 제외
         const filtered = (data.politicians || []).filter(
-          p => p.en.toLowerCase().replace(/\s+/g, '') !== 'ms.nancypelosi'
+          (p: {en: string, ko: string, image?: string}) => p.en.toLowerCase().replace(/\s+/g, '') !== 'ms.nancypelosi'
         );
         setPoliticians(filtered);
       });
@@ -75,7 +75,7 @@ export default function Home() {
     }
     setResults(
       politicians.filter(
-        p =>
+        (p: {en: string, ko: string, image?: string}) =>
           p.en.toLowerCase().includes(search.toLowerCase()) ||
           p.ko.includes(search)
       )
