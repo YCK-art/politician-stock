@@ -206,9 +206,11 @@ export default function Home() {
           지금 시작하기
         </button>
         <div className="relative w-full max-w-2xl">
-          <img
+          <Image
             src="/stock.gif"
             alt="주식과 정치, 애니메이션"
+            width={800}
+            height={450}
             className="w-full rounded-xl shadow-lg border border-gray-700 bg-black"
             style={{objectFit: 'cover'}}
           />

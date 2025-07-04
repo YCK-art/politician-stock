@@ -244,16 +244,7 @@ export default function NewsPage() {
   // 모달 상태
   const [modalOpen, setModalOpen] = useState<string|false>(false);
 
-  // 카드 placeholder
-  function CardPlaceholder({height = 'h-40', className = ''}: {height?: string, className?: string}) {
-    return (
-      <div className={`flex flex-col bg-[#23272f] rounded-xl overflow-hidden shadow animate-pulse ${height} ${className}`} style={{minHeight: '120px'}}>
-        <div className="w-full bg-[#23272f] flex-1 flex items-center justify-center text-gray-600 text-sm font-bold opacity-60">
-          뉴스가 없습니다
-        </div>
-      </div>
-    );
-  }
+
 
   // ESC로 모달 닫기
   React.useEffect(() => {
