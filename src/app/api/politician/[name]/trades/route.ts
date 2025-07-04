@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
 const API_KEY = process.env.QUIVER_API_KEY;
-const CACHE_DURATION = 600 * 1000; // 10분
+const CACHE_DURATION = 86400 * 1000; // 24시간
 
 // Quiver API 데이터 타입 정의
 interface QuiverTrade {
@@ -37,12 +37,8 @@ function slugToName(slug: string, nameList: PoliticianNameList) {
   return nameList.find(name => nameToSlug(name) === slug) || null;
 }
 
-// 정치인별 개별 캐시 구현
-interface CacheEntry {
-  data: QuiverTrade[];
-  time: number;
-}
-const cache: Record<string, CacheEntry> = {};
+// bulk 데이터 전체 캐시
+let bulkCache: { data: QuiverTrade[]; time: number } | null = null;
 let nameList: PoliticianNameList = [];
 
 export async function GET(req: NextRequest, { params }: { params: Promise<{ name: string }> }) {
@@ -50,33 +46,18 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ name
     const { name: slug } = await params;
     const now = Date.now();
 
-    // 최초 1회 전체 정치인 이름 목록을 받아옴
-    if (nameList.length === 0) {
+    // bulk 데이터 전체 캐시 확인 및 갱신
+    if (!bulkCache || now - bulkCache.time > CACHE_DURATION) {
       const url = "https://api.quiverquant.com/beta/bulk/congresstrading";
       const res = await fetch(url, {
         headers: { "Authorization": `Bearer ${API_KEY}` }
       });
       const data: QuiverTrade[] = await res.json();
+      bulkCache = { data, time: now };
       nameList = Array.from(new Set(data.map((item) => item.Name)));
     }
     const realName = slugToName(slug, nameList) || "Nancy Pelosi";
-
-    // 캐시 확인
-    if (cache[slug] && now - cache[slug].time < CACHE_DURATION) {
-      const filtered = cache[slug].data.filter((item) => item.Name === realName);
-      return NextResponse.json({ items: filtered });
-    }
-
-    // Quiver API 호출
-    const url = "https://api.quiverquant.com/beta/bulk/congresstrading";
-    const res = await fetch(url, {
-      headers: { "Authorization": `Bearer ${API_KEY}` }
-    });
-    const data: QuiverTrade[] = await res.json();
-    // 해당 정치인의 데이터만 필터링
-    const filtered = data.filter((item) => item.Name === realName);
-    // 캐시 저장
-    cache[slug] = { data: filtered, time: now };
+    const filtered = bulkCache.data.filter((item) => item.Name === realName);
     return NextResponse.json({ items: filtered });
   } catch (error) {
     console.error('API Error:', error);

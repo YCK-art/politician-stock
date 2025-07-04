@@ -106,6 +106,7 @@ const TABS = [
 
 // 설명 2줄(15자씩, 30자 초과 ...), <br/>로 줄바꿈
 function formatDesc(desc: string) {
+  if (!desc || desc.trim() === "") return "-";
   if (desc.length <= 15) return desc;
   if (desc.length <= 30) return desc.slice(0, 15) + "<br/>" + desc.slice(15, 30);
   return desc.slice(0, 15) + "<br/>" + desc.slice(15, 30) + "...";
@@ -135,12 +136,67 @@ function formatAmount(tradeSize: string | number | undefined) {
   return tradeAmountRanges[key] || `$${Number(tradeSize).toLocaleString()}~`;
 }
 
+// 이름 정규화 함수
+function normalizeName(name: string) {
+  return name.toLowerCase().replace(/\s+/g, '');
+}
+
+// 주요 인물 수동 매핑 (예시)
+const manualGovtrackIds: Record<string, string> = {
+  'nancypelosi': '400314',
+  'dancrenshaw': '412809',
+  'jonossoff': '456841',
+  // 필요시 추가
+};
+
+// GovTrack 인물 캐시
+const govtrackCache: { [name: string]: string } = {};
+let govtrackLoaded = false;
+
+// GovTrack 전체 인물 목록을 불러와서 캐시에 저장 (정규화된 이름으로)
+async function loadGovtrackCache() {
+  if (govtrackLoaded) return;
+  try {
+    const res = await fetch("https://www.govtrack.us/api/v2/role?current=true&limit=600");
+    const data = await res.json();
+    if (data.objects) {
+      data.objects.forEach((obj: any) => {
+        if (obj.person && obj.person.name && obj.person.id) {
+          govtrackCache[normalizeName(obj.person.name)] = String(obj.person.id);
+        }
+      });
+      govtrackLoaded = true;
+    }
+  } catch (e) {
+    // 실패 시 무시
+  }
+}
+
+// 금액 범위에서 중간값 추출 함수 추가
+function parseAmountRange(str: string | number | undefined): number {
+  if (typeof str === "number") return str;
+  if (!str) return 0;
+  const match = String(str).match(/\$([\d,]+)~\$([\d,]+)/);
+  if (match) {
+    const min = Number(match[1].replace(/,/g, ""));
+    const max = Number(match[2].replace(/,/g, ""));
+    return Math.round((min + max) / 2); // 중간값
+  }
+  // $1,001+ 등 단일값 처리
+  const single = String(str).match(/\$([\d,]+)/);
+  if (single) return Number(single[1].replace(/,/g, ""));
+  // 숫자형 문자열 처리
+  if (!isNaN(Number(str))) return Number(str);
+  return 0;
+}
+
 function PoliticianDetailPage() {
   const params = useParams();
   const name = (params.name as string) || "nancy-pelosi";
-  // 등록되지 않은 정치인은 낸시 펠로시로 fallback
+  // 기존 POLITICIANS는 fallback용으로만 사용
   const fallback = POLITICIANS.hasOwnProperty(name) ? POLITICIANS[name] : POLITICIANS["nancy-pelosi"];
   const [p, setP] = useState<Politician>(fallback);
+  const [govtrackId, setGovtrackId] = useState<string | null>(null);
   const [sortField, setSortField] = useState<'filed'|'traded'|null>(null);
   const [sortDir, setSortDir] = useState<'asc'|'desc'>('desc');
   const [showReturnInfo, setShowReturnInfo] = useState(false);
@@ -157,6 +213,82 @@ function PoliticianDetailPage() {
   // 연도별 거래량 차트 데이터 상태
   const [yearlyData, setYearlyData] = useState<{year:number;buy:number;sell:number}[]>([]);
 
+  // 이미지 매핑 캐시 (컴포넌트 내부로 이동)
+  const [imageMap, setImageMap] = useState<Record<string, string> | null>(null);
+  // Wikidata 이미지 매핑 fetch (컴포넌트 내부로 이동)
+  useEffect(() => {
+    fetch('/api/politician/image-map')
+      .then(async res => {
+        if (!res.ok) return {};
+        const text = await res.text();
+        return text ? JSON.parse(text) : {};
+      })
+      .then(data => setImageMap(data.map || {}));
+  }, []);
+
+  // 프로필 이미지 URL 결정 (폴더 내 jpg > Wikidata > govtrack)
+  let profileImgUrl: string | null = null;
+  // 1. 폴더 내 jpg 파일 우선 시도
+  profileImgUrl = `/politician-profiles/${name}.jpg`;
+  // 2. 폴더 내 jpg가 없으면 Wikidata 이미지
+  if (imageMap && imageMap[p.en]) {
+    profileImgUrl = imageMap[p.en];
+  } else if (govtrackId) {
+    // 3. Wikidata도 없으면 govtrack 이미지
+    profileImgUrl = `https://www.govtrack.us/data/photos/${govtrackId}-200px.jpeg`;
+  }
+  const [imgError, setImgError] = useState(false);
+
+  // GovTrack 인물 캐시 로딩 및 govtrackId 찾기 (수동 매핑 우선)
+  useEffect(() => {
+    loadGovtrackCache().then(() => {
+      const norm = normalizeName(p.en);
+      const id = manualGovtrackIds[norm] || govtrackCache[norm] || null;
+      setGovtrackId(id);
+    });
+  }, [p.en]);
+
+  // GovTrack API로 신상정보 보완 (나이, 활동기간)
+  useEffect(() => {
+    // Quiver API에서 age, yearsActive가 없을 때만 fetch
+    if (p.age && p.age > 0 && p.yearsActive && p.yearsActive !== '-') return;
+    if (!p.en) return;
+    async function fetchGovtrackInfo() {
+      try {
+        // GovTrack 인물 정보 fetch (이름 부분일치)
+        const res = await fetch(`https://www.govtrack.us/api/v2/person?name__contains=${encodeURIComponent(p.en)}`);
+        const data = await res.json();
+        console.log('GovTrack API 응답:', data);
+        if (data.objects && data.objects.length > 0) {
+          // 가장 이름이 비슷한 인물 선택 (성/이름 모두 포함 우선)
+          const lowerEn = p.en.toLowerCase();
+          let person = data.objects.find((obj: any) => lowerEn.includes(obj.name.toLowerCase())) || data.objects[0];
+          // 생년월일 → 나이 계산
+          let age = 0;
+          if (person.birthdate) {
+            const birth = new Date(person.birthdate);
+            const now = new Date();
+            age = now.getFullYear() - birth.getFullYear();
+            const m = now.getMonth() - birth.getMonth();
+            if (m < 0 || (m === 0 && now.getDate() < birth.getDate())) age--;
+          }
+          // 활동기간 계산 (가장 오래된 role~가장 최근 role)
+          let yearsActive = '-';
+          if (person.roles && person.roles.length > 0) {
+            const sorted = person.roles.slice().sort((a: any, b: any) => a.startdate.localeCompare(b.startdate));
+            const start = sorted[0].startdate ? sorted[0].startdate.slice(0, 4) : '';
+            const end = sorted[sorted.length - 1].enddate ? sorted[sorted.length - 1].enddate.slice(0, 4) : '현재';
+            if (start) yearsActive = `${start} - ${end}`;
+          }
+          setP(prev => ({ ...prev, age: age || prev.age, yearsActive: yearsActive !== '-' ? yearsActive : prev.yearsActive }));
+        }
+      } catch (e) {
+        console.warn('GovTrack API fetch 실패:', e);
+      }
+    }
+    fetchGovtrackInfo();
+  }, [p.en]);
+
   // Quiver API 연동: 정치인 상세 정보 + 거래내역 fetch
   useEffect(() => {
     async function fetchPolitician() {
@@ -164,6 +296,14 @@ function PoliticianDetailPage() {
         // 1. 거래내역은 기존 API 라우트 사용
         const tradesRes = await fetch(`/api/politician/${name}/trades`);
         const tradesData = await tradesRes.json();
+        
+        // 디버깅: 실제 데이터 확인
+        console.log('tradesData.items', tradesData.items);
+        if (tradesData.items && Array.isArray(tradesData.items)) {
+          tradesData.items.forEach((t: QuiverTrade, idx: number) => {
+            console.log(`[${idx}] Traded:`, t.Traded, 'Trade_Size_USD:', t.Trade_Size_USD);
+          });
+        }
         
         if (tradesData.items && Array.isArray(tradesData.items) && tradesData.items.length > 0) {
           // 거래내역 변환
@@ -183,20 +323,13 @@ function PoliticianDetailPage() {
               : "",
           }));
           
-          // 연도별 거래량 집계 (매수/매도)
+          // 연도별 거래량 집계 (매수/매도) - 중간값 기반
           const yearly: Record<string, { buy: number; sell: number }> = {};
           tradesData.items.forEach((t: QuiverTrade) => {
             if (!t.Traded || !t.Trade_Size_USD) return;
             const year = t.Traded.slice(0, 4);
+            const amount = parseAmountRange(formatAmount(t.Trade_Size_USD));
             const isBuy = t.Transaction !== "Sale";
-            // 거래 금액 범위의 최대값 추출
-            const str = String(t.Trade_Size_USD);
-            const match = str.match(/\$(\d{1,3}(,\d{3})*)(\+)?/g);
-            let amount = 0;
-            if (match && match.length > 0) {
-              const last = match[match.length-1].replace(/[^\d]/g, "");
-              amount = Number(last);
-            }
             if (!yearly[year]) yearly[year] = { buy: 0, sell: 0 };
             if (isBuy) yearly[year].buy += amount;
             else yearly[year].sell += amount;
@@ -210,17 +343,10 @@ function PoliticianDetailPage() {
           }));
           setYearlyData(yearlyData);
 
-          // 총 거래금액, 건수, 최근 거래일 계산
+          // 총 거래금액, 건수, 최근 거래일 계산 (중간값 합산, '약' 추가)
           let totalAmount = 0;
           tradesData.items.forEach((t: QuiverTrade) => {
-            if (t.Trade_Size_USD) {
-              const str = String(t.Trade_Size_USD);
-              const match = str.match(/\$(\d{1,3}(,\d{3})*)(\+)?/g);
-              if (match && match.length > 0) {
-                const last = match[match.length-1].replace(/[^\d]/g, "");
-                totalAmount += Number(last);
-              }
-            }
+            totalAmount += parseAmountRange(formatAmount(t.Trade_Size_USD));
           });
           const totalTrades = tradesData.items.length;
           const lastTraded = tradesData.items.reduce((latest: string, t: QuiverTrade) => {
@@ -231,17 +357,36 @@ function PoliticianDetailPage() {
           // 2. 정치인 상세 정보는 첫 번째 거래 데이터에서 추출
           const firstTrade = tradesData.items[0];
           if (firstTrade) {
+            // 정당 한글 변환
+            const partyMap: Record<string, string> = { D: '민주당', R: '공화당', I: '무소속' };
+            const chamberMap: Record<string, string> = { House: '하원', Senate: '상원' };
+            const partyKor = partyMap[firstTrade.Party?.trim() || ''] || '-';
+            const chamberKor = chamberMap[firstTrade.Chamber?.trim() || ''] || '-';
+            // 지역구: State(예: CA) + District(예: 12) → '캘리포니아' 등으로 변환(간단히 State만 한글로 변환, 없으면 '-')
+            const stateMap: Record<string, string> = { CA: '캘리포니아', TX: '텍사스', NY: '뉴욕', GA: '조지아', FL: '플로리다', NV: '네바다', UT: '유타', MN: '미네소타', /* 필요시 추가 */ };
+            const stateKor = stateMap[firstTrade.State?.trim() || ''] || '-';
+            const districtKor = firstTrade.District ? ` ${firstTrade.District}지구` : '';
+            const regionKor = stateKor !== '-' ? stateKor + districtKor : '-';
+            const partyDisplay = `${partyKor}/${chamberKor}/${regionKor}`;
+            // 활동기간/나이 더미값이면 '-'로 대체
+            let ageVal = firstTrade.Age || fallback.age || 0;
+            let yearsActiveVal = firstTrade.StartDate ? `${firstTrade.StartDate.slice(0,4)} - ${firstTrade.EndDate ? firstTrade.EndDate.slice(0,4) : '현재'}` : fallback.yearsActive;
+            // 더미값 목록(필요시 추가)
+            const dummyAges = [0, 1, 84, 37, 40];
+            const dummyYears = ['1987 - 현재', '2021 - 현재', '2019 - 현재'];
+            if (dummyAges.includes(ageVal)) ageVal = '-';
+            if (dummyYears.includes(yearsActiveVal)) yearsActiveVal = '-';
             setP({
               name: firstTrade.Name || fallback.name,
               en: firstTrade.Name || fallback.en,
-              party: firstTrade.Party || fallback.party,
-              netWorth: firstTrade.NetWorth || fallback.netWorth || "-",
-              tradeVolume: totalAmount ? `약 $${totalAmount.toLocaleString()}` : "-",
+              party: partyDisplay,
+              netWorth: firstTrade.NetWorth && firstTrade.NetWorth !== '-' ? firstTrade.NetWorth : '-',
+              tradeVolume: `약 $${totalAmount.toLocaleString()}`,
               totalTrades,
               lastTraded: lastTraded ? lastTraded.slice(0, 10) : "-",
               currentMember: firstTrade.CurrentMember !== undefined ? firstTrade.CurrentMember : fallback.currentMember,
-              yearsActive: firstTrade.StartDate ? `${firstTrade.StartDate.slice(0,4)} - ${firstTrade.EndDate ? firstTrade.EndDate.slice(0,4) : '현재'}` : fallback.yearsActive,
-              age: firstTrade.Age || fallback.age || 0,
+              yearsActive: yearsActiveVal,
+              age: ageVal,
               profile: fallback.profile, // Quiver API에 이미지 없으므로 fallback
               trades: mapped
             });
@@ -265,7 +410,7 @@ function PoliticianDetailPage() {
   // 정렬 함수
   function getSortedTrades(trades: Trade[]) {
     if (!sortField) return trades;
-    return [...trades].sort((a, b) => {
+    return [...trades].sort((a: any, b: any) => {
       const aVal = a[sortField];
       const bVal = b[sortField];
       if (sortDir === 'asc') return aVal.localeCompare(bVal);
@@ -282,11 +427,25 @@ function PoliticianDetailPage() {
           <section className="w-full md:w-[320px] flex flex-col gap-6">
             {/* 프로필 카드 */}
             <div className="bg-[#23272f] rounded-2xl p-7 shadow-lg flex flex-col items-center gap-3 border border-[#23272f]">
-              <Image src={p.profile} alt={p.name} width={112} height={112} className="w-28 h-28 rounded-full border-4 border-[#23272f] object-cover mb-2 shadow" />
-              <div className="text-2xl font-extrabold mb-1 tracking-tight text-white flex flex-col items-center">
-                {toKoreanName(p.name)}
+              {profileImgUrl ? (
+                <Image
+                  src={imgError ? "/default-profile.png" : profileImgUrl}
+                  alt={p.name}
+                  width={112}
+                  height={112}
+                  className="w-28 h-28 rounded-full border-4 border-[#23272f] object-cover mb-2 shadow"
+                  onError={() => setImgError(true)}
+                />
+              ) : (
+                <div className="w-28 h-28 rounded-full border-4 border-[#23272f] bg-gray-800 flex items-center justify-center mb-2 shadow" />
+              )}
+              <div className="text-lg font-extrabold mb-1 tracking-tight text-white flex flex-col items-center whitespace-nowrap overflow-hidden text-ellipsis" style={{maxWidth: '220px'}}>
+                {p.en}
               </div>
-              <div className="text-base text-gray-400 mb-2 font-semibold">{p.party}</div>
+              <div className="text-base text-gray-400 mb-2 font-semibold">
+                {/* 정당/상·하원/지역구 */}
+                {p.party ? p.party : '-'}
+              </div>
               <div className="flex flex-col gap-1 text-base w-full">
                 <div className="flex justify-between"><span>추정 순자산</span><span className="font-bold text-white">{p.netWorth}</span></div>
                 <div className="flex justify-between"><span>총 거래금액</span><span className="font-bold text-white">{p.tradeVolume}</span></div>
@@ -296,16 +455,6 @@ function PoliticianDetailPage() {
                 <div className="flex justify-between"><span>활동 기간</span><span className="font-bold text-white">{p.yearsActive}</span></div>
                 <div className="flex justify-between"><span>나이</span><span className="font-bold text-white">{p.age}</span></div>
               </div>
-            </div>
-            {/* 전략 복사 카드 */}
-            <div className="bg-[#23272f] rounded-2xl p-7 shadow-lg flex flex-col gap-2 border border-[#23272f]">
-              <div className="font-bold mb-2 text-lg text-white">낸시 펠로시 전략 따라하기</div>
-              <div className="h-24 flex items-center justify-center text-gray-500">[수익률 차트 자리]</div>
-              <div className="flex flex-col gap-1 text-base mt-2">
-                <div className="flex justify-between"><span>2014년 이후 수익률</span><span className="font-bold text-green-400">+710.13%</span></div>
-                <div className="flex justify-between"><span>S&P 500 수익률</span><span className="font-bold text-blue-400">+226.99%</span></div>
-              </div>
-              <button className="mt-3 w-full py-3 rounded-xl bg-[#3182f6] hover:bg-[#2563eb] text-white font-bold text-lg transition shadow">낸시 펠로시 전략 복사하기</button>
             </div>
           </section>
           {/* 우측: 차트/거래내역 등 */}
@@ -417,7 +566,7 @@ function PoliticianDetailPage() {
                           <td className="px-4 py-2 min-w-[120px] whitespace-nowrap text-white">{t.amount}</td>
                           <td className="px-4 py-2 min-w-[110px] whitespace-nowrap text-white">{t.filed}</td>
                           <td className="px-4 py-2 min-w-[110px] whitespace-nowrap text-white">{t.traded}</td>
-                          <td className="px-4 py-2 min-w-[180px] max-w-[240px] whitespace-nowrap text-white" style={{whiteSpace: 'pre-line'}} dangerouslySetInnerHTML={{__html: formatDesc(t.desc)}}></td>
+                          <td className="px-4 py-2 min-w-[180px] max-w-[240px] whitespace-nowrap text-white" style={{whiteSpace: 'pre-line', textAlign: (t.desc.trim() === '' || t.desc.trim() === '-') ? 'center' : 'left'}} dangerouslySetInnerHTML={{__html: formatDesc(t.desc)}}></td>
                           <td className={`px-4 py-2 min-w-[90px] max-w-[100px] whitespace-nowrap text-right font-bold overflow-hidden text-ellipsis ${isPlus ? 'text-red-500' : isMinus ? 'text-blue-500' : 'text-white'}`}>{t.return}</td>
                         </tr>
                       );

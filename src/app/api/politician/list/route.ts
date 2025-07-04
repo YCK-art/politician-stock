@@ -24,8 +24,8 @@ interface QuiverTrade {
 }
 
 // 캐시 구현
-let cache: { politicians: { en: string; ko: string }[]; time: number } | null = null;
-const CACHE_DURATION = 600 * 1000; // 10분
+let cache: { politicians: { en: string; ko: string; party: string }[]; time: number } | null = null;
+const CACHE_DURATION = 259200 * 1000; // 72시간
 
 export async function GET() {
   try {
@@ -53,17 +53,28 @@ export async function GET() {
     
     const data: QuiverTrade[] = await res.json();
     
-    // Name 필드만 추출, 중복 제거, 정렬
-    const names = data
-      .map((item) => item.Name)
-      .filter((name) => name && name !== null && name !== undefined && name.trim() !== '')
-      .filter((name, index, arr) => arr.indexOf(name) === index)
-      .sort();
-    
-    // 한글/영문 매핑 (더미 POLITICIANS 활용, 없으면 한글은 빈 문자열)
-    // 실제로 POLITICIANS를 사용하지 않으므로, ko는 빈 문자열로 둠
+    // Name, Party 필드 추출, 중복 제거, 정렬
+    const namePartyMap: Record<string, Record<string, number>> = {};
+    data.forEach((item) => {
+      if (!item.Name) return;
+      const party = item.Party || "";
+      if (!namePartyMap[item.Name]) namePartyMap[item.Name] = {};
+      if (!namePartyMap[item.Name][party]) namePartyMap[item.Name][party] = 0;
+      namePartyMap[item.Name][party]++;
+    });
+    const names = Object.keys(namePartyMap).sort();
     const politicians = names.map((en: string) => {
-      return { en, ko: "" };
+      // 가장 많이 등장한 party를 선택
+      const partyCounts = namePartyMap[en];
+      let maxParty = "";
+      let maxCount = 0;
+      for (const party in partyCounts) {
+        if (partyCounts[party] > maxCount) {
+          maxParty = party;
+          maxCount = partyCounts[party];
+        }
+      }
+      return { en, ko: "", party: maxParty };
     });
     
     // 캐시 저장

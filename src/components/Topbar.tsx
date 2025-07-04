@@ -1,17 +1,18 @@
 "use client";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import { signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "firebase/auth";
 import { auth } from "../firebase";
 import { createPortal } from "react-dom";
 import type { User } from "firebase/auth";
+import { useBanner } from "./BannerContext";
 
 const menus = [
   { name: "홈", path: "/" },
   { name: "뉴스", path: "/news" },
-  { name: "내부자 고르기", path: "/insiders" },
+  { name: "내부자 고르기", path: "/insider" },
 ];
 
 // 슬러그 변환 함수 (API와 동일하게)
@@ -48,6 +49,10 @@ export default function Topbar() {
   const [search, setSearch] = useState("");
   const [politicians, setPoliticians] = useState<{en: string, ko: string}[]>([]);
   const [results, setResults] = useState<{en: string, ko: string}[]>([]);
+  const [showDataset, setShowDataset] = useState(false);
+  const datasetRef = useRef<HTMLDivElement>(null);
+  const { showBanner } = useBanner();
+  const topOffset = pathname === "/" && showBanner ? 56 : 0;
 
   useEffect(() => {
     const unsub = onAuthStateChanged(auth, (u) => setUser(u));
@@ -108,9 +113,21 @@ export default function Topbar() {
     return () => window.removeEventListener("mousedown", onClick);
   }, [dropdownOpen]);
 
+  // 드롭다운 외부 클릭 시 닫힘
+  useEffect(() => {
+    function handleClick(e: MouseEvent) {
+      if (datasetRef.current && !datasetRef.current.contains(e.target as Node)) {
+        setShowDataset(false);
+      }
+    }
+    if (showDataset) document.addEventListener("mousedown", handleClick);
+    return () => document.removeEventListener("mousedown", handleClick);
+  }, [showDataset]);
+
   return (
     <>
-      <header className="w-full h-16 flex items-center justify-between px-8 fixed top-0 left-0 z-50 bg-black/60 backdrop-blur-md">
+      <header className="w-full h-16 flex items-center justify-between px-8 fixed left-0 z-50 bg-black/60 backdrop-blur-md"
+        style={{ top: topOffset }}>
         {/* 로고 */}
         <Link href="/" className="text-2xl font-extrabold text-white tracking-wide select-none">
           WHITEPICK
@@ -128,6 +145,32 @@ export default function Topbar() {
               {menu.name}
             </Link>
           ))}
+          {/* 데이터셋 메뉴 */}
+          <div className="relative" ref={datasetRef}>
+            <button
+              className="text-gray-400 hover:text-white text-lg font-semibold px-3 py-1 rounded-md flex items-center gap-1 transition-colors"
+              onClick={() => setShowDataset(v => !v)}
+            >
+              데이터셋
+              <svg width="18" height="18" fill="none" viewBox="0 0 20 20" className={`transition-transform ${showDataset ? "rotate-180" : ""}`}>
+                <path d="M5 8l5 5 5-5" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            </button>
+            {showDataset && (
+              <div className="absolute left-0 mt-2 w-56 bg-[#23272f] rounded-2xl shadow-2xl border border-white/10 z-50 animate-fadein">
+                <button
+                  className="w-full text-left px-5 py-4 text-base text-white font-semibold hover:bg-white/10 rounded-2xl transition"
+                  onClick={() => {
+                    setShowDataset(false);
+                    router.push("/dataset/recent-trades");
+                  }}
+                >
+                  최근 주식거래내역
+                </button>
+                {/* 추후 다른 메뉴 추가 가능 */}
+              </div>
+            )}
+          </div>
         </nav>
         {/* 검색창 & 로그인 */}
         <div className="flex items-center gap-4">
@@ -196,14 +239,14 @@ export default function Topbar() {
                     {user.displayName ? user.displayName[0] : user.email ? user.email[0] : "?"}
                   </div>
                 )}
-                <span className={`absolute left-1/2 -translate-x-1/2 top-7 px-2 py-0.5 rounded-full font-bold whitespace-nowrap ${isPro ? "bg-black text-white border border-white" : "bg-white text-black"} font-[Pretendard]`}
+                <span className={`absolute left-1/2 -translate-x-1/2 top-8 px-2 py-0.5 rounded-full font-bold whitespace-nowrap ${isPro ? "bg-black text-white border border-white" : "bg-white text-black"} font-[Pretendard]`}
                   style={{ minWidth: 36, textAlign: 'center', fontFamily: 'Pretendard, sans-serif', fontSize: '11px', lineHeight: '16px' }}>
                   {isPro ? "PRO" : "FREE"}
                 </span>
               </div>
               {/* 프로필 드롭다운 */}
               {dropdownOpen && (
-                <div className="profile-dropdown absolute right-0 top-14 w-40 bg-[#23272f] rounded-xl shadow-lg py-2 flex flex-col z-50 border border-white/10">
+                <div className="profile-dropdown absolute right-0 top-14 w-40 bg-[#23272f] rounded-xl shadow-lg py-2 flex flex-col z-[200] border border-white/10">
                   <button className="px-4 py-2 text-left hover:bg-white/10 transition text-sm" onClick={() => { setDropdownOpen(false); setShowSettings(true); }}>설정</button>
                   <button className="px-4 py-2 text-left hover:bg-white/10 transition text-sm" onClick={() => { setDropdownOpen(false); alert('계정전환은 추후 구현됩니다.'); }}>계정전환</button>
                   <button className="px-4 py-2 text-left hover:bg-white/10 transition text-sm text-red-400" onClick={() => { setDropdownOpen(false); setShowLogoutConfirm(true); }}>로그아웃</button>
