@@ -115,7 +115,7 @@ export default function Home() {
     <BannerProvider>
       {/* 베타 무료운영 배너 - 홈화면에서만, Topbar 위에 */}
       {showBanner && (
-        <div className="w-full bg-yellow-400 text-black font-bold text-center py-3 px-2 flex items-center justify-center gap-2 fixed top-0 left-0 z-[100] shadow-md" style={{letterSpacing: '-0.01em'}}>
+        <div className="w-full bg-yellow-200 text-black font-bold text-center py-3 px-2 flex items-center justify-center gap-2 fixed top-0 left-0 z-[100] shadow-md" style={{letterSpacing: '-0.01em'}}>
           <span className="text-base md:text-lg">🎉 지금 베타 테스트 기간! <b>한달 무료 트라이얼</b>로 모든 기능을 자유롭게 이용하세요.</span>
           <button
             className="ml-4 text-black/60 hover:text-black text-xl font-bold px-2 rounded focus:outline-none"
