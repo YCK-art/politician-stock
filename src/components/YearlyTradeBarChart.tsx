@@ -104,10 +104,7 @@ const YearlyTradeBarChart: React.FC<Props> = ({ data }) => {
                 height={CHART_HEIGHT+40}
                 fill="transparent"
                 style={{ cursor: "pointer" }}
-                onMouseEnter={e => {
-                  // SVG 내 좌표를 div 기준 좌표로 변환
-                  const svgRect = chartRef.current?.getBoundingClientRect();
-                  const mouseX = e.clientX - (svgRect?.left ?? 0);
+                onMouseEnter={() => {
                   // 봉 위에 툴팁이 뜨도록 y좌표 계산
                   const barTop = Math.min(CHART_HEIGHT - buyH, CHART_HEIGHT - sellH);
                   // 툴팁 방향 및 위치 보정

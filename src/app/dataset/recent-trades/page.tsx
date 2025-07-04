@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import dayjs from "dayjs";
+import Image from "next/image";
 
 interface Trade {
   Name: string;
@@ -50,7 +51,7 @@ export default function RecentTradesPage() {
         setTrades(data.items || []);
         setLoading(false);
       })
-      .catch(err => {
+      .catch(() => {
         setError('데이터를 불러오는 중 오류가 발생했습니다.');
         setLoading(false);
       });
@@ -91,7 +92,7 @@ export default function RecentTradesPage() {
                     <td className="px-1 py-2 text-blue-400 font-bold whitespace-nowrap min-w-[60px]">{t.Name}</td>
                     <td className="px-1 py-2 whitespace-nowrap min-w-[80px]">
                       <span className="flex items-center gap-1">
-                        <img
+                        <Image
                           src={`https://financialmodelingprep.com/image-stock/${t.Ticker}.png`}
                           alt={t.Ticker}
                           width={24}

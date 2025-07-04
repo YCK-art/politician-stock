@@ -3,7 +3,6 @@ import { useParams } from "next/navigation";
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import YearlyTradeBarChart from "@/components/YearlyTradeBarChart";
-import { toKoreanName } from "@/components/TrendingPoliticians";
 
 // Trade 타입 정의 추가
 interface Trade {
@@ -45,6 +44,14 @@ interface Politician {
   age: number;
   profile: string;
   trades: Trade[];
+}
+
+// GovTrack API 응답 타입
+interface GovTrackPerson {
+  person: {
+    name: string;
+    id: number;
+  };
 }
 
 // 더미 정치인 데이터 (실제 구현 시 DB/API 연동)
@@ -160,14 +167,14 @@ async function loadGovtrackCache() {
     const res = await fetch("https://www.govtrack.us/api/v2/role?current=true&limit=600");
     const data = await res.json();
     if (data.objects) {
-      data.objects.forEach((obj: any) => {
+      data.objects.forEach((obj: GovTrackPerson) => {
         if (obj.person && obj.person.name && obj.person.id) {
           govtrackCache[normalizeName(obj.person.name)] = String(obj.person.id);
         }
       });
       govtrackLoaded = true;
     }
-  } catch (e) {
+  } catch {
     // 실패 시 무시
   }
 }
@@ -262,7 +269,7 @@ function PoliticianDetailPage() {
         if (data.objects && data.objects.length > 0) {
           // 가장 이름이 비슷한 인물 선택 (성/이름 모두 포함 우선)
           const lowerEn = p.en.toLowerCase();
-          let person = data.objects.find((obj: any) => lowerEn.includes(obj.name.toLowerCase())) || data.objects[0];
+          const person = data.objects.find((obj: { name: string }) => lowerEn.includes(obj.name.toLowerCase())) || data.objects[0];
           // 생년월일 → 나이 계산
           let age = 0;
           if (person.birthdate) {
@@ -275,19 +282,19 @@ function PoliticianDetailPage() {
           // 활동기간 계산 (가장 오래된 role~가장 최근 role)
           let yearsActive = '-';
           if (person.roles && person.roles.length > 0) {
-            const sorted = person.roles.slice().sort((a: any, b: any) => a.startdate.localeCompare(b.startdate));
+            const sorted = person.roles.slice().sort((a: { startdate: string }, b: { startdate: string }) => a.startdate.localeCompare(b.startdate));
             const start = sorted[0].startdate ? sorted[0].startdate.slice(0, 4) : '';
             const end = sorted[sorted.length - 1].enddate ? sorted[sorted.length - 1].enddate.slice(0, 4) : '현재';
             if (start) yearsActive = `${start} - ${end}`;
           }
           setP(prev => ({ ...prev, age: age || prev.age, yearsActive: yearsActive !== '-' ? yearsActive : prev.yearsActive }));
         }
-      } catch (e) {
-        console.warn('GovTrack API fetch 실패:', e);
+      } catch {
+        console.warn('GovTrack API fetch 실패');
       }
     }
     fetchGovtrackInfo();
-  }, [p.en]);
+  }, [p.en, p.age, p.yearsActive]);
 
   // Quiver API 연동: 정치인 상세 정보 + 거래내역 fetch
   useEffect(() => {
@@ -410,11 +417,11 @@ function PoliticianDetailPage() {
   // 정렬 함수
   function getSortedTrades(trades: Trade[]) {
     if (!sortField) return trades;
-    return [...trades].sort((a: any, b: any) => {
-      const aVal = a[sortField];
-      const bVal = b[sortField];
-      if (sortDir === 'asc') return aVal.localeCompare(bVal);
-      else return bVal.localeCompare(aVal);
+    return [...trades].sort((a: Trade, b: Trade) => {
+      const aVal = a[sortField as keyof Trade];
+      const bVal = b[sortField as keyof Trade];
+      if (sortDir === 'asc') return String(aVal).localeCompare(String(bVal));
+      else return String(bVal).localeCompare(String(aVal));
     });
   }
   const sortedTrades = getSortedTrades(pagedTrades);

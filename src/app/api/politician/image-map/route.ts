@@ -1,5 +1,10 @@
 import { NextResponse } from "next/server";
 
+interface WikidataRow {
+  personLabel?: { value: string };
+  image?: { value: string };
+}
+
 export async function GET() {
   const endpoint = "https://query.wikidata.org/sparql";
   const sparql = `
@@ -15,7 +20,7 @@ export async function GET() {
   const data = await res.json();
   // 영문명 → 이미지URL 매핑
   const map: Record<string, string> = {};
-  data.results.bindings.forEach((row: any) => {
+  data.results.bindings.forEach((row: WikidataRow) => {
     if (row.personLabel?.value && row.image?.value) {
       // 파일명만 추출
       const fileName = row.image.value.split('/').pop();

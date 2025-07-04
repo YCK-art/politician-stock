@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
 // 하트 SVG 컴포넌트 (토스/카카오 스타일, 얇고 둥글게)
-function HeartIcon({ filled, ...props }: { filled: boolean, [key: string]: any }) {
+function HeartIcon({ filled, ...props }: { filled: boolean, [key: string]: unknown }) {
   return filled ? (
     <svg width="18" height="18" viewBox="0 0 20 20" fill="#ff3366" stroke="#ff3366" strokeWidth="1.5" {...props} style={{verticalAlign:'middle'}}>
       <path d="M10 17c-.3 0-5.2-3.5-6.7-6C1.2 7.2 3 5 5.2 5c1.1 0 2.2.6 2.8 1.6C8.8 5.6 9.9 5 11 5c2.2 0 4 2.2 1.9 6-1.5 2.5-6.4 6-6.9 6z" strokeLinecap="round" strokeLinejoin="round" />

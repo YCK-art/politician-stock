@@ -156,14 +156,14 @@ export default function Home() {
                         className="flex items-center gap-3 px-4 py-2 cursor-pointer hover:bg-white/10 transition"
                         onClick={() => router.push(`/politician/${nameToSlug(p.en)}`)}
                       >
-                        <img
+                        <Image
                           src={profilePath}
                           alt={p.ko}
                           width={32}
                           height={32}
                           className="w-8 h-8 rounded-full object-cover bg-gray-700"
                           onError={e => {
-                            const target = e.currentTarget;
+                            const target = e.currentTarget as HTMLImageElement;
                             if (p.image) target.src = p.image;
                             else target.src = "/default-profile.png";
                           }}

@@ -1,15 +1,20 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 
 const API_KEY = process.env.QUIVER_API_KEY;
 const CACHE_DURATION = 12 * 3600 * 1000; // 12시간(ms)
 
-// 캐시 구조: { data: any[]; time: number }
-let cache: { data: any[]; time: number } | null = null;
+interface TradeData {
+  [key: string]: unknown;
+  Traded?: string;
+}
+
+// 캐시 구조: { data: TradeData[]; time: number }
+let cache: { data: TradeData[]; time: number } | null = null;
 
 console.log('QUIVER_API_KEY:', process.env.QUIVER_API_KEY);
 
 // bulk API에서 모든 거래내역을 한 번에 불러오는 함수
-async function fetchAllTrades(): Promise<any[]> {
+async function fetchAllTrades(): Promise<TradeData[]> {
   const url = "https://api.quiverquant.com/beta/bulk/congresstrading";
   const res = await fetch(url, {
     headers: { "Authorization": `Bearer ${API_KEY}` }
@@ -18,7 +23,7 @@ async function fetchAllTrades(): Promise<any[]> {
   return await res.json();
 }
 
-export async function GET(req: NextRequest) {
+export async function GET() {
   const now = Date.now();
   if (cache && now - cache.time < CACHE_DURATION) {
     console.log('[recent-trades API] cache HIT, 응답 시간:', new Date().toISOString());
