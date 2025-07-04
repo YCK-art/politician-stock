@@ -46,14 +46,6 @@ interface Politician {
   trades: Trade[];
 }
 
-// GovTrack API 응답 타입
-interface GovTrackPerson {
-  person: {
-    name: string;
-    id: number;
-  };
-}
-
 // 더미 정치인 데이터 (실제 구현 시 DB/API 연동)
 const POLITICIANS: Record<string, Politician & { slug: string; profile: string }> = {
   "nancy-pelosi": {
@@ -141,11 +133,6 @@ function formatAmount(tradeSize: string | number | undefined) {
   if (!tradeSize) return "";
   const key = String(Number(tradeSize));
   return tradeAmountRanges[key] || `$${Number(tradeSize).toLocaleString()}~`;
-}
-
-// 이름 정규화 함수
-function normalizeName(name: string) {
-  return name.toLowerCase().replace(/\s+/g, '');
 }
 
 // 금액 범위에서 중간값 추출 함수 추가
