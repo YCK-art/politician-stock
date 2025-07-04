@@ -203,7 +203,6 @@ function PoliticianDetailPage() {
   // 기존 POLITICIANS는 fallback용으로만 사용
   const fallback = POLITICIANS.hasOwnProperty(name) ? POLITICIANS[name] : POLITICIANS["nancy-pelosi"];
   const [p, setP] = useState<Politician>(fallback);
-  const [govtrackId, setGovtrackId] = useState<string | null>(null);
   const [sortField, setSortField] = useState<'filed'|'traded'|null>(null);
   const [sortDir, setSortDir] = useState<'asc'|'desc'>('desc');
   const [showReturnInfo, setShowReturnInfo] = useState(false);
@@ -246,15 +245,6 @@ function PoliticianDetailPage() {
     profileImgUrl = localImageUrl;
   }
   const [imgError, setImgError] = useState(false);
-
-  // GovTrack 인물 캐시 로딩 및 govtrackId 찾기 (수동 매핑 우선)
-  useEffect(() => {
-    loadGovtrackCache().then(() => {
-      const norm = normalizeName(p.en);
-      const id = manualGovtrackIds[norm] || govtrackCache[norm] || null;
-      setGovtrackId(id);
-    });
-  }, [p.en]);
 
   // GovTrack API로 신상정보 보완 (나이, 활동기간)
   useEffect(() => {
