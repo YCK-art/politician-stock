@@ -235,14 +235,15 @@ function PoliticianDetailPage() {
 
   // 프로필 이미지 URL 결정 (폴더 내 jpg > Wikidata > govtrack)
   let profileImgUrl: string | null = null;
-  // 1. 폴더 내 jpg 파일 우선 시도
-  profileImgUrl = `/politician-profiles/${name}.jpg`;
-  // 2. 폴더 내 jpg가 없으면 Wikidata 이미지
+  // 1. 폴더 내 jpg 파일 우선 시도 (항상 유지)
+  const localImageUrl = `/politician-profiles/${name}.jpg`;
+  
+  // 2. Wikidata 이미지가 있으면 사용, 없으면 로컬 이미지 유지
   if (imageMap && imageMap[p.en]) {
     profileImgUrl = imageMap[p.en];
-  } else if (govtrackId) {
-    // 3. Wikidata도 없으면 govtrack 이미지
-    profileImgUrl = `https://www.govtrack.us/data/photos/${govtrackId}-200px.jpeg`;
+  } else {
+    // 3. Wikidata도 없으면 로컬 이미지 사용 (govtrack은 fallback으로만)
+    profileImgUrl = localImageUrl;
   }
   const [imgError, setImgError] = useState(false);
 
