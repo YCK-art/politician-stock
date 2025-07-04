@@ -333,7 +333,7 @@ export default function NewsPage() {
                 <div className="flex items-center gap-4 bg-[#23272f] rounded-xl p-3 shadow hover:bg-[#282c34] transition cursor-pointer">
                   <Image src="/news/hiring.jpg" alt="공공일자리" width={72} height={72} className="w-18 h-18 rounded-xl object-cover" />
                   <div className="flex flex-col flex-1 min-w-0">
-                    <div className="font-semibold text-base text-white line-clamp-2">공공일자리 무려 10배나 늘었다…미국 '깜짝고용' 숨은 배경은</div>
+                    <div className="font-semibold text-base text-white line-clamp-2">공공일자리 무려 10배나 늘었다…미국 &apos;깜짝고용&apos; 숨은 배경은</div>
                     <div className="text-xs text-gray-400 mt-1">11시간 전 · 매일경제</div>
                   </div>
                 </div>
@@ -341,7 +341,7 @@ export default function NewsPage() {
                 <div className="flex items-center gap-4 bg-[#23272f] rounded-xl p-3 shadow hover:bg-[#282c34] transition cursor-pointer">
                   <Image src="/news/goldholiday.jpg" alt="황금연휴" width={72} height={72} className="w-18 h-18 rounded-xl object-cover" />
                   <div className="flex flex-col flex-1 min-w-0">
-                    <div className="font-semibold text-base text-white line-clamp-2">"10월 황금연휴 온다"…노랑풍선·하나투어 꿈틀</div>
+                    <div className="font-semibold text-base text-white line-clamp-2">&quot;10월 황금연휴 온다&quot;…노랑풍선·하나투어 꿈틀</div>
                     <div className="text-xs text-gray-400 mt-1">16시간 전 · 한국경제</div>
                   </div>
                 </div>
@@ -349,7 +349,7 @@ export default function NewsPage() {
                 <div className="flex items-center gap-4 bg-[#23272f] rounded-xl p-3 shadow hover:bg-[#282c34] transition cursor-pointer">
                   <Image src="/news/china-casino.jpg" alt="중국인 무비자 카지노" width={72} height={72} className="w-18 h-18 rounded-xl object-cover" />
                   <div className="flex flex-col flex-1 min-w-0">
-                    <div className="font-semibold text-base text-white line-clamp-2">중국인 무비자에 카지노주 '껑충'</div>
+                    <div className="font-semibold text-base text-white line-clamp-2">중국인 무비자에 카지노주 &apos;껑충&apos;</div>
                     <div className="text-xs text-gray-400 mt-1">16시간 전 · 매일경제</div>
                   </div>
                 </div>
@@ -389,7 +389,7 @@ export default function NewsPage() {
                 <div className="flex items-center gap-4 bg-[#23272f] rounded-xl p-3 shadow hover:bg-[#282c34] transition cursor-pointer">
                   <Image src="/news/hiring.jpg" alt="공공일자리" width={72} height={72} className="w-18 h-18 rounded-xl object-cover" />
                   <div className="flex flex-col flex-1 min-w-0">
-                    <div className="font-semibold text-base text-white line-clamp-2">공공일자리 무려 10배나 늘었다…미국 '깜짝고용' 숨은 배경은</div>
+                    <div className="font-semibold text-base text-white line-clamp-2">공공일자리 무려 10배나 늘었다…미국 &apos;깜짝고용&apos; 숨은 배경은</div>
                     <div className="text-xs text-gray-400 mt-1">11시간 전 · 매일경제</div>
                   </div>
                 </div>
@@ -397,7 +397,7 @@ export default function NewsPage() {
                 <div className="flex items-center gap-4 bg-[#23272f] rounded-xl p-3 shadow hover:bg-[#282c34] transition cursor-pointer">
                   <Image src="/news/goldholiday.jpg" alt="황금연휴" width={72} height={72} className="w-18 h-18 rounded-xl object-cover" />
                   <div className="flex flex-col flex-1 min-w-0">
-                    <div className="font-semibold text-base text-white line-clamp-2">"10월 황금연휴 온다"…노랑풍선·하나투어 꿈틀</div>
+                    <div className="font-semibold text-base text-white line-clamp-2">&quot;10월 황금연휴 온다&quot;…노랑풍선·하나투어 꿈틀</div>
                     <div className="text-xs text-gray-400 mt-1">16시간 전 · 한국경제</div>
                   </div>
                 </div>
@@ -405,7 +405,7 @@ export default function NewsPage() {
                 <div className="flex items-center gap-4 bg-[#23272f] rounded-xl p-3 shadow hover:bg-[#282c34] transition cursor-pointer">
                   <Image src="/news/china-casino.jpg" alt="중국인 무비자 카지노" width={72} height={72} className="w-18 h-18 rounded-xl object-cover" />
                   <div className="flex flex-col flex-1 min-w-0">
-                    <div className="font-semibold text-base text-white line-clamp-2">중국인 무비자에 카지노주 '껑충'</div>
+                    <div className="font-semibold text-base text-white line-clamp-2">중국인 무비자에 카지노주 &apos;껑충&apos;</div>
                     <div className="text-xs text-gray-400 mt-1">16시간 전 · 매일경제</div>
                   </div>
                 </div>
@@ -445,7 +445,7 @@ export default function NewsPage() {
                 <div className="flex items-center gap-4 bg-[#23272f] rounded-xl p-3 shadow hover:bg-[#282c34] transition cursor-pointer">
                   <Image src="/news/hiring.jpg" alt="공공일자리" width={72} height={72} className="w-18 h-18 rounded-xl object-cover" />
                   <div className="flex flex-col flex-1 min-w-0">
-                    <div className="font-semibold text-base text-white line-clamp-2">공공일자리 무려 10배나 늘었다…미국 '깜짝고용' 숨은 배경은</div>
+                    <div className="font-semibold text-base text-white line-clamp-2">공공일자리 무려 10배나 늘었다…미국 &apos;깜짝고용&apos; 숨은 배경은</div>
                     <div className="text-xs text-gray-400 mt-1">11시간 전 · 매일경제</div>
                   </div>
                 </div>
@@ -453,7 +453,7 @@ export default function NewsPage() {
                 <div className="flex items-center gap-4 bg-[#23272f] rounded-xl p-3 shadow hover:bg-[#282c34] transition cursor-pointer">
                   <Image src="/news/goldholiday.jpg" alt="황금연휴" width={72} height={72} className="w-18 h-18 rounded-xl object-cover" />
                   <div className="flex flex-col flex-1 min-w-0">
-                    <div className="font-semibold text-base text-white line-clamp-2">"10월 황금연휴 온다"…노랑풍선·하나투어 꿈틀</div>
+                    <div className="font-semibold text-base text-white line-clamp-2">&quot;10월 황금연휴 온다&quot;…노랑풍선·하나투어 꿈틀</div>
                     <div className="text-xs text-gray-400 mt-1">16시간 전 · 한국경제</div>
                   </div>
                 </div>
@@ -461,7 +461,7 @@ export default function NewsPage() {
                 <div className="flex items-center gap-4 bg-[#23272f] rounded-xl p-3 shadow hover:bg-[#282c34] transition cursor-pointer">
                   <Image src="/news/china-casino.jpg" alt="중국인 무비자 카지노" width={72} height={72} className="w-18 h-18 rounded-xl object-cover" />
                   <div className="flex flex-col flex-1 min-w-0">
-                    <div className="font-semibold text-base text-white line-clamp-2">중국인 무비자에 카지노주 '껑충'</div>
+                    <div className="font-semibold text-base text-white line-clamp-2">중국인 무비자에 카지노주 &apos;껑충&apos;</div>
                     <div className="text-xs text-gray-400 mt-1">16시간 전 · 매일경제</div>
                   </div>
                 </div>
@@ -501,7 +501,7 @@ export default function NewsPage() {
                 <div className="flex items-center gap-4 bg-[#23272f] rounded-xl p-3 shadow hover:bg-[#282c34] transition cursor-pointer">
                   <Image src="/news/hiring.jpg" alt="공공일자리" width={72} height={72} className="w-18 h-18 rounded-xl object-cover" />
                   <div className="flex flex-col flex-1 min-w-0">
-                    <div className="font-semibold text-base text-white line-clamp-2">공공일자리 무려 10배나 늘었다…미국 '깜짝고용' 숨은 배경은</div>
+                    <div className="font-semibold text-base text-white line-clamp-2">공공일자리 무려 10배나 늘었다…미국 &apos;깜짝고용&apos; 숨은 배경은</div>
                     <div className="text-xs text-gray-400 mt-1">11시간 전 · 매일경제</div>
                   </div>
                 </div>
@@ -509,7 +509,7 @@ export default function NewsPage() {
                 <div className="flex items-center gap-4 bg-[#23272f] rounded-xl p-3 shadow hover:bg-[#282c34] transition cursor-pointer">
                   <Image src="/news/goldholiday.jpg" alt="황금연휴" width={72} height={72} className="w-18 h-18 rounded-xl object-cover" />
                   <div className="flex flex-col flex-1 min-w-0">
-                    <div className="font-semibold text-base text-white line-clamp-2">"10월 황금연휴 온다"…노랑풍선·하나투어 꿈틀</div>
+                    <div className="font-semibold text-base text-white line-clamp-2">&quot;10월 황금연휴 온다&quot;…노랑풍선·하나투어 꿈틀</div>
                     <div className="text-xs text-gray-400 mt-1">16시간 전 · 한국경제</div>
                   </div>
                 </div>
@@ -517,7 +517,7 @@ export default function NewsPage() {
                 <div className="flex items-center gap-4 bg-[#23272f] rounded-xl p-3 shadow hover:bg-[#282c34] transition cursor-pointer">
                   <Image src="/news/china-casino.jpg" alt="중국인 무비자 카지노" width={72} height={72} className="w-18 h-18 rounded-xl object-cover" />
                   <div className="flex flex-col flex-1 min-w-0">
-                    <div className="font-semibold text-base text-white line-clamp-2">중국인 무비자에 카지노주 '껑충'</div>
+                    <div className="font-semibold text-base text-white line-clamp-2">중국인 무비자에 카지노주 &apos;껑충&apos;</div>
                     <div className="text-xs text-gray-400 mt-1">16시간 전 · 매일경제</div>
                   </div>
                 </div>
@@ -557,7 +557,7 @@ export default function NewsPage() {
                 <div className="flex items-center gap-4 bg-[#23272f] rounded-xl p-3 shadow hover:bg-[#282c34] transition cursor-pointer">
                   <Image src="/news/hiring.jpg" alt="공공일자리" width={72} height={72} className="w-18 h-18 rounded-xl object-cover" />
                   <div className="flex flex-col flex-1 min-w-0">
-                    <div className="font-semibold text-base text-white line-clamp-2">공공일자리 무려 10배나 늘었다…미국 '깜짝고용' 숨은 배경은</div>
+                    <div className="font-semibold text-base text-white line-clamp-2">공공일자리 무려 10배나 늘었다…미국 &apos;깜짝고용&apos; 숨은 배경은</div>
                     <div className="text-xs text-gray-400 mt-1">11시간 전 · 매일경제</div>
                   </div>
                 </div>
@@ -565,7 +565,7 @@ export default function NewsPage() {
                 <div className="flex items-center gap-4 bg-[#23272f] rounded-xl p-3 shadow hover:bg-[#282c34] transition cursor-pointer">
                   <Image src="/news/goldholiday.jpg" alt="황금연휴" width={72} height={72} className="w-18 h-18 rounded-xl object-cover" />
                   <div className="flex flex-col flex-1 min-w-0">
-                    <div className="font-semibold text-base text-white line-clamp-2">"10월 황금연휴 온다"…노랑풍선·하나투어 꿈틀</div>
+                    <div className="font-semibold text-base text-white line-clamp-2">&quot;10월 황금연휴 온다&quot;…노랑풍선·하나투어 꿈틀</div>
                     <div className="text-xs text-gray-400 mt-1">16시간 전 · 한국경제</div>
                   </div>
                 </div>
@@ -573,7 +573,7 @@ export default function NewsPage() {
                 <div className="flex items-center gap-4 bg-[#23272f] rounded-xl p-3 shadow hover:bg-[#282c34] transition cursor-pointer">
                   <Image src="/news/china-casino.jpg" alt="중국인 무비자 카지노" width={72} height={72} className="w-18 h-18 rounded-xl object-cover" />
                   <div className="flex flex-col flex-1 min-w-0">
-                    <div className="font-semibold text-base text-white line-clamp-2">중국인 무비자에 카지노주 '껑충'</div>
+                    <div className="font-semibold text-base text-white line-clamp-2">중국인 무비자에 카지노주 &apos;껑충&apos;</div>
                     <div className="text-xs text-gray-400 mt-1">16시간 전 · 매일경제</div>
                   </div>
                 </div>
@@ -613,7 +613,7 @@ export default function NewsPage() {
                 <div className="flex items-center gap-4 bg-[#23272f] rounded-xl p-3 shadow hover:bg-[#282c34] transition cursor-pointer">
                   <Image src="/news/hiring.jpg" alt="공공일자리" width={72} height={72} className="w-18 h-18 rounded-xl object-cover" />
                   <div className="flex flex-col flex-1 min-w-0">
-                    <div className="font-semibold text-base text-white line-clamp-2">공공일자리 무려 10배나 늘었다…미국 '깜짝고용' 숨은 배경은</div>
+                    <div className="font-semibold text-base text-white line-clamp-2">공공일자리 무려 10배나 늘었다…미국 &apos;깜짝고용&apos; 숨은 배경은</div>
                     <div className="text-xs text-gray-400 mt-1">11시간 전 · 매일경제</div>
                   </div>
                 </div>
@@ -621,7 +621,7 @@ export default function NewsPage() {
                 <div className="flex items-center gap-4 bg-[#23272f] rounded-xl p-3 shadow hover:bg-[#282c34] transition cursor-pointer">
                   <Image src="/news/goldholiday.jpg" alt="황금연휴" width={72} height={72} className="w-18 h-18 rounded-xl object-cover" />
                   <div className="flex flex-col flex-1 min-w-0">
-                    <div className="font-semibold text-base text-white line-clamp-2">"10월 황금연휴 온다"…노랑풍선·하나투어 꿈틀</div>
+                    <div className="font-semibold text-base text-white line-clamp-2">&quot;10월 황금연휴 온다&quot;…노랑풍선·하나투어 꿈틀</div>
                     <div className="text-xs text-gray-400 mt-1">16시간 전 · 한국경제</div>
                   </div>
                 </div>
@@ -629,7 +629,7 @@ export default function NewsPage() {
                 <div className="flex items-center gap-4 bg-[#23272f] rounded-xl p-3 shadow hover:bg-[#282c34] transition cursor-pointer">
                   <Image src="/news/china-casino.jpg" alt="중국인 무비자 카지노" width={72} height={72} className="w-18 h-18 rounded-xl object-cover" />
                   <div className="flex flex-col flex-1 min-w-0">
-                    <div className="font-semibold text-base text-white line-clamp-2">중국인 무비자에 카지노주 '껑충'</div>
+                    <div className="font-semibold text-base text-white line-clamp-2">중국인 무비자에 카지노주 &apos;껑충&apos;</div>
                     <div className="text-xs text-gray-400 mt-1">16시간 전 · 매일경제</div>
                   </div>
                 </div>
