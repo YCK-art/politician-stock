@@ -5,6 +5,7 @@ import Image from "next/image";
 import TrendingPoliticians from "../components/TrendingPoliticians";
 import MarketSummary from "../components/MarketSummary";
 import { BannerProvider, useBanner } from "../components/BannerContext";
+import Footer from "../components/Footer";
 
 // 슬러그 변환 함수 (API와 동일하게)
 function nameToSlug(name: string) {
@@ -127,14 +128,14 @@ export default function Home() {
           </button>
         </div>
       )}
-      <main className="relative min-h-screen w-full bg-black/90 flex flex-col items-center justify-center">
-        <div className="flex flex-row items-center justify-center gap-40 w-full max-w-7xl mx-auto py-24">
+      <main className="relative min-h-screen w-full bg-black flex flex-col items-center justify-center">
+        <div className="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-40 w-full max-w-7xl mx-auto py-6 md:py-24 px-2 md:px-0">
           {/* 중앙 메인영역 */}
-          <div className="flex flex-col items-center gap-6">
-            <h1 className="text-5xl font-extrabold drop-shadow-lg text-left w-[600px] whitespace-nowrap">백악관 내부자의 주식을 꿰뚫어 본다</h1>
-            <p className="text-xl text-gray-300 text-left w-[600px]">미국 정치인들의 내부정보, 가장 빠르게 전달합니다</p>
+          <div className="flex flex-col items-center gap-2 md:gap-6 w-full md:w-auto">
+            <h1 className="text-lg sm:text-xl md:text-5xl font-extrabold drop-shadow-lg text-left w-full md:w-[600px] whitespace-normal md:whitespace-nowrap">백악관 내부자의 주식을 꿰뚫어 본다</h1>
+            <p className="text-xs sm:text-sm md:text-xl text-gray-300 text-left w-full md:w-[600px]">미국 정치인들의 내부정보, 가장 빠르게 전달합니다</p>
             {/* 중앙 검색창: 타이틀과 비슷한 길이, 왼쪽 정렬 */}
-            <div className="w-[600px] relative text-left">
+            <div className="w-full md:w-[600px] relative text-left">
               <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none">
                 <svg width="20" height="20" fill="none" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7" stroke="currentColor" strokeWidth="2"/><path stroke="currentColor" strokeWidth="2" strokeLinecap="round" d="M20 20l-3.5-3.5"/></svg>
               </span>
@@ -142,7 +143,7 @@ export default function Home() {
                 value={search}
                 onChange={e => setSearch(e.target.value)}
                 placeholder="미국 정치인 이름을 검색하세요"
-                className="w-full pl-10 px-4 py-3 rounded-lg bg-white/10 text-white border border-white/20 focus:outline-none focus:ring-2 focus:ring-blue-400 text-lg shadow"
+                className="w-full pl-10 px-4 py-2 rounded-lg bg-white/10 text-white border border-white/20 focus:outline-none focus:ring-2 focus:ring-blue-400 text-xs sm:text-sm md:text-lg shadow"
               />
               {/* 검색 결과 드롭다운 */}
               {results.length > 0 && (
@@ -169,8 +170,8 @@ export default function Home() {
                           }}
                         />
                         <div className="flex flex-col">
-                          <span className="font-semibold text-white text-base">{highlight(p.ko, search)}</span>
-                          <span className="text-xs text-gray-300">{highlight(p.en, search)}</span>
+                          <span className="font-semibold text-white text-xs sm:text-sm">{highlight(p.ko, search)}</span>
+                          <span className="text-[10px] sm:text-xs text-gray-300">{highlight(p.en, search)}</span>
                         </div>
                       </li>
                     );
@@ -179,20 +180,24 @@ export default function Home() {
               )}
             </div>
             {/* 환율/ETF 카드: 3대 ETF 칸 전체와 동일한 가로폭, 왼쪽 정렬 */}
-            <div className="w-[600px] text-left">
+            <div className="w-full md:w-[600px] text-left">
               <MarketSummary />
             </div>
           </div>
-          {/* 트렌딩 정치인 칸 */}
-          <div className="flex-1 min-w-[340px] max-w-2xl ml-32">
+          {/* PC에서만 트렌딩 정치인 칸 */}
+          <div className="hidden md:block md:flex-1 min-w-0 md:min-w-[340px] md:max-w-2xl md:ml-32 mt-8 md:mt-0">
             <TrendingPoliticians now={now} />
           </div>
         </div>
-        {/* 모바일/태블릿에서는 트렌딩 정치인 아래로 */}
-        <aside className="block lg:hidden w-full max-w-md mx-auto mt-12">
+        {/* 모바일/태블릿에서는 트렌딩 정치인 아래로 한 번만 */}
+        <aside className="block md:hidden w-full max-w-full px-2 mt-6">
           <TrendingPoliticians now={now} />
         </aside>
       </main>
+      {/* Footer 모바일 가로폭 꽉 차게 */}
+      <footer className="w-full">
+        <Footer />
+      </footer>
       {/* 추가 동영상 섹션 (푸터 위) - 숨김 처리 */}
       <section className="w-full flex flex-col items-center justify-center bg-[#111112] py-20 px-4" style={{display: 'none'}}>
         {/* 마케팅 문구 */}
